@@ -39,41 +39,40 @@ void log_func(const gchar *file, gint line, LOG_LEVEL level, const gchar *messag
 	gchar format[1024];
 	gchar str[1024];
 
+	va_start(ap, message);
+	vsnprintf(str, 1024, message, ap);
+	va_end(ap);
+
 	if(level <= ebview_log_level) {
+		char *prefix;
+
 		switch(level){
 		case LOG_ERROR:
-			sprintf(format, "%s:%d ERROR : ", file, line);
+			prefix = "ERROR";
 			break;
 		case LOG_CRITICAL:
-			sprintf(format, "%s:%d CRITICAL : ", file, line);
+			prefix = "CRITICAL";
 			break;
 		case LOG_WARNING:
-			sprintf(format, "%s:%d WARNING : ", file, line);
+			prefix = "WARNING";
 			break;
 		case LOG_MESSAGE:
-			sprintf(format, "%s:%d MESSAGE : ", file, line);
+			prefix = "MESSAGE";
 			break;
 		case LOG_INFO:
-			sprintf(format, "%s:%d INFO : ", file, line);
+			prefix = "INFO";
 			break;
 		case LOG_DEBUG:
-			sprintf(format, "%s:%d DEBUG : ", file, line);
+			prefix = "DEBUG";
 			break;
 		}
 
-		strcat(format, message);
-
-		va_start(ap, message);
-		g_vprintf(format, ap);
-		g_printf("\n");
-		//g_logv(G_LOG_DOMAIN, level, format, ap);
+		g_printf("%s:%d %s : %s\n", file, line, prefix, str);
 	}
 
 	// Show dialog box.
-
+#if 0
 	if(level <= LOG_MESSAGE){
-		vsprintf(str, message, ap);
-
 		switch(level){
 		case LOG_ERROR:
 		case LOG_CRITICAL:
@@ -86,9 +85,6 @@ void log_func(const gchar *file, gint line, LOG_LEVEL level, const gchar *messag
 		default:
 			break;
 		}
-
-		va_end(ap);
 	}
+#endif
 }
-
-
