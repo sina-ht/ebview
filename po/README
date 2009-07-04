@@ -1,0 +1,11 @@
+update POTFILE.in
+
+    ls -1 src/*.c > POTFILES.in
+
+make ja.pox
+
+edit ja.pox and rename it as ja.po
+
+make ja.mo
+make ja.gmo
+

@@ -1,0 +1,50 @@
+
+EBView のインストール方法
+
+1. 準備
+
+  本プログラムはEBライブラリを使用します。まだインストールしていない場
+  合には以下の場所からダウンロードしてインストールしてください。
+
+
+  http://www.sra.co.jp/people/m-kasahr/eb/
+
+また、GTK version 2.2 以上も必要です。まだインストールしていない場合は
+以下の場所からダウンロードしてインストールしてください。
+
+  GTK : http://www.gtk.org/
+
+
+2. コンパイル&インストール
+
+   基本的には以下の通りです。
+
+  $ ./configure
+  $ make
+  $ su 
+  Password: rootのパスワードを入力
+  # make install
+
+  尚、EBライブラリが /usr, /usr/local 以外の場所に入っている場合には、以
+  下のように configure に対してオプションを指定してください。
+
+
+  $ ./configure --with-eb-prefix=/usr/test
+
+
+3. FreeBSDでのコンパイル
+
+  libiconv、libintl が /usr/local に入っている場合は、以下の環境変数も
+  設定してください。
+
+  export CPPFLAGS=-I/usr/local/include
+  export LDFLAGS=-L/usr/local/lib
+
+
+
+4. プログラムの起動
+
+  コマンドプロンプトで "ebview" と入力します。
+
+  プログラムが起動したら「ヘルプ」メニューの「使い方」を選択してくださ
+い。Web ブラウザに使い方の説明が表示されます。
