@@ -1,9 +1,13 @@
 *~
 *.diff
 *.patch
+*.o
 *.lo
 Makefile
 Makefile.in
+!intl/Makefile.in
+about.en
+about.jp
 build*
 config.cache
 config.guess
@@ -33,5 +37,5 @@ depcomp
 .tm_project2.cache
 autom4te.cache
 TODO.tasks
-enfle.anjuta
-lib/mad/mad.h
+POTFILES
+src/ebview
