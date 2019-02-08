@@ -27,7 +27,7 @@
 #ifdef __WIN32__
 #include <pango/pangowin32.h>
 #else
-#include <pango/pangox.h>
+#include <pango/pangoft2.h>
 #endif
 
 #include "dictbar.h"
@@ -429,7 +429,7 @@ void  calculate_font_size(){
 		return;
 	}
 
-	fontmap = pango_x_font_map_for_display(display);
+	fontmap = pango_ft2_font_map_for_display();
 #endif
 
 	if(fontmap == NULL){

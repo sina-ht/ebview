@@ -24,9 +24,9 @@ dnl Checks for libraries.
 PKG_CHECK_MODULES(GTK, gtk+-2.0 >= 2.0.0)
 AC_SUBST(GTK_CFLAGS)
 AC_SUBST(GTK_LIBS)
-PKG_CHECK_MODULES(PANGOX, pangox, have_pangox="yes", have_pangox="no  (Pango-X not found)")
-AC_SUBST(PANGOX_CFLAGS) 
-AC_SUBST(PANGOX_LIBS) 
+PKG_CHECK_MODULES(PANGOFT2, pangoft2, have_pangoft2="yes", have_pangoft2="no  (Pango-FT2 not found)")
+AC_SUBST(PANGOFT2_CFLAGS)
+AC_SUBST(PANGOFT2_LIBS)
 
 eb_LIB_EB4
 
