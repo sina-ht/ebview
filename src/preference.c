@@ -153,7 +153,7 @@ void initialize_preference(){
 	bsort_by_dictionary = 0;
 	bemphasize_keyword = 1;
 	bshow_image = 1;
-	bshow_splash = 1;
+	bshow_splash = 0;
 	bword_search_automatic = 1;
 	bshow_filename = 1;
 	bheading_auto_calc = 1;
