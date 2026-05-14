@@ -647,7 +647,6 @@ void create_main_window()
 	
 	gtk_widget_show(vbox);
 
-	gtk_widget_set_size_request(note_tree, tree_width, tree_height);
 	gtk_widget_show_all (main_window);
 
 	gtk_selection_owner_set(main_window, GDK_SELECTION_PRIMARY,GDK_CURRENT_TIME);
