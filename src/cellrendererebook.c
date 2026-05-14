@@ -334,7 +334,8 @@ static void cell_renderer_ebook_render_gaiji(GtkCellRenderer *cell,
 //	LOG(LOG_DEBUG, "IN : cell_renderer_ebook_render_gaiji(code=%s)", code);
 
 	style = gtk_widget_get_style_context(widget);
-	gtk_style_context_get(style, state, "color", &color, NULL);
+	GtkStateFlags widget_state = gtk_style_context_get_state(style);
+	gtk_style_context_get(style, widget_state, "color", &color, NULL);
 	color_name = g_strdup_printf("#%02X%02X%02X",
 	    (gint)(color.red * 255), (gint)(color.green * 255), (gint)(color.blue * 255));
 	pixbuf = load_xbm(binfo, code, &width, &height, color_name);
@@ -426,7 +427,8 @@ static void cell_renderer_ebook_render_string(GtkCellRenderer *cell,
 //	LOG(LOG_DEBUG, "IN : cell_renderer_ebook_render_string(text=%s,w=%d, h=%d)",text, *x, *y );
 
 	style = gtk_widget_get_style_context(widget);
-	gtk_style_context_get(style, state, "color", &color, NULL);
+	GtkStateFlags widget_state = gtk_style_context_get_state(style);
+	gtk_style_context_get(style, widget_state, "color", &color, NULL);
 	str = g_strndup(text, length);
 
 	tmp_str = str;
