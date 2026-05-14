@@ -302,15 +302,9 @@ void show_result_tree()
 
  END:
 
-	if(bheading_auto_calc){
-		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (tree_scroll),
-						GTK_POLICY_AUTOMATIC,
-						GTK_POLICY_NEVER);
-	} else {
-		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (tree_scroll),
-						GTK_POLICY_AUTOMATIC,
-						GTK_POLICY_AUTOMATIC);
-	}
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (tree_scroll),
+					GTK_POLICY_AUTOMATIC,
+					GTK_POLICY_AUTOMATIC);
 
 	LOG(LOG_DEBUG, "OUT : show_result_tree()");
 }
@@ -700,15 +694,9 @@ GtkWidget *create_headword_tree(){
 	tree_scroll = gtk_scrolled_window_new (NULL, NULL);
 	gtk_box_pack_start(GTK_BOX(vbox), tree_scroll, TRUE, TRUE, 0);
 
-	if(bheading_auto_calc){
-		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (tree_scroll),
-						GTK_POLICY_AUTOMATIC,
-						GTK_POLICY_NEVER);
-	} else {
-		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (tree_scroll),
-						GTK_POLICY_AUTOMATIC,
-						GTK_POLICY_AUTOMATIC);
-	}
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (tree_scroll),
+					GTK_POLICY_AUTOMATIC,
+					GTK_POLICY_AUTOMATIC);
 
 	tree_view = gtk_tree_view_new();
 	gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(tree_view), FALSE);
