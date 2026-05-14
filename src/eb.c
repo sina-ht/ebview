@@ -78,6 +78,8 @@ gint ebook_search_method(){
 	LOG(LOG_DEBUG, "IN : ebook_search_method()");
 
 	text = gtk_combo_box_get_active_id(GTK_COMBO_BOX(combo_method));
+	if(text == NULL)
+		return(SEARCH_METHOD_UNKNOWN);
 	for(i=0 ; search_method[i].name != 0 ; i ++){
 		if(strcmp(text, search_method[i].name) == 0){
 			LOG(LOG_DEBUG, "OUT : ebook_search_method()=%d", search_method[i].code);

@@ -672,7 +672,7 @@ void previous_heading(GtkWidget *widget, gpointer *data){
 
 }
 
-gboolean configure_event(GtkWidget *widget, GdkEventConfigure *event, gpointer user_data)
+gboolean headword_tree_draw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 {
 	if(bheading_auto_calc){
 		num_heading = (gtk_widget_get_allocated_height(tree_scroll) - 12) / (font_height + 10);
@@ -717,8 +717,8 @@ GtkWidget *create_headword_tree(){
 	g_signal_connect(G_OBJECT(tree_view),"button_press_event",
 			 G_CALLBACK(button_press_event), (gpointer)NULL);
 
-	g_signal_connect(G_OBJECT(tree_view),"expose_event",
-			 G_CALLBACK(configure_event), (gpointer)NULL);
+	g_signal_connect(G_OBJECT(tree_view),"draw",
+			 G_CALLBACK(headword_tree_draw), (gpointer)NULL);
 
 
 /*

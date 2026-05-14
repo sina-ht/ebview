@@ -473,22 +473,23 @@ void note_switch_page(GtkNotebook *notebook, GtkWidget *page, gint page_num, gpo
 	note_page = page_num;
 
 	if((note_text) && GTK_IS_WIDGET(note_text)) {
+		const gchar *active_id = gtk_combo_box_get_active_id(GTK_COMBO_BOX(combo_method));
 		switch (page_num) {
 		case 0:
 			eb_web = 0;
 			gtk_notebook_set_current_page(GTK_NOTEBOOK(note_text), 0);
 
-			if(strcmp(gtk_combo_box_get_active_id(GTK_COMBO_BOX(combo_method)), _("Internet Search")) == 0)
-				gtk_entry_set_text(GTK_ENTRY(GTK_COMBO_BOX(combo_method)), _("Automatic Search"));
+			if(active_id && strcmp(active_id, _("Internet Search")) == 0)
+				gtk_combo_box_set_active_id(GTK_COMBO_BOX(combo_method), _("Automatic Search"));
 			break;
 
 		case 1:
 			eb_web = 0;
 			gtk_notebook_set_current_page(GTK_NOTEBOOK(note_bar), 0);
 			gtk_notebook_set_current_page(GTK_NOTEBOOK(note_text), 1);
-			
-			if(strcmp(gtk_combo_box_get_active_id(GTK_COMBO_BOX(combo_method)), _("Multiword Search")) != 0)
-				gtk_entry_set_text(GTK_ENTRY(GTK_COMBO_BOX(combo_method)), _("Multiword Search"));
+
+			if(!active_id || strcmp(active_id, _("Multiword Search")) != 0)
+				gtk_combo_box_set_active_id(GTK_COMBO_BOX(combo_method), _("Multiword Search"));
 
 			break;
 		case 2:
@@ -496,16 +497,16 @@ void note_switch_page(GtkNotebook *notebook, GtkWidget *page, gint page_num, gpo
 			gtk_notebook_set_current_page(GTK_NOTEBOOK(note_bar), 0);
 
 			gtk_notebook_set_current_page(GTK_NOTEBOOK(note_text), 0);
-			if(strcmp(gtk_combo_box_get_active_id(GTK_COMBO_BOX(combo_method)), _("Internet Search")) != 0)
-			gtk_entry_set_text(GTK_ENTRY(GTK_COMBO_BOX(combo_method)), _("Internet Search"));
+			if(!active_id || strcmp(active_id, _("Internet Search")) != 0)
+				gtk_combo_box_set_active_id(GTK_COMBO_BOX(combo_method), _("Internet Search"));
 
 			break;
 		case 3:
 			eb_web = 0;
 			gtk_notebook_set_current_page(GTK_NOTEBOOK(note_bar), 1);
-			
-			if(strcmp(gtk_combo_box_get_active_id(GTK_COMBO_BOX(combo_method)), _("File Search")) != 0)
-				gtk_entry_set_text(GTK_ENTRY(GTK_COMBO_BOX(combo_method)), _("File Search"));
+
+			if(!active_id || strcmp(active_id, _("File Search")) != 0)
+				gtk_combo_box_set_active_id(GTK_COMBO_BOX(combo_method), _("File Search"));
 
 			break;
 
@@ -568,9 +569,9 @@ static gint entry_focus_out_event(GtkWidget *widget, GdkEventKey *event)
 {
 	entry_focus_in = FALSE;
 #ifdef __WIN32__
-	gtk_editable_select_region(GTK_EDITABLE(word_entry), 
+	gtk_editable_select_region(GTK_EDITABLE(word_entry),
 				   0,
-				   GTK_ENTRY(word_entry)->text_length);
+				   gtk_entry_get_text_length(GTK_ENTRY(word_entry)));
 #endif
 	return(FALSE);
 }
@@ -612,8 +613,6 @@ void create_main_window()
 	main_window = gtk_widget_new (GTK_TYPE_WINDOW,
 				"type", GTK_WINDOW_TOPLEVEL,
 				 "title", title,
-				 "allow-shrink", TRUE,
-				 "allow-grow", TRUE,
 				 "default-width", window_width,
 				 "default-height", window_height,
 				NULL);
@@ -749,10 +748,9 @@ GtkWidget *create_dict_window()
 	gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 5);
 
 
-	combo_word = gtk_combo_box_text_new();
+	combo_word = gtk_entry_new();
+	word_entry = combo_word;
 	gtk_box_pack_start(GTK_BOX(hbox), combo_word, TRUE, TRUE, 0);
-
-	word_entry = GTK_WIDGET(gtk_bin_get_child(GTK_BIN(combo_word)));
 	// gtk_combo_disable_activate(GTK_COMBO(combo_word));
 	// gtk_combo_set_case_sensitive(GTK_COMBO(combo_word), TRUE);
 
@@ -771,7 +769,6 @@ GtkWidget *create_dict_window()
 
 	if(word_history != NULL)	
 		// gtk_combo_set_popdown_strings(GTK_COMBO(combo_word), word_history);
-	gtk_combo_box_set_active_id(GTK_COMBO_BOX(combo_word), "");
 
 
 	button_start = gtk_button_new();
@@ -805,8 +802,9 @@ GtkWidget *create_dict_window()
 	if(i != 0){
 		GList *l;
 		for(l = method_list; l; l = l->next){
-			gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_method), (char *)l->data);
+			gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo_method), (char *)l->data, (char *)l->data);
 		}
+		gtk_combo_box_set_active_id(GTK_COMBO_BOX(combo_method), _("Automatic Search"));
 	}
 
 	gtk_box_pack_start(GTK_BOX (hbox), combo_method, FALSE, TRUE, 0);
@@ -1138,7 +1136,7 @@ void select_any_search()
 
 	LOG(LOG_DEBUG, "IN : select_any_search()");
 
-	gtk_entry_set_text(GTK_ENTRY(GTK_COMBO_BOX(combo_method)), _("Automatic Search"));
+	gtk_combo_box_set_active_id(GTK_COMBO_BOX(combo_method), _("Automatic Search"));
 	gtk_notebook_set_current_page(GTK_NOTEBOOK(note_tree), 0);
 	change_search_menu(SEARCH_METHOD_AUTOMATIC);
 
@@ -1149,7 +1147,7 @@ void select_exactword_search()
 {
 	LOG(LOG_DEBUG, "IN : select_exactword_search()");
 
-	gtk_entry_set_text(GTK_ENTRY(GTK_COMBO_BOX(combo_method)), _("Exactword Search"));
+	gtk_combo_box_set_active_id(GTK_COMBO_BOX(combo_method), _("Exactword Search"));
 	gtk_notebook_set_current_page(GTK_NOTEBOOK(note_tree), 0);
 
 	change_search_menu(SEARCH_METHOD_EXACTWORD);
@@ -1161,7 +1159,7 @@ void select_word_search()
 {
 	LOG(LOG_DEBUG, "IN : select_word_search()");
 
-	gtk_entry_set_text(GTK_ENTRY(GTK_COMBO_BOX(combo_method)), _("Forward Search"));
+	gtk_combo_box_set_active_id(GTK_COMBO_BOX(combo_method), _("Forward Search"));
 	gtk_notebook_set_current_page(GTK_NOTEBOOK(note_tree), 0);
 
 	change_search_menu(SEARCH_METHOD_WORD);
@@ -1173,7 +1171,7 @@ void select_endword_search()
 {
 	LOG(LOG_DEBUG, "IN : select_endword_search()");
 
-	gtk_entry_set_text(GTK_ENTRY(GTK_COMBO_BOX(combo_method)), _("Backward Search"));
+	gtk_combo_box_set_active_id(GTK_COMBO_BOX(combo_method), _("Backward Search"));
 	gtk_notebook_set_current_page(GTK_NOTEBOOK(note_tree), 0);
 
 	change_search_menu(SEARCH_METHOD_ENDWORD);
@@ -1185,7 +1183,7 @@ void select_keyword_search()
 {
 	LOG(LOG_DEBUG, "IN : select_keyword_search()");
 
-	gtk_entry_set_text(GTK_ENTRY(GTK_COMBO_BOX(combo_method)), _("Keyword Search"));
+	gtk_combo_box_set_active_id(GTK_COMBO_BOX(combo_method), _("Keyword Search"));
 	gtk_notebook_set_current_page(GTK_NOTEBOOK(note_tree), 0);
 
 	change_search_menu(SEARCH_METHOD_KEYWORD);
@@ -1197,7 +1195,7 @@ void select_multi_search()
 {
 	LOG(LOG_DEBUG, "IN : select_multi_search()");
 
-	gtk_entry_set_text(GTK_ENTRY(GTK_COMBO_BOX(combo_method)), _("Multiword Search"));;
+	gtk_combo_box_set_active_id(GTK_COMBO_BOX(combo_method), _("Multiword Search"));
 	gtk_notebook_set_current_page(GTK_NOTEBOOK(note_tree), 1);
 
 	change_search_menu(SEARCH_METHOD_MULTI);
@@ -1209,7 +1207,7 @@ void select_fulltext_search()
 {
 	LOG(LOG_DEBUG, "IN : select_fulltext_search()");
 
-	gtk_entry_set_text(GTK_ENTRY(GTK_COMBO_BOX(combo_method)), _("Fulltext Search"));
+	gtk_combo_box_set_active_id(GTK_COMBO_BOX(combo_method), _("Fulltext Search"));
 	gtk_notebook_set_current_page(GTK_NOTEBOOK(note_tree), 0);
 
 	change_search_menu(SEARCH_METHOD_FULL_TEXT);
@@ -1224,7 +1222,7 @@ void select_internet_search()
 
 	eb_web = 1;
 	gtk_notebook_set_current_page(GTK_NOTEBOOK(note_text), 0);
-	gtk_entry_set_text(GTK_ENTRY(GTK_COMBO_BOX(combo_method)), _("Internet Search"));
+	gtk_combo_box_set_active_id(GTK_COMBO_BOX(combo_method), _("Internet Search"));
 	gtk_notebook_set_current_page(GTK_NOTEBOOK(note_tree), 2);
 
 	change_search_menu(SEARCH_METHOD_INTERNET);
@@ -1238,7 +1236,7 @@ void select_grep_search()
 
 	eb_web = 0;
 	gtk_notebook_set_current_page(GTK_NOTEBOOK(note_text), 0);
-	gtk_entry_set_text(GTK_ENTRY(GTK_COMBO_BOX(combo_method)), _("File Search"));
+	gtk_combo_box_set_active_id(GTK_COMBO_BOX(combo_method), _("File Search"));
 
 	change_search_menu(SEARCH_METHOD_GREP);
 

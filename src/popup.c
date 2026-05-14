@@ -308,8 +308,6 @@ static void create_popup_window(){
 
 	popup = gtk_widget_new (GTK_TYPE_WINDOW,
 				"type", GTK_WINDOW_TOPLEVEL,
-				 "allow-shrink", TRUE,
-				 "allow-grow", TRUE,
 				 "default-width", window_width,
 				 "default-height", window_height,
 
