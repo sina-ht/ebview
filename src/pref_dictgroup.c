@@ -1097,18 +1097,25 @@ static void dict_selection_changed(GtkTreeSelection *selection, gpointer data)
 	LOG(LOG_DEBUG, "OUT : dict_selection_changed()");
 }
 
-static void ok_colorsel(GtkWidget *widget,gpointer *data){
+static void ok_colorsel(GtkWidget *widget, gint response_id, gpointer *data){
 
 	GdkColor color;
+	GdkRGBA rgba_color;
 	gchar *color_name;
 	gchar buff[128];
 	gchar *title;
 	
 	LOG(LOG_DEBUG, "IN : ok_colorsel()");
 
-	gtk_grab_remove(colorsel_dlg);
+	if(response_id != GTK_RESPONSE_OK){
+		gtk_widget_destroy(colorsel_dlg);
+		return;
+	}
 
-	gtk_color_selection_get_current_color(GTK_COLOR_SELECTION(GTK_COLOR_SELECTION_DIALOG(colorsel_dlg)->colorsel), &color);
+	gtk_color_chooser_get_rgba(GTK_COLOR_CHOOSER(colorsel_dlg), &rgba_color);
+	color.red = rgba_color.red * 257;
+	color.green = rgba_color.green * 257;
+	color.blue = rgba_color.blue * 257;
 	color_name = gtk_color_selection_palette_to_string(&color, 1);
 
 	if(color_no == 0){
@@ -1143,7 +1150,7 @@ static void delete_colorsel( GtkWidget *widget,
 {
 	LOG(LOG_DEBUG, "IN : delete_colorsel()");
 
-	ok_colorsel(NULL, NULL);
+	ok_colorsel(NULL, GTK_RESPONSE_OK, NULL);
 
 	LOG(LOG_DEBUG, "OUT : delete_colorsel()");
 }
@@ -1159,17 +1166,11 @@ static void show_colorsel(GtkWidget *widget,gpointer *data){
 
 	colorsel_dlg = gtk_color_selection_dialog_new(_("Choose Color"));
 
-	g_signal_connect (G_OBJECT(colorsel_dlg), "delete_event",
-			  G_CALLBACK(delete_colorsel), NULL);
+	gtk_dialog_add_button(GTK_DIALOG(colorsel_dlg), _("OK"), GTK_RESPONSE_OK);
+	gtk_dialog_add_button(GTK_DIALOG(colorsel_dlg), _("Cancel"), GTK_RESPONSE_CANCEL);
+	g_signal_connect(G_OBJECT(colorsel_dlg), "response", G_CALLBACK(ok_colorsel), NULL);
 
-	g_signal_connect(G_OBJECT(GTK_COLOR_SELECTION_DIALOG(colorsel_dlg)->ok_button), "clicked",
-			 G_CALLBACK(ok_colorsel), NULL);
-
-	g_signal_connect_swapped(G_OBJECT(GTK_COLOR_SELECTION_DIALOG(colorsel_dlg)->cancel_button), "clicked",
-				G_CALLBACK(gtk_widget_destroy), (gpointer)colorsel_dlg);
-
-
-	g_assert(color_no < NUM_COLORS);
+g_assert(color_no < NUM_COLORS);
 
 	if(color_no == 0){
 		gdk_color_parse(fg_color, &color);
@@ -1177,7 +1178,12 @@ static void show_colorsel(GtkWidget *widget,gpointer *data){
 		gdk_color_parse(bg_color, &color);
 	}
 
-	gtk_color_selection_set_current_color(GTK_COLOR_SELECTION(GTK_COLOR_SELECTION_DIALOG(colorsel_dlg)->colorsel), &color);
+	GdkRGBA rgba;
+	rgba.red = color.red / 65535.0;
+	rgba.green = color.green / 65535.0;
+	rgba.blue = color.blue / 65535.0;
+	rgba.alpha = 1.0;
+	gtk_color_chooser_set_rgba(GTK_COLOR_CHOOSER(colorsel_dlg), &rgba);
 
 	gtk_widget_realize(colorsel_dlg);
 	center_dialog(pref_dlg, colorsel_dlg);
@@ -1214,7 +1220,7 @@ GtkWidget *pref_start_dictgroup()
 	GtkWidget *frame;
 	GtkWidget *label;
 	GtkWidget *scroll;
-	GtkObject *adj;
+	GtkAdjustment *adj;
 
 	GtkCellRenderer *renderer;
 	GtkTreeSelection *select;
@@ -1449,8 +1455,7 @@ GtkWidget *pref_start_dictgroup()
 	spin_search_depth = gtk_spin_button_new(GTK_ADJUSTMENT(adj), 1.0, 0);
 	gtk_box_pack_start(GTK_BOX(hbox2),
 			   spin_search_depth,FALSE, FALSE, 2);
-	gtk_tooltips_set_tip(tooltip, spin_search_depth, 
-			     _("Specify search depth. 0 means to search only specified directory."),"Private");
+	gtk_widget_set_tooltip_text(spin_search_depth, _("Specify search depth. 0 means to search only specified directory."));
 
 
 
@@ -1556,7 +1561,7 @@ GtkWidget *pref_start_dictgroup()
 }
 
 #define G_NODE(node) ((GNode *)node)
-#define VALID_ITER(iter, tree_store) (iter!= NULL && iter->user_data != NULL && tree_store->stamp == iter->stamp)
+#define VALID_ITER(iter, tree_store) (iter!= NULL && iter->user_data != NULL)
 
 
 /**
@@ -1606,7 +1611,7 @@ my_gtk_tree_store_swap (GtkTreeStore *tree_store,
 	}
 
 	if(gtk_tree_path_get_depth(path_a) == 0){
-		parent_node = G_NODE (tree_store->root);
+		parent_node = node_a->parent;
 	} else {
 		gtk_tree_model_get_iter (GTK_TREE_MODEL (tree_store), &parent, path_a);
 		parent_node = G_NODE (parent.user_data);

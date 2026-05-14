@@ -68,7 +68,7 @@ void next_dict_group(){
 			   DICT_TITLE_COLUMN, &title,
 			   -1);
 
-	gtk_entry_set_text(GTK_ENTRY(GTK_COMBO(combo_group)->entry), title);
+	gtk_entry_set_text(GTK_ENTRY(GTK_COMBO_BOX(combo_group)), title);
 
 	g_free(title);
 
@@ -81,7 +81,7 @@ void next_dict_group(){
 
  GREP:
 
-	title = (gchar *)gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(combo_dirgroup)->entry));
+	title = (gchar *)gtk_combo_box_get_active_id(GTK_COMBO_BOX(combo_dirgroup));
 	if(strcmp(title, _("Manual Select")) == 0){
 		gtk_tree_model_get_iter_first(GTK_TREE_MODEL(dirgroup_store), &iter);
 		gtk_tree_model_get(GTK_TREE_MODEL(dirgroup_store), 
@@ -89,7 +89,7 @@ void next_dict_group(){
 				   DIRGROUP_TITLE_COLUMN, &title,
 				   -1);
 
-		gtk_entry_set_text(GTK_ENTRY(GTK_COMBO(combo_dirgroup)->entry), title);
+		gtk_entry_set_text(GTK_ENTRY(GTK_COMBO_BOX(combo_dirgroup)), title);
 		g_free(title);
 
 		return;
@@ -110,14 +110,14 @@ void next_dict_group(){
 	}
 
 	if(gtk_tree_model_iter_next(GTK_TREE_MODEL(dirgroup_store), &iter) == FALSE) {
-		gtk_entry_set_text(GTK_ENTRY(GTK_COMBO(combo_dirgroup)->entry), _("Manual Select"));
+		gtk_entry_set_text(GTK_ENTRY(GTK_COMBO_BOX(combo_dirgroup)), _("Manual Select"));
 	} else {
 		gtk_tree_model_get(GTK_TREE_MODEL(dirgroup_store), 
 				   &iter, 
 				   DIRGROUP_TITLE_COLUMN, &title,
 				   -1);
 
-		gtk_entry_set_text(GTK_ENTRY(GTK_COMBO(combo_dirgroup)->entry), title);
+		gtk_entry_set_text(GTK_ENTRY(GTK_COMBO_BOX(combo_dirgroup)), title);
 		g_free(title);
 	}
 }
@@ -170,7 +170,7 @@ void previous_dict_group(){
 		} while (gtk_tree_model_iter_next(GTK_TREE_MODEL(dict_store), &iter) == TRUE);
 	}
 
-	gtk_entry_set_text(GTK_ENTRY(GTK_COMBO(combo_group)->entry), title);
+	gtk_entry_set_text(GTK_ENTRY(GTK_COMBO_BOX(combo_group)), title);
 
 	g_free(title);
 
@@ -185,7 +185,7 @@ void previous_dict_group(){
  GREP:
 
 	// 
-	title = (gchar *)gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(combo_dirgroup)->entry));
+	title = (gchar *)gtk_combo_box_get_active_id(GTK_COMBO_BOX(combo_dirgroup));
 	if(strcmp(title, _("Manual Select")) == 0){
 		title = NULL;
 		if(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(dirgroup_store), &iter) == TRUE){
@@ -196,7 +196,7 @@ void previous_dict_group(){
 						   DIRGROUP_TITLE_COLUMN, &title,
 						   -1);
 			} while (gtk_tree_model_iter_next(GTK_TREE_MODEL(dirgroup_store), &iter) == TRUE);
-			gtk_entry_set_text(GTK_ENTRY(GTK_COMBO(combo_dirgroup)->entry), title);
+			gtk_entry_set_text(GTK_ENTRY(GTK_COMBO_BOX(combo_dirgroup)), title);
 			g_free(title);
 		}
 
@@ -227,11 +227,11 @@ void previous_dict_group(){
 				   DIRGROUP_TITLE_COLUMN, &title,
 				   -1);
 
-		gtk_entry_set_text(GTK_ENTRY(GTK_COMBO(combo_dirgroup)->entry), title);
+		gtk_entry_set_text(GTK_ENTRY(GTK_COMBO_BOX(combo_dirgroup)), title);
 		g_free(title);
 
 	} else {
-		gtk_entry_set_text(GTK_ENTRY(GTK_COMBO(combo_dirgroup)->entry), _("Manual Select"));
+		gtk_entry_set_text(GTK_ENTRY(GTK_COMBO_BOX(combo_dirgroup)), _("Manual Select"));
 	}
 
 }
@@ -326,9 +326,9 @@ void quit(){
 void iconify(){
 #ifdef __WIN32__
 #else
-    XIconifyWindow (GDK_DISPLAY (), 
-		    GDK_WINDOW_XWINDOW(main_window->window),
-		    DefaultScreen (GDK_DISPLAY ()));
+    XIconifyWindow (gdk_x11_display_get_xdisplay(gdk_display_get_default()),
+		    GDK_WINDOW_XID(gtk_widget_get_window(main_window)),
+		    DefaultScreen (gdk_x11_display_get_xdisplay(gdk_display_get_default())));
 #endif
 }
 

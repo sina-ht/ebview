@@ -39,6 +39,8 @@
  */
 
 #include <stdlib.h>
+#include <cairo.h>
+#include <cairo-gobject.h>
 #include "cellrendererebook.h"
 #include "defs.h"
 #include "global.h"
@@ -61,23 +63,22 @@ static void gtk_cell_renderer_ebook_set_property  (GObject                  *obj
 						   GParamSpec               *pspec);
 static void gtk_cell_renderer_ebook_get_size   (GtkCellRenderer          *cell,
 						GtkWidget                *widget,
-						GdkRectangle             *cell_area,
+						const cairo_rectangle_int_t *cell_area,
 						gint                     *x_offset,
 						gint                     *y_offset,
 						gint                     *width,
 						gint                     *height);
 static void gtk_cell_renderer_ebook_render     (GtkCellRenderer          *cell,
-						GdkWindow                *window,
+						cairo_t                *cr,
 						GtkWidget                *widget,
-						GdkRectangle             *background_area,
-						GdkRectangle             *cell_area,
-						GdkRectangle             *expose_area,
+						const cairo_rectangle_int_t *background_area,
+						const cairo_rectangle_int_t *cell_area,
 						GtkCellRendererState      flags);
 
 static void cell_renderer_ebook_render_ebook(GtkCellRenderer *cell,
-					     GdkWindow *window,
+					     cairo_t *cr,
 					     GtkWidget *widget,
-					     GtkStateType state,
+					     GtkStateFlags state,
 					     gchar *text,
 					     BOOK_INFO *binfo,
 					     gint origin_x,
@@ -93,10 +94,10 @@ enum {
 static gpointer parent_class;
 
 
-GtkType
+GType
 gtk_cell_renderer_ebook_get_type (void)
 {
-	static GtkType cell_ebook_type = 0;
+	static GType cell_ebook_type = 0;
 
 //	LOG(LOG_DEBUG, "IN : gtk_cell_renderer_ebook_get_type()");
 
@@ -127,10 +128,7 @@ gtk_cell_renderer_ebook_init (GtkCellRendererEbook *cellebook)
 {
 //	LOG(LOG_DEBUG, "IN : gtk_cell_renderer_ebook_init()");
 
-	GTK_CELL_RENDERER (cellebook)->xalign = 0.0;
-	GTK_CELL_RENDERER (cellebook)->yalign = 0.5;
-	GTK_CELL_RENDERER (cellebook)->xpad = 2;
-	GTK_CELL_RENDERER (cellebook)->ypad = 2;
+	g_object_set(G_OBJECT(cellebook), "xalign", 0.0, "yalign", 0.5, "xpad", 2, "ypad", 2, NULL);
 	cellebook->width = 0;
 	cellebook->height = 0;
 
@@ -268,7 +266,7 @@ gtk_cell_renderer_ebook_new (void)
 static void
 gtk_cell_renderer_ebook_get_size (GtkCellRenderer *cell,
 				  GtkWidget       *widget,
-				  GdkRectangle    *cell_area,
+				  const cairo_rectangle_int_t *cell_area,
 				  gint            *x_offset,
 				  gint            *y_offset,
 				  gint            *width,
@@ -297,15 +295,15 @@ gtk_cell_renderer_ebook_get_size (GtkCellRenderer *cell,
 		cell_renderer_ebook_render_ebook(cell,
 						 NULL,
 						 widget,
-						 GTK_STATE_NORMAL,
+						 0,
 						 cellebook->text,
 						 cellebook->binfo,
 						 0, 0,
 						 FALSE);
 
-		*width = cellebook->width + cell->xpad * 2;
+		*width = cellebook->width + 4;
 //		*height = cellebook->height + cell->ypad * 3;
-		*height = font_height + cell->ypad * 4;
+		*height = font_height + 8;
 
 		cellebook->width = 0;
 		cellebook->height = 0;
@@ -316,9 +314,9 @@ gtk_cell_renderer_ebook_get_size (GtkCellRenderer *cell,
 }
 
 static void cell_renderer_ebook_render_gaiji(GtkCellRenderer *cell,
-					     GdkWindow *window,
+					     cairo_t *cr,
 					     GtkWidget *widget,
-					     GtkStateType state,
+					     GtkStateFlags state,
 					     BOOK_INFO *binfo,
 					     gint *x, gint *y,
 					     gchar *code,
@@ -328,14 +326,17 @@ static void cell_renderer_ebook_render_gaiji(GtkCellRenderer *cell,
 	gchar *color_name;
 	gint width, height;
 	GdkPixbuf *pixbuf;
+	GdkRGBA color;
+	GtkStyleContext *style;
 	gint l_y;
 
 
 //	LOG(LOG_DEBUG, "IN : cell_renderer_ebook_render_gaiji(code=%s)", code);
 
-	color_name = gtk_color_selection_palette_to_string(
-		&(widget->style->fg[state]), 1);
-	//color_name = strdup("Black");
+	style = gtk_widget_get_style_context(widget);
+	gtk_style_context_get(style, state, "color", &color, NULL);
+	color_name = g_strdup_printf("#%02X%02X%02X",
+	    (gint)(color.red * 255), (gint)(color.green * 255), (gint)(color.blue * 255));
 	pixbuf = load_xbm(binfo, code, &width, &height, color_name);
 
 	// Is 0.8  appropriate ?
@@ -343,20 +344,11 @@ static void cell_renderer_ebook_render_gaiji(GtkCellRenderer *cell,
 	if(l_y < 0)
 		l_y = 0;
 
-	if(render){
-		gdk_pixbuf_render_to_drawable_alpha (pixbuf,
-                                         window,
-                                         /* pixbuf 0, 0 is at pix_rect.x, pix_rect.y */
-					     0, 0,
-					     *x,
-					     //*y,
-					     l_y,
-					     width,
-					     height,
-					     GDK_PIXBUF_ALPHA_FULL,
-					     0,
-					     GDK_RGB_DITHER_NORMAL,
-					     0, 0);
+	if(render && cr){
+		cairo_save(cr);
+		gdk_cairo_set_source_pixbuf(cr, pixbuf, *x, l_y);
+		cairo_paint_with_alpha(cr, 1.0);
+		cairo_restore(cr);
 	}
 
 	*x += width + 2;
@@ -366,7 +358,7 @@ static void cell_renderer_ebook_render_gaiji(GtkCellRenderer *cell,
 	cellebook->width += width + 2;
 
 
-	gdk_pixbuf_unref(pixbuf);
+	g_object_unref(pixbuf);
 	g_free(color_name);
 
 //	LOG(LOG_DEBUG, "OUT : cell_renderer_ebook_render_gaiji()");
@@ -412,9 +404,9 @@ static gchar *replace_special_char(gchar *text){
 
 
 static void cell_renderer_ebook_render_string(GtkCellRenderer *cell,
-					      GdkWindow *window,
+					      cairo_t *cr,
 					      GtkWidget *widget,
-					      GtkStateType state,
+					      GtkStateFlags state,
 					      gchar *text,
 					      gint length,
 					      gint *x, gint *y,
@@ -427,24 +419,19 @@ static void cell_renderer_ebook_render_string(GtkCellRenderer *cell,
 	PangoRectangle rect;
 	PangoAttrList *attrs;
 	gchar *parsed_text;
-	gchar *color_name;
+	GdkRGBA color;
+	GtkStyleContext *style;
 
 
 //	LOG(LOG_DEBUG, "IN : cell_renderer_ebook_render_string(text=%s,w=%d, h=%d)",text, *x, *y );
 
-	color_name = gtk_color_selection_palette_to_string(
-		&(widget->style->fg[state]), 1);
-
+	style = gtk_widget_get_style_context(widget);
+	gtk_style_context_get(style, state, "color", &color, NULL);
 	str = g_strndup(text, length);
 
-/*
 	tmp_str = str;
-	str = replace_special_char(tmp_str);
-	g_free(tmp_str);
-*/
-	tmp_str = str;
-	str = g_strdup_printf("<span foreground=\"%s\" font_desc=\"%s\" >%s</span>",
-			      color_name,
+	str = g_strdup_printf("<span foreground=\"#%02X%02X%02X\" font_desc=\"%s\" >%s</span>",
+	    (gint)(color.red * 255), (gint)(color.green * 255), (gint)(color.blue * 255),
 			      fontset_normal,
 			      tmp_str);
 	g_free(tmp_str);
@@ -460,11 +447,9 @@ static void cell_renderer_ebook_render_string(GtkCellRenderer *cell,
 
 	pango_layout_get_pixel_extents (layout, NULL, &rect);
 
-	if(render){
-		gdk_draw_layout(window, 
-				widget->style->fg_gc[GTK_WIDGET_STATE(widget)],
-				*x, *y+1,
-				layout);
+	if(render && cr){
+		cairo_move_to(cr, *x, *y+1);
+		pango_cairo_show_layout(cr, layout);
 	}
 
 	if(rect.height > cellebook->height)
@@ -472,20 +457,22 @@ static void cell_renderer_ebook_render_string(GtkCellRenderer *cell,
 	cellebook->width += rect.width;
 
 	*x += rect.width;
-	//y += rect.height;
 
+	g_object_unref(layout);
 	g_free(str);
 	if(parsed_text)
 		g_free(parsed_text);
-	
+	if(attrs)
+		pango_attr_list_unref(attrs);
+
 //	LOG(LOG_DEBUG, "OUT : cell_renderer_ebook_render_string()");
 }
 
 
 static void cell_renderer_ebook_render_ebook(GtkCellRenderer *cell,
-					     GdkWindow *window,
+					     cairo_t *cr,
 					     GtkWidget *widget,
-					     GtkStateType state,
+					     GtkStateFlags state,
 					     gchar *text,
 					     BOOK_INFO *binfo,
 					     gint origin_x,
@@ -517,7 +504,7 @@ static void cell_renderer_ebook_render_ebook(GtkCellRenderer *cell,
 			if(strcmp(tag_name, "gaiji") == 0){
 				if(body_length != 0){
 					cell_renderer_ebook_render_string(cell,
-								  window, 
+								  cr, 
 								  widget,
 								  state,
 								  body,
@@ -530,7 +517,7 @@ static void cell_renderer_ebook_render_ebook(GtkCellRenderer *cell,
 				get_attr(start_tag, "code", code);
 
 				cell_renderer_ebook_render_gaiji(cell,
-								 window,
+								 cr,
 								 widget,
 								 state,
 								 binfo,
@@ -616,7 +603,7 @@ static void cell_renderer_ebook_render_ebook(GtkCellRenderer *cell,
 
 	if(body_length != 0){
 		cell_renderer_ebook_render_string(cell,
-						  window, 
+						  cr, 
 						  widget,
 						  state,
 						  body,
@@ -631,75 +618,48 @@ static void cell_renderer_ebook_render_ebook(GtkCellRenderer *cell,
 
 static void
 gtk_cell_renderer_ebook_render (GtkCellRenderer      *cell,
-				GdkWindow            *window,
+				cairo_t              *cr,
 				GtkWidget            *widget,
-				GdkRectangle         *background_area,
-				GdkRectangle         *cell_area,
-				GdkRectangle         *expose_area,
+				const cairo_rectangle_int_t *background_area,
+				const cairo_rectangle_int_t *cell_area,
 				GtkCellRendererState  flags)
 
 {
 	GtkCellRendererEbook *cellebook = (GtkCellRendererEbook *) cell;
-	GtkStateType state;
-	gint x_offset;
-	gint y_offset;
+	GtkStateFlags state;
 
 
 //	LOG(LOG_DEBUG, "IN : gtk_cell_renderer_ebook_render()");
 
-
-	gtk_cell_renderer_ebook_get_size (cell, widget, cell_area, &x_offset, &y_offset, NULL, NULL);
-
 	if ((flags & GTK_CELL_RENDERER_SELECTED) == GTK_CELL_RENDERER_SELECTED)
 	{
-		if (GTK_WIDGET_HAS_FOCUS (widget)){
-			state = GTK_STATE_SELECTED;
+		if (gtk_widget_has_focus(widget)){
+			state = GTK_STATE_FLAG_SELECTED;
 		}
 		else {
-			state = GTK_STATE_ACTIVE;
+			state = GTK_STATE_FLAG_ACTIVE;
 		}
 	}
 	else
 	{
-		if (GTK_WIDGET_STATE (widget) == GTK_STATE_INSENSITIVE){
-			state = GTK_STATE_INSENSITIVE;
+		GtkStyleContext *wstyle;
+		wstyle = gtk_widget_get_style_context(widget);
+		if (gtk_style_context_get_state(wstyle) & GTK_STATE_FLAG_INSENSITIVE){
+			state = GTK_STATE_FLAG_INSENSITIVE;
 		}
 		else {
-			state = GTK_STATE_NORMAL;
+			state = 0;
 		}
 	}
 
-/*     
-	if (state != GTK_STATE_SELECTED){
-	{
-		GdkColor color;
-		GdkGC *gc;
-
-		gc = gdk_gc_new (window);
-
-		gdk_gc_set_foreground(gc, &widget->style->bg[state]);
-		gdk_gc_set_background(gc, &widget->style->bg[state]);
-      
-		gdk_draw_rectangle (window,
-				    gc,
-				    TRUE,
-				    background_area->x,
-				    background_area->y,
-				    background_area->width,
-				    background_area->height);
-
-		g_object_unref (G_OBJECT (gc));
-	}
-*/
-
 	cell_renderer_ebook_render_ebook(cell,
-					 window,
+					 cr,
 					 widget,
 					 state,
 					 cellebook->text,
 					 cellebook->binfo,
-					 cell_area->x + cell->xpad,
-					 cell_area->y + cell->ypad,
+					 cell_area->x + 2,
+					 cell_area->y + 2,
 					 TRUE);
 //	LOG(LOG_DEBUG, "OUT : gtk_cell_renderer_ebook_render()");
 }

@@ -215,16 +215,15 @@ void dump_hex(){
 
 	
 		button = gtk_button_new_with_label(_("Close"));
-		GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
-		gtk_box_pack_start (GTK_BOX (GTK_DIALOG (hex_dlg)->action_area), button,
-				    TRUE, TRUE, 0);
+		gtk_widget_set_can_default(button, TRUE);
+		gtk_dialog_add_action_widget(GTK_DIALOG(hex_dlg), button, GTK_RESPONSE_CLOSE);
 		g_signal_connect(G_OBJECT (button), "clicked",
 				 G_CALLBACK(hex_close), (gpointer)hex_dlg);
-		
+
 		hbox = gtk_hbox_new(FALSE,5);
 		gtk_container_set_border_width(GTK_CONTAINER(hbox), 5);
-		gtk_box_pack_start (GTK_BOX(GTK_DIALOG(hex_dlg)->vbox)
-				    , hbox, FALSE, FALSE, 0);
+		gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(hex_dlg))),
+				    hbox, FALSE, FALSE, 0);
 		
 		label = gtk_label_new(_("page"));
 		gtk_box_pack_start (GTK_BOX(hbox), label, FALSE, FALSE, 0);
@@ -236,14 +235,14 @@ void dump_hex(){
 				 G_CALLBACK(hex_dump_page), (gpointer)NULL);
 
 		button = gtk_button_new_with_label("  >>  ");
-		GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+		gtk_widget_set_can_default(button, TRUE);
 		gtk_box_pack_end(GTK_BOX (hbox), button,
 				    FALSE, FALSE, 0);
 		g_signal_connect(G_OBJECT (button), "clicked",
 				 G_CALLBACK(forward_page), NULL);
 
 		button = gtk_button_new_with_label("  <<  ");
-		GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+		gtk_widget_set_can_default(button, TRUE);
 		gtk_box_pack_end(GTK_BOX (hbox), button,
 				    FALSE, FALSE, 0);
 		g_signal_connect(G_OBJECT (button), "clicked",
@@ -251,8 +250,8 @@ void dump_hex(){
 
 		
 		hbox = gtk_hbox_new(FALSE,5);
-		gtk_box_pack_start (GTK_BOX(GTK_DIALOG(hex_dlg)->vbox)
-				    , hbox,TRUE, TRUE, 0);
+		gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(hex_dlg))),
+				    hbox,TRUE, TRUE, 0);
 
 		hex_scroll = gtk_scrolled_window_new (NULL, NULL);
 		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (hex_scroll),
@@ -354,15 +353,14 @@ void dump_text(){
 				 G_CALLBACK(text_close), NULL);
 
 		button = gtk_button_new_with_label(_("Close"));
-		GTK_WIDGET_SET_FLAGS(button, GTK_CAN_DEFAULT);
-		gtk_box_pack_start(GTK_BOX (GTK_DIALOG (text_dlg)->action_area), button,
-				   TRUE, TRUE, 0);
+		gtk_widget_set_can_default(button, TRUE);
+		gtk_dialog_add_action_widget(GTK_DIALOG(text_dlg), button, GTK_RESPONSE_CLOSE);
 		g_signal_connect(G_OBJECT (button), "clicked",
 				 G_CALLBACK(text_close), (gpointer)text_dlg);
 
 		hbox = gtk_hbox_new(FALSE,5);
-		gtk_box_pack_start (GTK_BOX(GTK_DIALOG(text_dlg)->vbox)
-				    , hbox, FALSE, FALSE, 0);
+		gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(text_dlg))),
+				    hbox, FALSE, FALSE, 0);
 		
 		label = gtk_label_new(_("page"));
 		gtk_box_pack_start (GTK_BOX(hbox), label, FALSE, FALSE, 0);
@@ -384,8 +382,8 @@ void dump_text(){
 
 		
 		hbox = gtk_hbox_new(FALSE,5);
-		gtk_box_pack_start (GTK_BOX(GTK_DIALOG(text_dlg)->vbox)
-				    , hbox, FALSE, FALSE, 0);
+		gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(text_dlg))),
+				    hbox, FALSE, FALSE, 0);
 
 
 		text_scroll = gtk_scrolled_window_new (NULL, NULL);

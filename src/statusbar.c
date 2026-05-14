@@ -35,7 +35,7 @@ gint clear_status_message(gpointer data)
 void status_message(gchar *msg)
 {
 	if(tag != 0){
-		gtk_timeout_remove(tag);
+		g_source_remove(tag);
 	}
 	gtk_statusbar_pop(GTK_STATUSBAR(status_bar), context_id);
 	gtk_statusbar_push(GTK_STATUSBAR(status_bar), context_id, msg);

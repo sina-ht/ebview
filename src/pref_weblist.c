@@ -208,7 +208,7 @@ static void add_engine(GtkWidget *widget,gpointer *data)
 	pre = gtk_entry_get_text(GTK_ENTRY(entry_engine_pre));
 	post = gtk_entry_get_text(GTK_ENTRY(entry_engine_post));
 	glue = gtk_entry_get_text(GTK_ENTRY(entry_engine_glue));
-	code = gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(combo_charcode)->entry));
+	code = gtk_combo_box_get_active_id(GTK_COMBO_BOX(combo_charcode));
 
 
 	gtk_tree_model_get(GTK_TREE_MODEL(web_store), 
@@ -308,9 +308,9 @@ static void web_selection_changed(GtkTreeSelection *selection, gpointer data)
 		gtk_entry_set_text(GTK_ENTRY(entry_engine_glue), "");
 
 	if(code != NULL)
-		gtk_entry_set_text(GTK_ENTRY(GTK_COMBO(combo_charcode)->entry), code);
+		gtk_entry_set_text(GTK_ENTRY(GTK_COMBO_BOX(combo_charcode)), code);
 	else
-		gtk_entry_set_text(GTK_ENTRY(GTK_COMBO(combo_charcode)->entry), "iso-2022-jp");
+		gtk_combo_box_set_active_id(GTK_COMBO_BOX(combo_charcode), "iso-2022-jp");
 
 	gtk_tree_selection_get_selected(selection, NULL, &last_iter);
 	edited = TRUE;
@@ -362,7 +362,7 @@ static gboolean update_last_engine()
 
 	post = gtk_entry_get_text(GTK_ENTRY(entry_engine_post));
 	glue = gtk_entry_get_text(GTK_ENTRY(entry_engine_glue));
-	code = gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(combo_charcode)->entry));
+	code = gtk_combo_box_get_active_id(GTK_COMBO_BOX(combo_charcode));
 
 
 	gtk_tree_store_set(web_store, &last_iter,
@@ -588,20 +588,16 @@ GtkWidget *pref_start_weblist()
 	gtk_table_attach(GTK_TABLE(table), label, 0, 1, 5, 6,
 			 xoption, yoption, 5, 5);
 
-	combo_charcode = gtk_combo_new();
-//	gtk_widget_set_usize(GTK_WIDGET(combo_charcode), 250, 20);
-	gtk_editable_set_editable(GTK_EDITABLE(GTK_COMBO(combo_charcode)->entry), FALSE);
+	combo_charcode = gtk_combo_box_text_new();
 	gtk_table_attach(GTK_TABLE(table), combo_charcode, 1, 2, 5, 6,
 			 xoption, yoption, 5, 5);
 	gtk_size_group_add_widget (entry_group, combo_charcode);
 
-	charcode_list = g_list_append(charcode_list, "euc-jp");
-	charcode_list = g_list_append(charcode_list, "shift_jis");
-	charcode_list = g_list_append(charcode_list, "iso-2022-jp");
-	charcode_list = g_list_append(charcode_list, "utf-8");
-	charcode_list = g_list_append(charcode_list, "ascii");
-	gtk_combo_set_popdown_strings(GTK_COMBO(combo_charcode), 
-				       charcode_list) ;
+	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_charcode), "euc-jp");
+	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_charcode), "shift_jis");
+	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_charcode), "iso-2022-jp");
+	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_charcode), "utf-8");
+	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_charcode), "ascii");
 
 
 	hbox2 = gtk_hbox_new(FALSE,5);

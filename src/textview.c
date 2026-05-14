@@ -41,17 +41,7 @@ GtkWidget *dict_scroll=NULL;
 static GtkTextTagTable *tag_table=NULL;
 static void search_selection();
 
-static GtkItemFactory *text_item_factory;
-
-static GtkItemFactoryEntry text_menu_items[] = {
-	{ N_("/Search This Word"),    NULL, search_selection, 0, NULL },
-	{ N_("/Copy To Clipboard"),    NULL, copy_to_clipboard, 0, NULL },
-	{ N_("/Display"),    NULL, NULL, 0, "<Branch>" },
-	{ N_("/Display/Menu bar"),    NULL, show_menu_bar, 0, NULL },
-	{ N_("/Display/Dictionary Selection Bar"),    NULL, show_dict_bar, 0, NULL },
-	{ N_("/Display/Status Bar"),    NULL, show_status_bar, 0, NULL },
-	{ N_("/Display/Tree Frame Tab"),    NULL, show_tree_tab, 0, NULL },
-};
+static GtkWidget *text_menu;
 
 static void search_selection()
 {
@@ -85,9 +75,9 @@ static void search_selection()
 	}
 
 	save_word_history(text);
-	gtk_editable_select_region(GTK_EDITABLE(word_entry), 
+	gtk_editable_select_region(GTK_EDITABLE(word_entry),
 				   0,
-				   GTK_ENTRY(word_entry)->text_length);
+				   gtk_entry_get_text_length(GTK_ENTRY(word_entry)));
 //	show_result_tree();
 	g_free(euc_str);
 
@@ -357,9 +347,9 @@ gint motion_notify_event(GtkWidget *widget, GdkEventMotion *event)
 		cursor = gdk_cursor_new(CURSOR_NORMAL);
 	}
 	gdk_window_set_cursor(gtk_text_view_get_window(GTK_TEXT_VIEW(widget), GTK_TEXT_WINDOW_TEXT), cursor);
-	gdk_cursor_destroy (cursor);
+	g_object_unref (cursor);
 
-	gdk_window_get_pointer(widget->window, &x, &y, &mask);
+gdk_window_get_pointer(gtk_widget_get_window(widget), &x, &y, &mask);
 #endif
 
 //	LOG(LOG_DEBUG, "OUT : motion_notify_event()");
@@ -388,7 +378,7 @@ gint leave_notify_event(GtkWidget *widget, GdkEventCrossing *event, gpointer dat
 	gdk_window_set_cursor(gtk_text_view_get_window(GTK_TEXT_VIEW(widget), 
 						       GTK_TEXT_WINDOW_TEXT),
 			      cursor);
-	gdk_cursor_destroy (cursor);
+	g_object_unref (cursor);
 #endif
 	LOG(LOG_DEBUG, "OUT : leave_notify_event()");
 	return(FALSE);
@@ -440,9 +430,7 @@ gint button_press_event(GtkWidget *widget, GdkEventButton *event)
 
 	} else 	if((event->type == GDK_BUTTON_PRESS) &&
 		((event->button == 2) || (event->button == 3))){
-		gtk_item_factory_popup(GTK_ITEM_FACTORY(text_item_factory), 
-				       event->x_root, event->y_root, 
-				       event->button, event->time);
+		gtk_menu_popup(GTK_MENU(text_menu), NULL, NULL, NULL, NULL, event->button, event->time);
 		LOG(LOG_DEBUG, "OUT : button_press_event() = TRUE");
 		return(TRUE);
 
@@ -501,14 +489,41 @@ GtkWidget *create_main_view()
 
 	gtk_container_add (GTK_CONTAINER (dict_scroll), main_view);
 
-	nmenu_items = sizeof (text_menu_items) / sizeof (text_menu_items[0]);
-	for(i=0 ; i<nmenu_items ; i++){
-		text_menu_items[i].path = _(text_menu_items[i].path);
+	{
+		GtkWidget *item;
+		GtkWidget *submenu;
+
+		text_menu = gtk_menu_new();
+
+		item = gtk_menu_item_new_with_label(_("Search This Word"));
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(search_selection), NULL);
+		gtk_menu_shell_append(GTK_MENU_SHELL(text_menu), item);
+
+		item = gtk_menu_item_new_with_label(_("Copy To Clipboard"));
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(copy_to_clipboard), NULL);
+		gtk_menu_shell_append(GTK_MENU_SHELL(text_menu), item);
+
+		submenu = gtk_menu_new();
+		item = gtk_menu_item_new_with_label(_("Display"));
+		gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), submenu);
+		gtk_menu_shell_append(GTK_MENU_SHELL(text_menu), item);
+
+		item = gtk_menu_item_new_with_label(_("Menu bar"));
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(show_menu_bar), NULL);
+		gtk_menu_shell_append(GTK_MENU_SHELL(submenu), item);
+
+		item = gtk_menu_item_new_with_label(_("Dictionary Selection Bar"));
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(show_dict_bar), NULL);
+		gtk_menu_shell_append(GTK_MENU_SHELL(submenu), item);
+
+		item = gtk_menu_item_new_with_label(_("Status Bar"));
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(show_status_bar), NULL);
+		gtk_menu_shell_append(GTK_MENU_SHELL(submenu), item);
+
+		item = gtk_menu_item_new_with_label(_("Tree Frame Tab"));
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(show_tree_tab), NULL);
+		gtk_menu_shell_append(GTK_MENU_SHELL(submenu), item);
 	}
-	text_item_factory = gtk_item_factory_new (GTK_TYPE_MENU, "<text>", 
-						  NULL);
-	gtk_item_factory_create_items (text_item_factory, nmenu_items, 
-				       text_menu_items, NULL);
 
 
 	LOG(LOG_DEBUG, "OUT : create_main_view()");

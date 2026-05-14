@@ -401,8 +401,13 @@ static void draw_gaiji(CANVAS *canvas, BOOK_INFO *binfo, TAG *tag, gchar *code)
 		start_iter = *(canvas->iter);
 	}
 
-	color_name = gtk_color_selection_palette_to_string(
-		&(main_window->style->fg[GTK_STATE_NORMAL]), 1);
+	GdkRGBA fg_color;
+	gtk_style_context_get(gtk_widget_get_style_context(main_window), GTK_STATE_FLAG_NORMAL, "color", &fg_color, NULL);
+	GdkColor gdk_color;
+	gdk_color.red = fg_color.red * 257;
+	gdk_color.green = fg_color.green * 257;
+	gdk_color.blue = fg_color.blue * 257;
+	color_name = gtk_color_selection_palette_to_string(&gdk_color, 1);
 	strcpy(color, color_name);
 	g_free(color_name);
 

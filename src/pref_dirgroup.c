@@ -171,7 +171,7 @@ static void remove_item(GtkWidget *widget, gpointer *data)
 	LOG(LOG_DEBUG, "OUT : remove_item()");
 }
 
-static void filesel_ok(GtkWidget *widget, GtkFileSelection *fs)
+static void filesel_ok(GtkWidget *filesel, gint response_id, gpointer *data)
 {
 	gchar *dir;
 	gchar *text;
@@ -180,7 +180,12 @@ static void filesel_ok(GtkWidget *widget, GtkFileSelection *fs)
 
 	LOG(LOG_DEBUG, "IN : filesel_ok()");
 
-	dir = (gchar *)gtk_file_selection_get_filename (GTK_FILE_SELECTION (fs));
+	if(response_id != GTK_RESPONSE_OK){
+		gtk_widget_destroy(filesel);
+		return;
+	}
+
+	dir = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(filesel));
 	strcpy(last_dir, dir);
 	dir = fs_to_unicode(dir);
 
@@ -193,9 +198,9 @@ static void filesel_ok(GtkWidget *widget, GtkFileSelection *fs)
 
 	g_free(text);
 	g_free(dir);
+	g_free(gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(filesel)));
 
-	gtk_grab_remove(GTK_WIDGET(fs));
-	gtk_widget_destroy(GTK_WIDGET(fs));
+	gtk_widget_destroy(filesel);
 
 	LOG(LOG_DEBUG, "OUT : filesel_ok()");
 }
@@ -206,18 +211,17 @@ static void open_filesel(GtkWidget *widget, gpointer *data)
 
 	LOG(LOG_DEBUG, "IN : open_filesel()");
 
-	filesel = gtk_file_selection_new (_("Select directory"));
-	gtk_file_selection_hide_fileop_buttons(GTK_FILE_SELECTION(filesel));
-	g_signal_connect (G_OBJECT (GTK_FILE_SELECTION (filesel)->ok_button),
-			  "clicked", G_CALLBACK (filesel_ok), (gpointer) filesel);
+	filesel = gtk_file_chooser_dialog_new(_("Select directory"), NULL,
+		GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
+		_("Cancel"), GTK_RESPONSE_CANCEL,
+		_("OK"), GTK_RESPONSE_OK, NULL);
 
-	g_signal_connect_swapped (G_OBJECT (GTK_FILE_SELECTION (filesel)->cancel_button),
-				  "clicked", G_CALLBACK (gtk_widget_destroy),
-				  G_OBJECT (filesel));
+	gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(filesel), "");
+	g_signal_connect(G_OBJECT(filesel), "response", G_CALLBACK(filesel_ok), NULL);
 
 	if(strcmp(&last_dir[strlen(last_dir) -1], DIR_DELIMITER) != 0)
 		strcat(last_dir, DIR_DELIMITER);
-	gtk_file_selection_set_filename(GTK_FILE_SELECTION(filesel), last_dir);
+	gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(filesel), last_dir);
 	gtk_widget_show(filesel);
 	gtk_grab_add(filesel);
 
@@ -319,8 +323,7 @@ GtkWidget *pref_start_dirgroup()
 	entry_group_name = gtk_entry_new();
 	gtk_box_pack_start (GTK_BOX (vbox), entry_group_name,
 			    FALSE, FALSE, 0);
-	gtk_tooltips_set_tip(tooltip, entry_group_name,
-			     _("Enter the name of directory group."),"Private");
+	gtk_widget_set_tooltip_text(entry_group_name, _("Enter the name of directory group."));
 
 	label = gtk_label_new(_("Directory list"));
 	gtk_box_pack_start (GTK_BOX (vbox), label,
@@ -341,8 +344,7 @@ GtkWidget *pref_start_dirgroup()
 	dirgroup_view = gtk_text_view_new();
 //	gtk_widget_set_size_request(dirgroup_view, 200, 200);
 	gtk_container_add(GTK_CONTAINER(scroll), dirgroup_view);
-	gtk_tooltips_set_tip(tooltip, dirgroup_view,
-			     _("Specify directory names one per line. You can specify extension of files that will be searched. For example, \"/some/dir/name,.txt\" searches all files under /some/dir/name which have the extension .txt."),"Private");
+	gtk_widget_set_tooltip_text(dirgroup_view, _("Specify directory names one per line. You can specify extension of files that will be searched. For example, \"/some/dir/name,.txt\" searches all files under /some/dir/name which have the extension .txt."));
 
 
 

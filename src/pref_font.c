@@ -33,12 +33,17 @@ static 	GtkWidget *entry_super;
 static  gint font_no;
 
 
-static void ok_fontsel(GtkWidget *widget,gpointer *data){
+static void ok_fontsel(GtkWidget *widget, gint response_id, gpointer *data){
 	gchar *fontname;
 
 	LOG(LOG_DEBUG, "IN : ok_fontsel()");
 
-	fontname = gtk_font_selection_dialog_get_font_name(GTK_FONT_SELECTION_DIALOG(fontsel_dlg));
+	if(response_id != GTK_RESPONSE_OK){
+		gtk_widget_destroy(fontsel_dlg);
+		return;
+	}
+
+	fontname = gtk_font_chooser_get_font(GTK_FONT_CHOOSER(fontsel_dlg));
 
 	LOG(LOG_DEBUG, "fontname = %s", fontname);
 
@@ -70,7 +75,7 @@ static void delete_fontsel( GtkWidget *widget,
 		   gpointer   data )
 {
 	LOG(LOG_DEBUG, "IN : delete_fontsel()");
-	ok_fontsel(NULL, NULL);
+	ok_fontsel(NULL, GTK_RESPONSE_OK, NULL);
 	LOG(LOG_DEBUG, "OUT : delete_fontsel()");
 }
 
@@ -81,18 +86,11 @@ static void show_fontsel(GtkWidget *widget,gpointer *data){
 
 	font_no = (gint)data;
 
-	fontsel_dlg = gtk_font_selection_dialog_new("Please select font");
+	fontsel_dlg = gtk_font_chooser_dialog_new("Please select font", NULL);
 
-	g_signal_connect(G_OBJECT (fontsel_dlg), "delete_event",
-			 G_CALLBACK(delete_fontsel), NULL);
-
-	g_signal_connect(G_OBJECT(GTK_FONT_SELECTION_DIALOG (fontsel_dlg)->ok_button), "clicked",
-			 G_CALLBACK(ok_fontsel), NULL);
-
-	g_signal_connect_swapped(G_OBJECT(GTK_FONT_SELECTION_DIALOG (fontsel_dlg)->cancel_button), "clicked",
-				 G_CALLBACK(gtk_widget_destroy), (gpointer)fontsel_dlg);
-
-	gtk_widget_destroy(GTK_FONT_SELECTION_DIALOG (fontsel_dlg)->apply_button);
+	gtk_dialog_add_button(GTK_DIALOG(fontsel_dlg), _("OK"), GTK_RESPONSE_OK);
+	gtk_dialog_add_button(GTK_DIALOG(fontsel_dlg), _("Cancel"), GTK_RESPONSE_CANCEL);
+	g_signal_connect(G_OBJECT(fontsel_dlg), "response", G_CALLBACK(ok_fontsel), NULL);
 
 	switch(font_no){
 	case 0:

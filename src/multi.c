@@ -37,7 +37,7 @@ extern GtkWidget *entry_box;
 GtkWidget *container_child(GtkWidget *container);
 
 typedef struct {
-	GdkPixmap *pixbuff;
+	GdkPixbuf *pixbuff;
 	gchar *text;
 } CANDIDATE_DATA;
 

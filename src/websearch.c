@@ -37,17 +37,10 @@ void web_search();
 
 static GtkWidget *weblist_view;
 //static GtkCTreeNode *current_node;
-static GtkItemFactory *tree_item_factory;
-static GtkItemFactoryEntry tree_menu_items[] = {
-	{ N_("/Go Home"),    NULL, go_home, 0, NULL },
-	{ N_("/Search"),    NULL, web_search, 0, NULL },
-};
+static GtkWidget *tree_menu;
 
-
-extern GdkPixmap *book_open_pixmap;
-extern GdkPixmap *book_closed_pixmap;
-extern GdkBitmap *book_open_mask;
-extern GdkBitmap *book_closed_mask;
+extern GdkPixbuf *book_open_pixbuf;
+extern GdkPixbuf *book_closed_pixbuf;
 
 
 extern GtkWidget *dict_viewport;
@@ -222,9 +215,7 @@ static gint button_press_event(GtkWidget *widget, GdkEventButton *event)
 //KENKEN
 	if ((event->type == GDK_BUTTON_PRESS) && 
 	    ((event->button == 2) || (event->button == 3))){
-		gtk_item_factory_popup (GTK_ITEM_FACTORY (tree_item_factory), 
-					event->x_root, event->y_root, 
-					event->button, event->time);
+		gtk_menu_popup(GTK_MENU(tree_menu), NULL, NULL, NULL, NULL, event->button, event->time);
 		return(TRUE);
 	} else 	if ((event->type == GDK_2BUTTON_PRESS) && 
 		    (event->button == 1)){
@@ -302,15 +293,19 @@ GtkWidget *create_web_tree()
 			  NULL);
 */
 
-	nmenu_items = sizeof (tree_menu_items) / sizeof (tree_menu_items[0]);
-	for(i=0 ; i<nmenu_items ; i++){
-		tree_menu_items[i].path = _(tree_menu_items[i].path);
-	}
+	{
+		GtkWidget *item;
 
-	tree_item_factory = gtk_item_factory_new (GTK_TYPE_MENU, "<tree>", 
-					     NULL);
-	gtk_item_factory_create_items (tree_item_factory, nmenu_items, 
-				       tree_menu_items, NULL);
+		tree_menu = gtk_menu_new();
+
+		item = gtk_menu_item_new_with_label(_("Go Home"));
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(go_home), NULL);
+		gtk_menu_shell_append(GTK_MENU_SHELL(tree_menu), item);
+
+		item = gtk_menu_item_new_with_label(_("Search"));
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(web_search), NULL);
+		gtk_menu_shell_append(GTK_MENU_SHELL(tree_menu), item);
+	}
 	LOG(LOG_DEBUG, "OUT : create_web_tree()");
 
 	return(web_box);

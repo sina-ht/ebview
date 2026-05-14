@@ -58,7 +58,7 @@ EB_Error_Code ebook_set_subbook(BOOK_INFO *binfo);
 
 static gchar *ebook_message = NULL;
 
-gchar *ebook_error_message(error_code)
+gchar *ebook_error_message(EB_Error_Code error_code)
 {
 	const gchar *message;
 
@@ -77,7 +77,7 @@ gint ebook_search_method(){
 
 	LOG(LOG_DEBUG, "IN : ebook_search_method()");
 
-	text = gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(combo_method)->entry));
+	text = gtk_combo_box_get_active_id(GTK_COMBO_BOX(combo_method));
 	for(i=0 ; search_method[i].name != 0 ; i ++){
 		if(strcmp(text, search_method[i].name) == 0){
 			LOG(LOG_DEBUG, "OUT : ebook_search_method()=%d", search_method[i].code);
@@ -620,7 +620,7 @@ void split_word(const gchar *word, gchar **keywords)
 
 void cat_word(char *string, char **words){
 	gint i;
-	gint len = 0;
+	ssize_t len = 0;
 
 	LOG(LOG_DEBUG, "IN : cat_word()");
 
@@ -674,7 +674,8 @@ EB_Error_Code ebook_my_backward_text(BOOK_INFO *binfo)
 	EB_Error_Code error_code=EB_SUCCESS;
 	EB_Position text_position;
 	char data[EB_SIZE_PAGE+4];
-	int i, length;
+	int i;
+	ssize_t length;
 
 	int start_page;
 	int end_page;
@@ -856,7 +857,8 @@ static gint ebook_full_search_old(BOOK_INFO *binfo, char *word, gint method, gch
 	char data[EB_SIZE_PAGE];
 	char *jisword;
 	char *word_p;
-	int i, length;
+	int i;
+	ssize_t length;
 	char *p;
 	char heading[MAXLEN_TEXT + 1];
 	RESULT *rp;
@@ -1053,7 +1055,7 @@ static gint ebook_full_search(BOOK_INFO *binfo, char *word, gint method, gchar *
 	char data[EB_SIZE_PAGE];
 	char *jisword;
 	char *word_p;
-	int length;
+	ssize_t length;
 	char *p;
 	char heading[MAXLEN_TEXT + 1];
 	RESULT *rp;
@@ -1402,7 +1404,7 @@ static void plain_heading()
 {
 	RESULT *rp;
 	GList *l;
-	gint len;
+	ssize_t len;
 	gchar *p;
 	gchar *pp;
 	guchar body[65536];
@@ -1457,7 +1459,7 @@ static void sort_result(gchar *word)
 	gchar l_word[512];
 	gunichar ch;
 	gint i;
-	gint len;
+	ssize_t len;
 	gchar *p;
         gchar *pp;
 
@@ -1679,7 +1681,8 @@ gint ebook_search_auto(char *g_word, gint method)
 gint ebook_simple_search2(BOOK_INFO *binfo, char *word, gint method, gchar *title)
 {
 	EB_Error_Code error_code=EB_SUCCESS;
-	int i, len, total_hits=0;
+	int i, total_hits=0;
+	ssize_t len;
 	EB_Hit hits[MAX_HITS];
 	int hitcount;
 	char heading[MAXLEN_HEADING + 1];
@@ -1838,7 +1841,7 @@ static gint ebook_ending_search(BOOK_INFO *binfo, char *word, gint method, gchar
 {
 	EB_Error_Code error_code=EB_SUCCESS;
 	gint i;
-	gint len_word, len_ending;
+	ssize_t len_word, len_ending;
 	char *keywords[EBOOK_MAX_KEYWORDS + 1];
 	char new_word[MAX_BUFSIZE];
 	char new_key[256];
@@ -1988,7 +1991,7 @@ static gint ebook_ending_search(BOOK_INFO *binfo, char *word, gint method, gchar
 gchar *ebook_get_heading(BOOK_INFO *binfo, int page, int offset)
 {
 	EB_Error_Code error_code;
-	int len;
+	ssize_t len;
 	char heading[MAXLEN_HEADING + 1];
 	EB_Position position;
 	gchar *p;
@@ -2021,7 +2024,7 @@ gchar *ebook_get_heading(BOOK_INFO *binfo, int page, int offset)
 
 gchar *ebook_get_text(BOOK_INFO *binfo, int page, int offset){
 	EB_Error_Code error_code;
-	int len;
+	ssize_t len;
 	char text[MAXLEN_TEXT + 1];
 	EB_Position position;
 	gchar *p;
@@ -2064,7 +2067,7 @@ gchar *ebook_get_text(BOOK_INFO *binfo, int page, int offset){
 gchar *ebook_get_candidate(BOOK_INFO *binfo, int page, int offset)
 {
 	EB_Error_Code error_code;
-	int len;
+	ssize_t len;
 	char text[MAXLEN_TEXT + 1];
 	EB_Position position;
 	gchar *p;
@@ -3022,7 +3025,7 @@ EB_Error_Code ebook_output_mono(BOOK_INFO *binfo, gchar *filename, gint page, gi
 	ssize_t read_length;
 	gint data_size;
 	gchar *bmp_data;
-	gint bmp_length;
+	ssize_t bmp_length;
 
 #ifdef COLOR_HACK
 	

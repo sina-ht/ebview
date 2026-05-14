@@ -33,7 +33,7 @@ static void check_changed(GtkWidget *widget,gpointer *data){
 
 	LOG(LOG_DEBUG, "IN : check_changed()");
 
-	if(GTK_TOGGLE_BUTTON(widget)->active){
+	if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget))){
 		gtk_widget_set_sensitive(stemming_view, TRUE);
 		gtk_widget_set_sensitive(entry_pattern, TRUE);
 		gtk_widget_set_sensitive(entry_normal, TRUE);
@@ -54,7 +54,7 @@ static void check_changed2(GtkWidget *widget,gpointer *data){
 
 	LOG(LOG_DEBUG, "IN : check_changed2()");
 
-	if(GTK_TOGGLE_BUTTON(widget)->active){
+	if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget))){
 		bending_only_nohit = TRUE;
 	} else {
 		bending_only_nohit = FALSE;
@@ -69,7 +69,7 @@ static void lang_changed(GtkWidget *widget,gpointer *data){
 	
 	LOG(LOG_DEBUG, "IN : check_changed()");
 
-	index = gtk_option_menu_get_history(GTK_OPTION_MENU(option_lang));
+	index = gtk_combo_box_get_active(GTK_COMBO_BOX(option_lang));
 
 	switch(index){
 	case 0:
@@ -164,8 +164,7 @@ GtkWidget *pref_start_stemming()
 			    , vbox,TRUE,FALSE, 0);
 
 	check_ending = gtk_check_button_new_with_label(_("Perform stemming"));
-	gtk_tooltips_set_tip(tooltip, check_ending, 
-			     _("When ending of each words matches the pattern in the list, normal form of the word will also be tried. It takes longer."),"Private");
+	gtk_widget_set_tooltip_text(check_ending, _("When ending of each words matches the pattern in the list, normal form of the word will also be tried. It takes longer."));
 	gtk_box_pack_start (GTK_BOX(vbox)
 			    , check_ending,FALSE,FALSE, 0);
 	g_signal_connect(G_OBJECT (check_ending), "clicked",
@@ -173,8 +172,7 @@ GtkWidget *pref_start_stemming()
 
 
 	check_nohit = gtk_check_button_new_with_label(_("Stemming only when no hit"));
-	gtk_tooltips_set_tip(tooltip, check_nohit, 
-			     _("Do not perform stemming when original words hit."),"Private");
+	gtk_widget_set_tooltip_text(check_nohit, _("Do not perform stemming when original words hit."));
 	gtk_box_pack_start (GTK_BOX(vbox)
 			    , check_nohit,FALSE,FALSE, 0);
 	g_signal_connect(G_OBJECT (check_nohit), "clicked",
@@ -183,15 +181,9 @@ GtkWidget *pref_start_stemming()
 
         // Option menu for language selection
 
-	menu = gtk_menu_new ();
-	menu_item = gtk_menu_item_new_with_label (_("English"));
-	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
-
-	menu_item = gtk_menu_item_new_with_label (_("Japanese"));
-	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
-
-	option_lang = gtk_option_menu_new ();
-	gtk_option_menu_set_menu (GTK_OPTION_MENU (option_lang), menu);
+	option_lang = gtk_combo_box_text_new();
+	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(option_lang), _("English"));
+	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(option_lang), _("Japanese"));
 	gtk_box_pack_start (GTK_BOX(vbox)
 			    , option_lang, FALSE, FALSE, 0);
 
@@ -230,14 +222,14 @@ GtkWidget *pref_start_stemming()
 			    , entry_normal, FALSE, FALSE, 0);
 	
 	button = gtk_button_new_with_label(_("Add"));
-	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+	gtk_widget_set_can_default(button, TRUE);
 	gtk_box_pack_start (GTK_BOX (hbox), button,
 			    FALSE, FALSE, 0);
 	g_signal_connect(G_OBJECT (button), "clicked",
 			 G_CALLBACK(add_entry), (gpointer)NULL);
 
 	button = gtk_button_new_with_label(_("Remove"));
-	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+	gtk_widget_set_can_default(button, TRUE);
 	gtk_box_pack_start (GTK_BOX (hbox), button,
 			    FALSE, FALSE, 0);
 	g_signal_connect(G_OBJECT (button), "clicked",

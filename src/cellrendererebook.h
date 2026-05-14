@@ -41,9 +41,6 @@
 #ifndef __GTK_CELL_RENDERER_EBOOK_H__
 #define __GTK_CELL_RENDERER_EBOOK_H__
 
-#include <pango/pango.h>
-#include <gtk/gtkcellrenderer.h>
-
 #include "defs.h"
 
 #ifdef __cplusplus
@@ -52,18 +49,18 @@ extern "C" {
 
 
 #define GTK_TYPE_CELL_RENDERER_EBOOK		(gtk_cell_renderer_ebook_get_type ())
-#define GTK_CELL_RENDERER_EBOOK(obj)		(GTK_CHECK_CAST ((obj), GTK_TYPE_CELL_RENDERER_EBOOK, GtkCellRendererEbook))
-#define GTK_CELL_RENDERER_EBOOK_CLASS(klass)	(GTK_CHECK_CLASS_CAST ((klass), GTK_TYPE_CELL_RENDERER_EBOOK, GtkCellRendererEbookClass))
-#define GTK_IS_CELL_RENDERER_EBOOK(obj)		(GTK_CHECK_TYPE ((obj), GTK_TYPE_CELL_RENDERER_EBOOK))
-#define GTK_IS_CELL_RENDERER_EBOOK_CLASS(klass)	(GTK_CHECK_CLASS_TYPE ((klass), GTK_TYPE_CELL_RENDERER_EBOOK))
-#define GTK_CELL_RENDERER_EBOOK_GET_CLASS(obj)   (GTK_CHECK_GET_CLASS ((obj), GTK_TYPE_CELL_RENDERER_EBOOK, GtkCellRendererEbookClass))
+#define GTK_CELL_RENDERER_EBOOK(obj)		(G_TYPE_CHECK_INSTANCE_CAST ((obj), GTK_TYPE_CELL_RENDERER_EBOOK, GtkCellRendererEbook))
+#define GTK_CELL_RENDERER_EBOOK_CLASS(klass)	(G_TYPE_CHECK_CLASS_CAST ((klass), GTK_TYPE_CELL_RENDERER_EBOOK, GtkCellRendererEbookClass))
+#define GTK_IS_CELL_RENDERER_EBOOK(obj)		(G_TYPE_CHECK_INSTANCE_TYPE ((obj), GTK_TYPE_CELL_RENDERER_EBOOK))
+#define GTK_IS_CELL_RENDERER_EBOOK_CLASS(klass)	(G_TYPE_CHECK_CLASS_TYPE ((klass), GTK_TYPE_CELL_RENDERER_EBOOK))
+#define GTK_CELL_RENDERER_EBOOK_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), GTK_TYPE_CELL_RENDERER_EBOOK, GtkCellRendererEbookClass))
 
 typedef struct _GtkCellRendererEbook      GtkCellRendererEbook;
 typedef struct _GtkCellRendererEbookClass GtkCellRendererEbookClass;
 
 struct _GtkCellRendererEbook
 {
-	GtkCellRenderer parent;
+	GtkCellRenderer parent_instance;
 	gchar *text;
 	BOOK_INFO *binfo;
 	gint width;
@@ -81,7 +78,7 @@ struct _GtkCellRendererEbookClass
   void (*_gtk_reserved4) (void);
 };
 
-GtkType          gtk_cell_renderer_ebook_get_type (void);
+GType            gtk_cell_renderer_ebook_get_type (void);
 GtkCellRenderer *gtk_cell_renderer_ebook_new      (void);
 
 #ifdef __cplusplus

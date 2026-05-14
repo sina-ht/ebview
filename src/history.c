@@ -160,7 +160,7 @@ void save_word_history(const gchar *word){
 		word_history = g_list_prepend(word_history, g_strdup(word));	
 	}
 
-	gtk_combo_set_popdown_strings( GTK_COMBO(combo_word), word_history) ;
+	// gtk_combo_set_popdown_strings(GTK_COMBO(combo_word), word_history);
 
 	save_history();
 

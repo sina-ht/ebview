@@ -61,23 +61,22 @@ static void gtk_cell_renderer_color_set_property  (GObject                  *obj
 						   GParamSpec               *pspec);
 static void gtk_cell_renderer_color_get_size   (GtkCellRenderer          *cell,
 						GtkWidget                *widget,
-						GdkRectangle             *cell_area,
+						const cairo_rectangle_int_t *cell_area,
 						gint                     *x_offset,
 						gint                     *y_offset,
 						gint                     *width,
 						gint                     *height);
 static void gtk_cell_renderer_color_render     (GtkCellRenderer          *cell,
-						GdkWindow                *window,
+						cairo_t                *cr,
 						GtkWidget                *widget,
-						GdkRectangle             *background_area,
-						GdkRectangle             *cell_area,
-						GdkRectangle             *expose_area,
+						const cairo_rectangle_int_t *background_area,
+						const cairo_rectangle_int_t *cell_area,
 						GtkCellRendererState      flags);
 
 static void cell_renderer_color_render_color(GtkCellRenderer *cell,
-					     GdkWindow *window,
+					     cairo_t *cr,
 					     GtkWidget *widget,
-					     GtkStateType state,
+					     GtkStateFlags state,
 					     gchar *text,
 					     BOOK_INFO *binfo,
 					     gint origin_x,
@@ -93,10 +92,10 @@ enum {
 static gpointer parent_class;
 
 
-GtkType
+GType
 gtk_cell_renderer_color_get_type (void)
 {
-	static GtkType cell_color_type = 0;
+	static GType cell_color_type = 0;
 
 //	LOG(LOG_DEBUG, "IN : gtk_cell_renderer_color_get_type()");
 
@@ -127,10 +126,7 @@ gtk_cell_renderer_color_init (GtkCellRendererColor *cellcolor)
 {
 //	LOG(LOG_DEBUG, "IN : gtk_cell_renderer_color_init()");
 
-	GTK_CELL_RENDERER (cellcolor)->xalign = 0.0;
-	GTK_CELL_RENDERER (cellcolor)->yalign = 0.5;
-	GTK_CELL_RENDERER (cellcolor)->xpad = 2;
-	GTK_CELL_RENDERER (cellcolor)->ypad = 2;
+	g_object_set(G_OBJECT(cellcolor), "xalign", 0.0, "yalign", 0.5, "xpad", 2, "ypad", 2, NULL);
 
 //	LOG(LOG_DEBUG, "OUT : gtk_cell_renderer_color_init()");
 }
@@ -239,7 +235,7 @@ gtk_cell_renderer_color_new (void)
 static void
 gtk_cell_renderer_color_get_size (GtkCellRenderer *cell,
 				  GtkWidget       *widget,
-				  GdkRectangle    *cell_area,
+				  const cairo_rectangle_int_t *cell_area,
 				  gint            *x_offset,
 				  gint            *y_offset,
 				  gint            *width,
@@ -262,49 +258,87 @@ gtk_cell_renderer_color_get_size (GtkCellRenderer *cell,
 }
 
 static void
+cell_renderer_color_render_color(GtkCellRenderer *cell,
+				 cairo_t *cr,
+				 GtkWidget *widget,
+				 GtkStateFlags state,
+				 gchar *text,
+				 BOOK_INFO *binfo,
+				 gint origin_x,
+				 gint origin_y,
+				 gboolean render)
+{
+	// Render color swatch using cairo
+	GtkCellRendererColor *cellcolor = (GtkCellRendererColor *) cell;
+	GdkRGBA color;
+	gdouble r, g, b;
+
+	if(!render || !cr)
+		return;
+
+	if(cellcolor->color && *cellcolor->color){
+		gdk_rgba_parse(&color, cellcolor->color);
+		r = color.red;
+		g = color.green;
+		b = color.blue;
+		cairo_set_source_rgb(cr, r, g, b);
+		cairo_rectangle(cr, origin_x, origin_y, 20, 10);
+		cairo_fill(cr);
+		cairo_set_source_rgb(cr, 0, 0, 0);
+		cairo_rectangle(cr, origin_x, origin_y, 20, 10);
+		cairo_stroke(cr);
+	}
+}
+
+static void
 gtk_cell_renderer_color_render (GtkCellRenderer      *cell,
-				GdkWindow            *window,
+				cairo_t              *cr,
 				GtkWidget            *widget,
-				GdkRectangle         *background_area,
-				GdkRectangle         *cell_area,
-				GdkRectangle         *expose_area,
+				const cairo_rectangle_int_t *background_area,
+				const cairo_rectangle_int_t *cell_area,
 				GtkCellRendererState  flags)
 
 {
 	GtkCellRendererColor *cellcolor = (GtkCellRendererColor *) cell;
-	GtkStateType state;
+	GtkStateFlags state;
 	gint x_offset;
 	gint y_offset;
 
-	GtkWidget *button;
-
 
 //	LOG(LOG_DEBUG, "IN : gtk_cell_renderer_color_render()");
-
 
 	gtk_cell_renderer_color_get_size (cell, widget, cell_area, &x_offset, &y_offset, NULL, NULL);
 
 	if ((flags & GTK_CELL_RENDERER_SELECTED) == GTK_CELL_RENDERER_SELECTED)
 	{
-		if (GTK_WIDGET_HAS_FOCUS (widget)){
-			state = GTK_STATE_SELECTED;
+		if (gtk_widget_has_focus(widget)){
+			state = GTK_STATE_FLAG_SELECTED;
 		}
 		else {
-			state = GTK_STATE_ACTIVE;
+			state = GTK_STATE_FLAG_ACTIVE;
 		}
 	}
 	else
 	{
-		if (GTK_WIDGET_STATE (widget) == GTK_STATE_INSENSITIVE){
-			state = GTK_STATE_INSENSITIVE;
+		GtkStyleContext *wstyle;
+		wstyle = gtk_widget_get_style_context(widget);
+		if (gtk_style_context_get_state(wstyle) & GTK_STATE_FLAG_INSENSITIVE){
+			state = GTK_STATE_FLAG_INSENSITIVE;
 		}
 		else {
-			state = GTK_STATE_NORMAL;
+			state = 0;
 		}
 	}
 
-	gtk_paint_option
-
+	cell_renderer_color_render_color(cell,
+					 cr,
+					 widget,
+					 state,
+					 cellcolor->color,
+					 NULL,
+					 cell_area->x + 2,
+					 cell_area->y + 2,
+					 TRUE);
 
 //	LOG(LOG_DEBUG, "OUT : gtk_cell_renderer_color_render()");
 }

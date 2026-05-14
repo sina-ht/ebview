@@ -17,6 +17,9 @@
 
 #include "defs.h"
 #include "global.h"
+#ifndef __WIN32__
+#include <gdk/gdkx.h>
+#endif
 
 #include <sys/stat.h>
 
@@ -423,13 +426,13 @@ void  calculate_font_size(){
 #ifdef __WIN32__
 	fontmap = pango_win32_font_map_for_display();
 #else
-	display = gdk_x11_drawable_get_xdisplay(main_window->window);
+	display = gdk_x11_display_get_xdisplay(gdk_display_get_default());
 	if(display == NULL){
 		LOG(LOG_INFO, "display == NULL");
 		return;
 	}
 
-	fontmap = pango_ft2_font_map_for_display();
+	fontmap = pango_cairo_font_map_get_default();
 #endif
 
 	if(fontmap == NULL){
@@ -554,7 +557,7 @@ void show_preference()
 
 
 	hbox = gtk_hbox_new(FALSE,10);
-	gtk_box_pack_start (GTK_BOX(GTK_DIALOG(pref_dlg)->vbox)
+	gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(pref_dlg)))
 		      , hbox,TRUE, TRUE, 0);
 	gtk_container_set_border_width(GTK_CONTAINER(hbox), 5);
 
@@ -632,9 +635,8 @@ void show_preference()
 	}
 
 	button = gtk_button_new_with_label(_("Ok"));
-	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
-	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (pref_dlg)->action_area), button,
-			    TRUE, TRUE, 0);
+	gtk_widget_set_can_default(button, TRUE);
+	gtk_dialog_add_action_widget(GTK_DIALOG(pref_dlg), button, GTK_RESPONSE_OK);
 	
 	g_signal_connect(G_OBJECT (button), "clicked",
 			 G_CALLBACK(ok_pref), (gpointer)pref_dlg);

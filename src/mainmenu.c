@@ -140,7 +140,7 @@ gint menuitem_handler (GtkWidget *widget, gchar *string)
 	}
 
 	if(strcmp(string, "view.menubar") == 0){
-		if(GTK_CHECK_MENU_ITEM(display_menubar)->active) {
+		if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(display_menubar))) {
 			show_menu_bar();
 		} else {
 			hide_menu_bar();
@@ -149,7 +149,7 @@ gint menuitem_handler (GtkWidget *widget, gchar *string)
 	}
 
 	if(strcmp(string, "view.statusbar") == 0){
-		if(GTK_CHECK_MENU_ITEM(display_statusbar)->active) {
+		if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(display_statusbar))) {
 			show_status_bar();
 		} else {
 			hide_status_bar();
@@ -158,7 +158,7 @@ gint menuitem_handler (GtkWidget *widget, gchar *string)
 	}
 
 	if(strcmp(string, "view.dictbar") == 0){
-		if(GTK_CHECK_MENU_ITEM(display_dictbar)->active) {
+		if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(display_dictbar))) {
 			show_dict_bar();
 		} else {
 			hide_dict_bar();
@@ -167,7 +167,7 @@ gint menuitem_handler (GtkWidget *widget, gchar *string)
 	}
 
 	if(strcmp(string, "view.treetab") == 0){
-		if(GTK_CHECK_MENU_ITEM(display_treetab)->active) {
+		if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(display_treetab))) {
 			show_tree_tab();
 		} else {
 			hide_tree_tab();
@@ -176,7 +176,7 @@ gint menuitem_handler (GtkWidget *widget, gchar *string)
 	}
 
 	if(strcmp(string, "view.emphasize") == 0){
-		if(GTK_CHECK_MENU_ITEM(menuitem_emphasize)->active) {
+		if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(menuitem_emphasize))) {
 			bemphasize_keyword = TRUE;
 		} else {
 			bemphasize_keyword = FALSE;
@@ -190,7 +190,7 @@ gint menuitem_handler (GtkWidget *widget, gchar *string)
 	}
 
 	if(strcmp(string, "view.image") == 0){
-		if(GTK_CHECK_MENU_ITEM(menuitem_image)->active) {
+		if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(menuitem_image))) {
 			bshow_image = TRUE;
 		} else {
 			bshow_image = FALSE;
@@ -224,7 +224,7 @@ gint menuitem_handler (GtkWidget *widget, gchar *string)
 	}
 
 	if(strcmp(string, "result.sort") == 0){
-		if(GTK_CHECK_MENU_ITEM(menuitem_sortbydict)->active) {
+		if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(menuitem_sortbydict))) {
 			bsort_by_dictionary = TRUE;
 		} else {
 			bsort_by_dictionary = FALSE;
@@ -236,7 +236,7 @@ gint menuitem_handler (GtkWidget *widget, gchar *string)
 	}
 
 	if(strcmp(string, "result.filename") == 0){
-		if(GTK_CHECK_MENU_ITEM(menuitem_filename)->active) {
+		if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(menuitem_filename))) {
 			bshow_filename = TRUE;
 		} else {
 			bshow_filename = FALSE;
@@ -631,7 +631,7 @@ GtkWidget *create_main_menu()
 	display_statusbar = gtk_check_menu_item_new_with_label(_("Status Bar"));
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(display_statusbar), 				       bshow_status_bar);
 	gtk_menu_shell_append(GTK_MENU_SHELL(toolbar_menu), display_statusbar);
-	g_signal_connect(GTK_OBJECT(display_statusbar), "activate",
+	g_signal_connect(G_OBJECT(display_statusbar), "activate",
 				  G_CALLBACK(menuitem_handler),
 				  (gpointer)"view.statusbar");
 
@@ -1023,8 +1023,6 @@ void update_main_menu()
 
 	LOG(LOG_DEBUG, "IN : update_main_menu()");
 
-	gtk_menu_item_remove_submenu(GTK_MENU_ITEM(item_search));
-
 	menu = create_search_menu();
 	gtk_menu_item_set_submenu (GTK_MENU_ITEM (item_search), menu);
 	gtk_widget_show_all(menu);
@@ -1126,7 +1124,7 @@ void split_vertical()
 	g_object_unref(G_OBJECT(note_text));
 
 
-	parent = pane->parent;
+	parent = GTK_WIDGET(gtk_widget_get_parent(pane));
 	gtk_container_remove(GTK_CONTAINER(parent), pane);
 	gtk_box_pack_start(GTK_BOX(parent), new_pane, TRUE, TRUE, 0);
 
@@ -1171,7 +1169,7 @@ void split_horizontal()
 	g_object_unref(G_OBJECT(note_text));
 
 
-	parent = pane->parent;
+	parent = GTK_WIDGET(gtk_widget_get_parent(pane));
 	gtk_container_remove(GTK_CONTAINER(parent), pane);
 	gtk_box_pack_start(GTK_BOX(parent), new_pane, TRUE, TRUE, 0);
 

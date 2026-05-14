@@ -452,7 +452,7 @@ static void *grep_search_thread(void *arg)
 	}
 	grep_file_list = NULL;
 
-	group = gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(combo_dirgroup)->entry));
+	group = gtk_combo_box_get_active_id(GTK_COMBO_BOX(combo_dirgroup));
 	if(strcmp(group, _("Manual Select")) == 0) {
 		dir_list = get_active_dir_list();
 
@@ -1013,7 +1013,7 @@ static gint dirgroup_changed (GtkWidget *combo){
 
 	LOG(LOG_DEBUG, "IN : dirgroup_changed()");
 
-	text = gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(combo_dirgroup)->entry));
+	text = gtk_combo_box_get_active_id(GTK_COMBO_BOX(combo_dirgroup));
 
 	if(strcmp(text, _("Manual Select")) == 0) {
 	    if((note_tree != NULL) && 
@@ -1077,33 +1077,36 @@ GtkWidget *create_grep_bar()
 	gboolean old_found;
 	GtkTreeIter active_iter;
 	GtkTreeIter old_iter;
-	GtkTreeIter iter;
+GtkTreeIter iter;
 	gchar *title;
 	GList *children;
-	GtkBoxChild *child;
+	GtkWidget *child;
 
 
 	LOG(LOG_DEBUG, "IN : create_grep_bar()");
 
 	if(grep_bar){
-	        old_group = strdup(gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(combo_dirgroup)->entry)));
-	        children = GTK_BOX(grep_bar)->children;
+		old_group = g_strdup(gtk_combo_box_get_active_id(GTK_COMBO_BOX(combo_dirgroup)));
+		if(old_group == NULL)
+			old_group = g_strdup("");
+
+		children = gtk_container_get_children(GTK_CONTAINER(grep_bar));
 		while(children){
-		        child = children->data;
+			child = children->data;
 			children = children->next;
-			gtk_widget_destroy(child->widget);
+			gtk_widget_destroy(child);
 		}
+		g_list_free(children);
 	} else {
-	        grep_bar = gtk_hbox_new(FALSE, 0);
+		grep_bar = gtk_hbox_new(FALSE, 0);
 	}
 
 	gtk_container_set_border_width(GTK_CONTAINER(grep_bar), 1);
-	
-	combo_dirgroup = gtk_combo_new();
-	gtk_widget_set_size_request(GTK_WIDGET(combo_dirgroup), 120, 10);
-	gtk_editable_set_editable(GTK_EDITABLE(GTK_COMBO(combo_dirgroup)->entry), FALSE);
 
-	g_signal_connect(G_OBJECT (GTK_COMBO(combo_dirgroup)->entry), "changed",
+	combo_dirgroup = gtk_combo_box_text_new();
+	gtk_widget_set_size_request(combo_dirgroup, 120, 10);
+
+	g_signal_connect(G_OBJECT (GTK_COMBO_BOX(combo_dirgroup)), "changed",
 			 G_CALLBACK(dirgroup_changed),
 			 NULL);
 
@@ -1116,7 +1119,7 @@ GtkWidget *create_grep_bar()
 			 G_CALLBACK(suppress_hidden_toggled),
 			 NULL);
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), bsuppress_hidden_files);
-	gtk_tooltips_set_tip(tooltip, button, _("Suppress files whose name start with dot."),"Private");
+	gtk_widget_set_tooltip_text(button, _("Suppress files whose name start with dot."));
 
 	button = gtk_check_button_new_with_label(_("Ignore Case"));
 	gtk_box_pack_start(GTK_BOX (grep_bar), button, FALSE, FALSE, 5);
@@ -1124,7 +1127,7 @@ GtkWidget *create_grep_bar()
 			 G_CALLBACK(ignore_case_toggled),
 			 NULL);
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), bignore_case);
-	gtk_tooltips_set_tip(tooltip, button, _("When checked, uppercase letters and lowercase letters are regarded as identical."),"Private");
+	gtk_widget_set_tooltip_text(button, _("When checked, uppercase letters and lowercase letters are regarded as identical."));
 
 	active_found = FALSE;
 	old_found = FALSE;
@@ -1154,31 +1157,35 @@ GtkWidget *create_grep_bar()
 
 	list = g_list_append(list, g_strdup(_("Manual Select")));
 
-	if(g_list_length(list) != 0)
-	        gtk_combo_set_popdown_strings( GTK_COMBO(combo_dirgroup), list) ;
+	if(g_list_length(list) != 0){
+		GList *l;
+		for(l = list; l; l = l->next){
+			gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_dirgroup), (char *)l->data);
+		}
+	}
 
 	if(active_found == TRUE){
 		gtk_tree_model_get(GTK_TREE_MODEL(dirgroup_store), 
 				   &active_iter, 
 				   DIRGROUP_TITLE_COLUMN, &title,
 				   -1);
-		gtk_entry_set_text(GTK_ENTRY(GTK_COMBO(combo_dirgroup)->entry), title);
+		gtk_combo_box_set_active_id(GTK_COMBO_BOX(combo_dirgroup), title);
 		g_free(title);
 	} else if (old_found == TRUE){
 		gtk_tree_model_get(GTK_TREE_MODEL(dirgroup_store), 
 				   &old_iter, 
 				   DIRGROUP_TITLE_COLUMN, &title,
 				   -1);
-		gtk_entry_set_text(GTK_ENTRY(GTK_COMBO(combo_dirgroup)->entry), title);
+		gtk_combo_box_set_active_id(GTK_COMBO_BOX(combo_dirgroup), title);
 		g_free(title);
 
 		gtk_tree_store_set(GTK_TREE_STORE(dirgroup_store),
 				   &old_iter,
 				   DIRGROUP_ACTIVE_COLUMN, TRUE,
 				   -1);
-		
+
 	} else {
-		gtk_entry_set_text(GTK_ENTRY(GTK_COMBO(combo_dirgroup)->entry), 
+		gtk_combo_box_set_active_id(GTK_COMBO_BOX(combo_dirgroup), 
 				   _("Manual Select"));
 	}
   

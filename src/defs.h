@@ -30,7 +30,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <gtk/gtk.h>
-#include <gdk/gdkprivate.h>
+#include <pango/pangocairo.h>
 #include <locale.h>
 #include <ctype.h>
 #include <unistd.h>

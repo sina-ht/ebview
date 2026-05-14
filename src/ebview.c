@@ -77,12 +77,12 @@ void exit_program( GtkWidget *widget,
 
 	ebook_end();
 
-	gdk_window_get_root_origin(main_window->window, &window_x, &window_y);
-	window_width = main_window->allocation.width;
-	window_height = main_window->allocation.height;
+	gdk_window_get_root_origin(gtk_widget_get_window(main_window), &window_x, &window_y);
+	window_width = gtk_widget_get_allocated_width(main_window);
+	window_height = gtk_widget_get_allocated_height(main_window);
 
-	tree_width = note_tree->allocation.width;
-	tree_height = note_tree->allocation.height;
+	tree_width = gtk_widget_get_allocated_width(note_tree);
+	tree_height = gtk_widget_get_allocated_height(note_tree);
 
 	save_preference();
 	gtk_main_quit ();

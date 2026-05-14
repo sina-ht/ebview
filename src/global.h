@@ -21,8 +21,7 @@ global GtkWidget *button_back;
 global GtkWidget *button_forward;
 global GtkWidget *status_bar;
 
-global GtkTooltips *tooltip;
-
+// GtkTooltips removed in GTK3; use per-widget gtk_widget_set_tooltip_text()
 
 global GList *search_result;
 global RESULT *current_result;
@@ -30,10 +29,7 @@ global RESULT *current_result;
 global GList *ending_list;
 global GList *ending_list_ja;
 
-global GdkFont *font_normal;
-global GdkFont *font_bold;
-global GdkFont *font_superscript;
-global GdkFont *font_italic;
+// GdkFont removed in GTK3; fontset_* strings used instead
 
 global gint font_height;
 global gint font_width;

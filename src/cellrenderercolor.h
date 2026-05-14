@@ -41,9 +41,6 @@
 #ifndef __GTK_CELL_RENDERER_COLOR_H__
 #define __GTK_CELL_RENDERER_COLOR_H__
 
-#include <pango/pango.h>
-#include <gtk/gtkcellrenderer.h>
-
 #include "defs.h"
 
 #ifdef __cplusplus
@@ -52,18 +49,18 @@ extern "C" {
 
 
 #define GTK_TYPE_CELL_RENDERER_COLOR		(gtk_cell_renderer_color_get_type ())
-#define GTK_CELL_RENDERER_COLOR(obj)		(GTK_CHECK_CAST ((obj), GTK_TYPE_CELL_RENDERER_COLOR, GtkCellRendererColor))
-#define GTK_CELL_RENDERER_COLOR_CLASS(klass)	(GTK_CHECK_CLASS_CAST ((klass), GTK_TYPE_CELL_RENDERER_COLOR, GtkCellRendererColorClass))
-#define GTK_IS_CELL_RENDERER_COLOR(obj)		(GTK_CHECK_TYPE ((obj), GTK_TYPE_CELL_RENDERER_COLOR))
-#define GTK_IS_CELL_RENDERER_COLOR_CLASS(klass)	(GTK_CHECK_CLASS_TYPE ((klass), GTK_TYPE_CELL_RENDERER_COLOR))
-#define GTK_CELL_RENDERER_COLOR_GET_CLASS(obj)   (GTK_CHECK_GET_CLASS ((obj), GTK_TYPE_CELL_RENDERER_COLOR, GtkCellRendererColorClass))
+#define GTK_CELL_RENDERER_COLOR(obj)		(G_TYPE_CHECK_INSTANCE_CAST ((obj), GTK_TYPE_CELL_RENDERER_COLOR, GtkCellRendererColor))
+#define GTK_CELL_RENDERER_COLOR_CLASS(klass)	(G_TYPE_CHECK_CLASS_CAST ((klass), GTK_TYPE_CELL_RENDERER_COLOR, GtkCellRendererColorClass))
+#define GTK_IS_CELL_RENDERER_COLOR(obj)		(G_TYPE_CHECK_INSTANCE_TYPE ((obj), GTK_TYPE_CELL_RENDERER_COLOR))
+#define GTK_IS_CELL_RENDERER_COLOR_CLASS(klass)	(G_TYPE_CHECK_CLASS_TYPE ((klass), GTK_TYPE_CELL_RENDERER_COLOR))
+#define GTK_CELL_RENDERER_COLOR_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), GTK_TYPE_CELL_RENDERER_COLOR, GtkCellRendererColorClass))
 
 typedef struct _GtkCellRendererColor      GtkCellRendererColor;
 typedef struct _GtkCellRendererColorClass GtkCellRendererColorClass;
 
 struct _GtkCellRendererColor
 {
-	GtkCellRenderer parent;
+	GtkCellRenderer parent_instance;
 	gchar *color;
 	gint width;
 	gint height;
@@ -80,7 +77,7 @@ struct _GtkCellRendererColorClass
   void (*_gtk_reserved4) (void);
 };
 
-GtkType          gtk_cell_renderer_color_get_type (void);
+GType            gtk_cell_renderer_color_get_type (void);
 GtkCellRenderer *gtk_cell_renderer_color_new      (void);
 
 #ifdef __cplusplus

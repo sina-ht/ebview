@@ -172,7 +172,7 @@ static gint title_click_event (GtkWidget *widget, GdkEventButton *event, gpointe
 			popup = NULL;
 		} else if(strcmp(data, "t") == 0){
 			bbutton_down = TRUE;
-			root_win = gdk_window_foreign_new (GDK_ROOT_WINDOW ());
+root_win = gdk_screen_get_root_window(gdk_screen_get_default());
 			gdk_window_get_pointer (root_win, &prev_x, &prev_y, &mask);
 			previous_x = event->x;
 			previous_y = event->y;
@@ -227,13 +227,13 @@ gint title_motion_event(GtkWidget *widget, GdkEventMotion *event)
 	if((event->state & GDK_BUTTON1_MASK) &&
 	   bbutton_down){
 
-		root_win = gdk_window_foreign_new (GDK_ROOT_WINDOW ());
+root_win = gdk_screen_get_root_window(gdk_screen_get_default());
 		gdk_window_get_pointer (root_win, &xp, &yp, &mask);
 
 	        mov_x = xp - prev_x;
 	        mov_y = yp - prev_y;
 
- 	        gdk_window_get_root_origin(popup->window, &win_x, &win_y);
+	        gdk_window_get_root_origin(gtk_widget_get_window(popup), &win_x, &win_y);
 
 		gtk_window_move(GTK_WINDOW(popup),
 				win_x + mov_x,
@@ -273,8 +273,9 @@ static void create_popup_window(){
 	root_x = GetSystemMetrics(SM_CXSCREEN);
 	root_y = GetSystemMetrics(SM_CYSCREEN);
 #else
-	root_win = gdk_window_foreign_new (GDK_ROOT_WINDOW ());
-	gdk_window_get_size(root_win, &root_x, &root_y);
+	root_win = gdk_screen_get_root_window(gdk_screen_get_default());
+	root_x = gdk_window_get_width(root_win);
+	root_y = gdk_window_get_height(root_win);
 #endif
 
 	// If there already is an window, use that position.
@@ -421,7 +422,7 @@ static void create_popup_window(){
 
 #ifndef __WIN32__
 	gtk_widget_realize(popup);
-	gdk_window_set_decorations(popup->window, 0);
+	gdk_window_set_decorations(gtk_widget_get_window(popup), 0);
 #endif
 
 	gtk_widget_show_all(popup);
@@ -446,7 +447,7 @@ static void create_popup_window(){
 }
 
 
-static gint scroll_to_top()
+static gboolean scroll_to_top(gpointer data)
 {
 	GtkTextIter iter;
 	GtkTextMark *mark;
@@ -558,7 +559,7 @@ void show_popup(RESULT *result)
 	g_free(text);
 	set_current_result(result);
 
-	gtk_timeout_add(10, scroll_to_top, NULL);
+	g_timeout_add(10, scroll_to_top, NULL);
 
 	LOG(LOG_DEBUG, "OUT : show_popup()");
 

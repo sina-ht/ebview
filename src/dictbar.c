@@ -200,7 +200,7 @@ static void add_dict_buttons(GtkWidget *bar)
 						}
 
 						tip_string = g_strconcat(_("Push to enable this dictionary."), "\n(", title, ")", NULL);
-						gtk_tooltips_set_tip(tooltip, toggle, tip_string, "Private");
+						gtk_widget_set_tooltip_text(toggle, tip_string);
 						g_free(tip_string);
 						g_free(title);
 
@@ -218,21 +218,20 @@ static void add_dict_buttons(GtkWidget *bar)
 static void update_dict_button()
 {
 	GList *children;
-	GtkBoxChild *child;
 	
 	LOG(LOG_DEBUG, "IN : update_dict_button()");
 
 	gtk_widget_hide(dict_box);
 
-	// Re-creaet buttons
-
-	children = GTK_BOX(dict_box)->children;
+	// Re-create buttons
+	children = gtk_container_get_children(GTK_CONTAINER(dict_box));
 	while(children){
-		child = children->data;
+		GtkWidget *widget = children->data;
 		children = children->next;
-		if(GTK_IS_TOGGLE_BUTTON(child->widget))
-			gtk_widget_destroy(child->widget);
+		if(GTK_IS_TOGGLE_BUTTON(widget))
+			gtk_widget_destroy(widget);
 	}
+	g_list_free(children);
 
 	add_dict_buttons(dict_box);
 	gtk_widget_show_all(dict_box);
@@ -248,7 +247,10 @@ static gint group_changed (GtkWidget *combo){
 
 	LOG(LOG_DEBUG, "IN : group_changed()");
 
-	text = gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(combo_group)->entry));
+	text = gtk_combo_box_get_active_id(GTK_COMBO_BOX(combo_group));
+	if(text == NULL) {
+		text = "";
+	}
 
 	if(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(dict_store), &iter) == TRUE){
 		do { 
@@ -291,7 +293,7 @@ GtkWidget *create_dict_bar()
 	GList *list=NULL;
 	gchar *old_group=NULL;
 	GList *children;
-	GtkBoxChild *child;
+	GtkWidget *child;
 	gboolean active_found;
 	gboolean old_found;
 	GtkTreeIter active_iter;
@@ -303,26 +305,29 @@ GtkWidget *create_dict_bar()
 	LOG(LOG_DEBUG, "IN : create_dict_bar()");
 
 	if(dict_bar){
-	        old_group = strdup(gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(combo_group)->entry)));
+		old_group = g_strdup(gtk_combo_box_get_active_id(GTK_COMBO_BOX(combo_group)));
+		if(old_group == NULL)
+			old_group = g_strdup("");
 
-	        children = GTK_BOX(dict_bar)->children;
+		children = gtk_container_get_children(GTK_CONTAINER(dict_bar));
 		while(children){
-		        child = children->data;
+			child = children->data;
 			children = children->next;
-			gtk_widget_destroy(child->widget);
+			gtk_widget_destroy(child);
 		}
+		g_list_free(children);
 	} else {
-	        dict_bar = gtk_hbox_new(FALSE, 0);
+		dict_bar = gtk_hbox_new(FALSE, 0);
 	}
-	
-	combo_group = gtk_combo_new();
-	gtk_widget_set_size_request(GTK_WIDGET(combo_group), 120, 10);
-	gtk_editable_set_editable(GTK_EDITABLE(GTK_COMBO(combo_group)->entry), FALSE);
+
+	combo_group = gtk_combo_box_text_new();
+	gtk_widget_set_size_request(combo_group, 120, 10);
 	gtk_box_pack_start(GTK_BOX(dict_bar), combo_group, FALSE, FALSE, 0);
 
 	gtk_container_set_border_width(GTK_CONTAINER(dict_bar), 1);
 
-	gtk_tooltips_set_tip(tooltip, GTK_COMBO(combo_group)->entry, _("Select dictionary group."),"Private");
+	gtk_widget_set_tooltip_text(combo_group, _("Select dictionary group."));
+
 
 
 	active_found = FALSE;
@@ -351,22 +356,26 @@ GtkWidget *create_dict_bar()
 	       } while (gtk_tree_model_iter_next(GTK_TREE_MODEL(dict_store), &iter) == TRUE);
 	}
 
-	if(g_list_length(list) != 0)
-	        gtk_combo_set_popdown_strings( GTK_COMBO(combo_group), list) ;
+if(g_list_length(list) != 0){
+		GList *l;
+		for(l = list; l; l = l->next){
+			gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_group), (char *)l->data);
+		}
+	}
 
 	if(active_found == TRUE){
 		gtk_tree_model_get(GTK_TREE_MODEL(dict_store), 
 				   &active_iter, 
 				   DICT_TITLE_COLUMN, &title,
 				   -1);
-		gtk_entry_set_text(GTK_ENTRY(GTK_COMBO(combo_group)->entry), title);
+		gtk_combo_box_set_active_id(GTK_COMBO_BOX(combo_group), title);
 		g_free(title);
 	} else if (old_found == TRUE){
 		gtk_tree_model_get(GTK_TREE_MODEL(dict_store), 
 				   &old_iter, 
 				   DICT_TITLE_COLUMN, &title,
 				   -1);
-		gtk_entry_set_text(GTK_ENTRY(GTK_COMBO(combo_group)->entry), title);
+		gtk_combo_box_set_active_id(GTK_COMBO_BOX(combo_group), title);
 		g_free(title);
 
 		gtk_tree_store_set(GTK_TREE_STORE(dict_store),
@@ -380,7 +389,7 @@ GtkWidget *create_dict_bar()
 				   &iter, 
 				   DICT_TITLE_COLUMN, &title,
 				   -1);
-		gtk_entry_set_text(GTK_ENTRY(GTK_COMBO(combo_group)->entry), title);
+		gtk_combo_box_set_active_id(GTK_COMBO_BOX(combo_group), title);
 		g_free(title);
 
 		gtk_tree_store_set(GTK_TREE_STORE(dict_store), &iter,
@@ -388,9 +397,9 @@ GtkWidget *create_dict_bar()
 				   -1);
 		}
 	}
-  
+   
 
-	g_signal_connect(G_OBJECT (GTK_COMBO(combo_group)->entry), "changed",
+	g_signal_connect(G_OBJECT(combo_group), "changed",
 			 G_CALLBACK(group_changed),
 			 NULL);
 

@@ -23,6 +23,7 @@
 extern struct _shortcut_command commands[];
 
 gint menuitem_handler(GtkWidget *widget, gchar *string);
+gboolean perform_shortcut_by_event(GdkEventKey *event);
 
 GtkAccelGroup *accel_group=NULL;
 
@@ -40,7 +41,7 @@ gboolean accel_handler(GtkAccelGroup *accelgroup,
 
 	LOG(LOG_DEBUG, "IN : accel_handler()");
 
-	event.keyval = user_data;
+	event.keyval = GPOINTER_TO_UINT(user_data);
 	event.state = arg3;
 
 	ret = perform_shortcut_by_event(&event);
@@ -90,7 +91,7 @@ void install_shortcut(){
 
 //			g_snprintf(string, 64, "sc_%s", command->name);
 			str = g_strdup_printf("sc_%s", command->name);
-			if((state == 0) && (keyval == GDK_Return))
+			if((state == 0) && (keyval == GDK_KEY_Return))
 				continue;
 
 			closure = g_cclosure_new(G_CALLBACK(accel_handler), (gpointer)keyval, NULL);
@@ -136,7 +137,7 @@ void install_shortcut_old(){
 
 //			g_snprintf(string, 64, "sc_%s", command->name);
 			str = g_strdup_printf("sc_%s", command->name);
-			if((state == 0) && (keyval == GDK_Return))
+			if((state == 0) && (keyval == GDK_KEY_Return))
 				continue;
 
 			item = gtk_menu_item_new();

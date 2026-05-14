@@ -98,8 +98,8 @@ struct _shortcut_command commands[] = {
 	{ N_("Iconify Window"), iconify},
 	{ N_("Scroll Mainview Down"), scroll_mainview_down},
 	{ N_("Scroll Mainview Up"), scroll_mainview_up},
-	{ N_("Next Hits"), next_heading},
-	{ N_("Prev. Hits"), previous_heading},
+	{ N_("Next Hits"), (void (*)(void))next_heading},
+	{ N_("Prev. Hits"), (void (*)(void))previous_heading},
 	{ N_("Increase Font Size"), increase_font_size},
 	{ N_("Decrease Font Size"), decrease_font_size},
 	{ N_("Expand Lines"), expand_lines},
@@ -127,7 +127,7 @@ gboolean ungrab_server(gpointer data){
 	if(grab == FALSE)
 		return(TRUE);
 
-	gtk_timeout_remove(timeout_id);
+	g_source_remove(timeout_id);
 #ifndef __WIN32__
 	gdk_x11_ungrab_server();
 #endif
@@ -149,7 +149,7 @@ static void grab_server(GtkWidget *widget,gpointer *data){
 
 #ifndef __WIN32__
 	gdk_x11_grab_server();
-	timeout_id = gtk_timeout_add(10000, ungrab_server, NULL);
+	timeout_id = g_timeout_add(10000, (GSourceFunc)ungrab_server, NULL);
 	grab = TRUE;
 #endif
 
@@ -232,19 +232,19 @@ static gint window_key_event(GtkWidget *widget, GdkEventKey *event){
 //		return(FALSE);
 
 	switch (event->keyval){
-	case GDK_Shift_L:
-	case GDK_Shift_R:
-	case GDK_Control_L:
-	case GDK_Control_R:
-	case GDK_Meta_L:
-	case GDK_Meta_R:
-	case GDK_Alt_L:
-	case GDK_Alt_R:
-	case GDK_Caps_Lock:
-	case GDK_Shift_Lock:
-	case GDK_Scroll_Lock:
-	case GDK_Num_Lock:
-	case GDK_Kana_Lock:
+	case GDK_KEY_Shift_L:
+	case GDK_KEY_Shift_R:
+	case GDK_KEY_Control_L:
+	case GDK_KEY_Control_R:
+	case GDK_KEY_Meta_L:
+	case GDK_KEY_Meta_R:
+	case GDK_KEY_Alt_L:
+	case GDK_KEY_Alt_R:
+	case GDK_KEY_Caps_Lock:
+	case GDK_KEY_Shift_Lock:
+	case GDK_KEY_Scroll_Lock:
+	case GDK_KEY_Num_Lock:
+	case GDK_KEY_Kana_Lock:
 		return(FALSE);
 		break;
 	}
@@ -540,8 +540,7 @@ GtkWidget *pref_start_shortcut()
 	check_lock = gtk_check_button_new_with_label(_("Ignore locks"));
 	gtk_box_pack_start(GTK_BOX(vbox2), check_lock,
 			   FALSE, FALSE, 0);
-	gtk_tooltips_set_tip(tooltip, check_lock, 
-			     _("Ignore Caps Lock and Num Lock key."),"Private");
+	gtk_widget_set_tooltip_text(check_lock, _("Ignore Caps Lock and Num Lock key."));
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(check_lock), bignore_locks);
 	g_signal_connect(G_OBJECT(check_lock), "clicked",
 			 G_CALLBACK(lock_changed), NULL);

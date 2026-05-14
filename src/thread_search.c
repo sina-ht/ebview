@@ -44,7 +44,7 @@ static void cancel_thread(GtkWidget *widget, gpointer *data)
 
 	LOG(LOG_DEBUG, "IN : cancel_thread()");
 
-	gtk_timeout_remove(tag_timeout);
+	g_source_remove(tag_timeout);
 
 	gtk_grab_remove(cancel_dialog);
 	gtk_widget_destroy(cancel_dialog);
@@ -95,24 +95,21 @@ static void show_cancel_dialog(gchar *text)
 			    G_CALLBACK(delete_event), NULL);
 
 	gtk_widget_set_size_request(cancel_dialog, 200, -1);
-	gtk_container_set_border_width (GTK_CONTAINER (GTK_DIALOG(cancel_dialog)->vbox), 10);
-	
 	button = gtk_button_new_with_label(_("Cancel"));
-	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (cancel_dialog)->action_area), button,
-				    TRUE, TRUE, 0);
+	gtk_dialog_add_action_widget(GTK_DIALOG(cancel_dialog), button, GTK_RESPONSE_CANCEL);
 	g_signal_connect (G_OBJECT (button), "clicked",
 			  G_CALLBACK(cancel_thread), (gpointer)NULL);
-	
+
 	label_cancel = gtk_label_new (_("Searching"));
-	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (cancel_dialog)->vbox), label_cancel, TRUE,TRUE, 5);
+	gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(cancel_dialog))), label_cancel, TRUE,TRUE, 5);
 
 	progress = gtk_progress_bar_new();
 	gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progress), 0);
 
-	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (cancel_dialog)->vbox), progress, TRUE,TRUE, 5);
+	gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(cancel_dialog))), progress, TRUE,TRUE, 5);
 
 	label_match = gtk_label_new ("0 hit");
-	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (cancel_dialog)->vbox), label_match, TRUE,TRUE, 5);
+	gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(cancel_dialog))), label_match, TRUE,TRUE, 5);
 
 //	gtk_window_set_position(GTK_WINDOW(cancel_dialog), GTK_WIN_POS_CENTER_ALWAYS);
 
@@ -143,7 +140,7 @@ static gint watch_thread(gpointer data){
 //		LOG(LOG_DEBUG, "OUT : watch_thread() : CONTINUE");
 		return(1);
 	}
-	gtk_timeout_remove(tag_timeout);
+	g_source_remove(tag_timeout);
 
 	show_result_tree();
 	if(search_result == NULL)
@@ -199,7 +196,7 @@ void thread_search(gboolean cancelable, gchar *text, void *(*func)(void *), void
 	pthread_attr_destroy(&thread_attr);
 
 	if(cancelable == TRUE) {
-		tag_timeout = gtk_timeout_add(WATCH_INTERVAL, watch_thread, NULL);
+		tag_timeout = g_timeout_add(WATCH_INTERVAL, watch_thread, NULL);
 //		pthread_join(tid, &p);
 
 	} else {

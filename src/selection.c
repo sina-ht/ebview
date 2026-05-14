@@ -188,22 +188,23 @@ selection_received (GtkWidget *widget, GtkSelectionData *data)
 
 	LOG(LOG_DEBUG, "IN : selection_received()");
 
-	if((data == NULL) || (data->data == NULL) || (data->length < 0)){
+	if((data == NULL) || (gtk_selection_data_get_data(data) == NULL) || (gtk_selection_data_get_length(data) < 0)){
 		LOG(LOG_DEBUG, "no data");
 		goto END;
 	}
 
 	// No conversion required for STRING type.
-	if (data->type == GDK_TARGET_STRING){
-		str = g_strndup(data->data, data->length);
+	if (gtk_selection_data_get_target(data) == GDK_TARGET_STRING){
+		str = g_strndup(gtk_selection_data_get_data(data), gtk_selection_data_get_length(data));
 
 	// Convert to UTF-8 for COMPOUND_TEXT type.
-	} else if ((data->type == gdk_atom_intern ("COMPOUND_TEXT", FALSE)) ||
-		   (data->type == gdk_atom_intern ("TEXT", FALSE))){
-		count = gdk_text_property_to_utf8_list (data->type,
-							data->format, 
-							data->data,
-							data->length,
+	} else if ((gtk_selection_data_get_target(data) == gdk_atom_intern ("COMPOUND_TEXT", FALSE)) ||
+		   (gtk_selection_data_get_target(data) == gdk_atom_intern ("TEXT", FALSE))){
+		count = gdk_text_property_to_utf8_list_for_display(gdk_display_get_default(),
+							gtk_selection_data_get_target(data),
+							gtk_selection_data_get_format(data),
+							gtk_selection_data_get_data(data),
+							gtk_selection_data_get_length(data),
 							&list);
 
 
@@ -370,8 +371,8 @@ void auto_lookup_start()
 #else
 
 	if(tag_timeout != 0)
-		gtk_timeout_remove(tag_timeout);
-	tag_timeout = gtk_timeout_add(auto_interval, copy_clipboard_x, NULL);
+		g_source_remove(tag_timeout);
+	tag_timeout = g_timeout_add(auto_interval, (GSourceFunc)copy_clipboard_x, NULL);
 
 #endif
 	auto_lookup_suspended = FALSE;
@@ -389,7 +390,7 @@ void auto_lookup_stop()
 	}
 #else
 	if(tag_timeout != 0)
-		gtk_timeout_remove(tag_timeout);
+		g_source_remove(tag_timeout);
 	tag_timeout = 0;
 #endif
 

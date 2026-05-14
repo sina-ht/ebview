@@ -21,12 +21,12 @@ AC_PROG_MAKE_SET
 AC_PROG_RANLIB
 
 dnl Checks for libraries.
-PKG_CHECK_MODULES(GTK, gtk+-2.0 >= 2.0.0)
+PKG_CHECK_MODULES(GTK, gtk+-3.0 >= 3.0)
 AC_SUBST(GTK_CFLAGS)
 AC_SUBST(GTK_LIBS)
-PKG_CHECK_MODULES(PANGOFT2, pangoft2, have_pangoft2="yes", have_pangoft2="no  (Pango-FT2 not found)")
-AC_SUBST(PANGOFT2_CFLAGS)
-AC_SUBST(PANGOFT2_LIBS)
+PKG_CHECK_MODULES(PANGOCAIRO, pangocairo, have_pangocairo="yes", have_pangocairo="no  (Pango-Cairo not found)")
+AC_SUBST(PANGOCAIRO_CFLAGS)
+AC_SUBST(PANGOCAIRO_LIBS)
 
 eb_LIB_EB4
 

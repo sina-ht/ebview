@@ -32,16 +32,23 @@ static 	GtkWidget *entry_reverse_bg;
 
 gint color_no;
 
-static void ok_colorsel(GtkWidget *widget,gpointer *data){
+static void ok_colorsel(GtkWidget *widget, gint response_id, gpointer *data){
 
 	GdkColor color;
+	GdkRGBA rgba_color;
 	gchar *color_name;
 	
 	LOG(LOG_DEBUG, "IN : ok_colorsel()");
 
-	gtk_grab_remove(colorsel_dlg);
+	if(response_id != GTK_RESPONSE_OK){
+		gtk_widget_destroy(colorsel_dlg);
+		return;
+	}
 
-	gtk_color_selection_get_current_color(GTK_COLOR_SELECTION(GTK_COLOR_SELECTION_DIALOG(colorsel_dlg)->colorsel), &color);
+	gtk_color_chooser_get_rgba(GTK_COLOR_CHOOSER(colorsel_dlg), &rgba_color);
+	color.red = rgba_color.red * 257;
+	color.green = rgba_color.green * 257;
+	color.blue = rgba_color.blue * 257;
 	color_name = gtk_color_selection_palette_to_string(&color, 1);
 
 	switch(color_no){
@@ -77,7 +84,7 @@ static void delete_colorsel( GtkWidget *widget,
 {
 	LOG(LOG_DEBUG, "IN : delete_colorsel()");
 
-	ok_colorsel(NULL, NULL);
+	ok_colorsel(NULL, GTK_RESPONSE_OK, NULL);
 
 	LOG(LOG_DEBUG, "OUT : delete_colorsel()");
 }
@@ -97,11 +104,9 @@ static void show_colorsel(GtkWidget *widget,gpointer *data){
 	g_signal_connect (G_OBJECT(colorsel_dlg), "delete_event",
 			  G_CALLBACK(delete_colorsel), NULL);
 
-	g_signal_connect(G_OBJECT(GTK_COLOR_SELECTION_DIALOG(colorsel_dlg)->ok_button), "clicked",
-			 G_CALLBACK(ok_colorsel), NULL);
-
-	g_signal_connect_swapped(G_OBJECT(GTK_COLOR_SELECTION_DIALOG(colorsel_dlg)->cancel_button), "clicked",
-				G_CALLBACK(gtk_widget_destroy), (gpointer)colorsel_dlg);
+	gtk_dialog_add_button(GTK_DIALOG(colorsel_dlg), _("OK"), GTK_RESPONSE_OK);
+	gtk_dialog_add_button(GTK_DIALOG(colorsel_dlg), _("Cancel"), GTK_RESPONSE_CANCEL);
+	g_signal_connect(G_OBJECT(colorsel_dlg), "response", G_CALLBACK(ok_colorsel), NULL);
 
 
 	g_assert(color_no < NUM_COLORS);
@@ -146,10 +151,12 @@ static void show_colorsel(GtkWidget *widget,gpointer *data){
 	} else {
 */
 	gdk_color_parse(text, &color);
-/*
-	}
-*/
-	gtk_color_selection_set_current_color(GTK_COLOR_SELECTION(GTK_COLOR_SELECTION_DIALOG(colorsel_dlg)->colorsel), &color);
+	GdkRGBA rgba;
+	rgba.red = color.red / 65535.0;
+	rgba.green = color.green / 65535.0;
+	rgba.blue = color.blue / 65535.0;
+	rgba.alpha = 1.0;
+	gtk_color_chooser_set_rgba(GTK_COLOR_CHOOSER(colorsel_dlg), &rgba);
 
 	gtk_widget_show_all(colorsel_dlg);
 

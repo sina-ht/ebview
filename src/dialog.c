@@ -32,12 +32,17 @@ void center_dialog(GtkWidget *window, GtkWidget *dialog){
 	gint window_width, window_height;
 	gint dialog_x, dialog_y;
 	gint dialog_width, dialog_height;
+	GdkWindow *w;
 
-	gdk_window_get_root_origin(window->window, &window_x, &window_y);
-	window_width = window->allocation.width;
-	window_height = window->allocation.height;
-	dialog_width = dialog->allocation.width;
-	dialog_height = dialog->allocation.height;
+	w = gtk_widget_get_window(window);
+	if(w)
+		gdk_window_get_root_origin(w, &window_x, &window_y);
+	else
+		window_x = window_y = 0;
+	window_width = gtk_widget_get_allocated_width(window);
+	window_height = gtk_widget_get_allocated_height(window);
+	dialog_width = gtk_widget_get_allocated_width(dialog);
+	dialog_height = gtk_widget_get_allocated_height(dialog);
 
 	if((window_width <= dialog_width) || 
 	   (window_height <= dialog_height))
@@ -137,7 +142,7 @@ void push_message(gchar *str){
 	GtkTextIter iter;
 
 #ifdef __WIN32__
-	// Windows ¤À¤È¤Ê¤¼¤«»à¤Ì
+	// Windows ï¿½ï¿½ï¿½È¤Ê¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	return;
 #endif
 

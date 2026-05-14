@@ -66,7 +66,7 @@ static gint load_watch_thread(gpointer data){
 //		LOG(LOG_DEBUG, "OUT : watch_thread() : CONTINUE");
 		return(1);
 	}
-	gtk_timeout_remove(tag_timeout);
+	g_source_remove(tag_timeout);
 
 	gtk_widget_destroy(splash);
 
@@ -94,8 +94,9 @@ void show_splash()
 	root_x = GetSystemMetrics(SM_CXSCREEN);
 	root_y = GetSystemMetrics(SM_CYSCREEN);
 #else
-	root_win = gdk_window_foreign_new (GDK_ROOT_WINDOW ());
-	gdk_window_get_size(root_win, &root_x, &root_y);
+	root_win = gdk_screen_get_root_window(gdk_screen_get_default());
+	root_x = gdk_window_get_width(root_win);
+	root_y = gdk_window_get_height(root_win);
 #endif
 
 	x = (root_x - SPLASH_WIDTH) /2;
@@ -127,7 +128,7 @@ void show_splash()
 
 	loading_dictgroup = 1;
 
-	tag_timeout = gtk_timeout_add(200, load_watch_thread, NULL);
+	tag_timeout = g_timeout_add(200, (GSourceFunc)load_watch_thread, NULL);
 	load_dictgroup_background();
 
 	gtk_main();
