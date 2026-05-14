@@ -288,6 +288,8 @@ static gint group_changed (GtkWidget *combo){
 }
 
 
+static GtkWidget *dict_bar_scroll;
+
 GtkWidget *create_dict_bar()
 {
 	GList *list=NULL;
@@ -317,7 +319,14 @@ GtkWidget *create_dict_bar()
 		}
 		g_list_free(children);
 	} else {
-		dict_bar = gtk_hbox_new(FALSE, 0);
+		dict_bar = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+
+		dict_bar_scroll = gtk_scrolled_window_new(NULL, NULL);
+		gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(dict_bar_scroll),
+					       GTK_POLICY_AUTOMATIC,
+					       GTK_POLICY_NEVER);
+		gtk_container_set_border_width(GTK_CONTAINER(dict_bar_scroll), 0);
+		gtk_container_add(GTK_CONTAINER(dict_bar_scroll), dict_bar);
 	}
 
 	combo_group = gtk_combo_box_text_new();
@@ -325,6 +334,7 @@ GtkWidget *create_dict_bar()
 	gtk_box_pack_start(GTK_BOX(dict_bar), combo_group, FALSE, FALSE, 0);
 
 	gtk_container_set_border_width(GTK_CONTAINER(dict_bar), 1);
+	gtk_container_set_border_width(GTK_CONTAINER(dict_bar_scroll), 1);
 
 	gtk_widget_set_tooltip_text(combo_group, _("Select dictionary group."));
 
@@ -409,21 +419,21 @@ if(g_list_length(list) != 0){
 	gtk_box_pack_start(GTK_BOX (dict_bar), dict_box, FALSE, FALSE, 0);
 	add_dict_buttons(dict_box);
 
-	gtk_widget_show_all(dict_bar);
+	gtk_widget_show_all(dict_bar_scroll);
 
 	LOG(LOG_DEBUG, "OUT : create_dict_bar()");
 
-	return(dict_bar);
+	return(dict_bar_scroll);
 }
 
 void update_dict_bar()
 {
-	
+
 	LOG(LOG_DEBUG, "IN : update_dict_bar()");
 
-	gtk_widget_hide(dict_bar);
+	gtk_widget_hide(dict_bar_scroll);
 	create_dict_bar();
-	gtk_widget_show_all(dict_bar);
+	gtk_widget_show_all(dict_bar_scroll);
 
 	LOG(LOG_DEBUG, "OUT : update_dict_bar()");
 
