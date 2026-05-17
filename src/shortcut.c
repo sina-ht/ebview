@@ -55,15 +55,10 @@ void install_shortcut(){
 	GtkTreeIter  iter;
 	guint state;
 	guint keyval;
-	GtkWidget *item;
-	gint idx;
-	gchar *str;
 	struct _shortcut_command *command;
 	GClosure *closure;
 
 	LOG(LOG_DEBUG, "IN : install_shortcut()");
-
-	idx = 0;
 
 	if(accel_group != NULL) {
 		gtk_window_remove_accel_group(GTK_WINDOW(main_window),
@@ -89,12 +84,10 @@ void install_shortcut(){
 					   SHORTCUT_COMMAND_COLUMN, &command,
 					   -1);
 
-//			g_snprintf(string, 64, "sc_%s", command->name);
-			str = g_strdup_printf("sc_%s", command->name);
 			if((state == 0) && (keyval == GDK_KEY_Return))
 				continue;
 
-			closure = g_cclosure_new(G_CALLBACK(accel_handler), (gpointer)keyval, NULL);
+			closure = g_cclosure_new(G_CALLBACK(accel_handler), GINT_TO_POINTER(keyval), NULL);
 
 
 			gtk_accel_group_connect(accel_group, keyval, state, GTK_ACCEL_VISIBLE, closure);
@@ -111,18 +104,15 @@ void install_shortcut(){
 	LOG(LOG_DEBUG, "OUT : install_shortcut()");
 }
 
-void install_shortcut_old(){
+G_GNUC_UNUSED void install_shortcut_old(){
 	GtkTreeIter  iter;
 	guint state;
 	guint keyval;
 	GtkWidget *item;
-	gint idx;
 	gchar *str;
 	struct _shortcut_command *command;
 
 	LOG(LOG_DEBUG, "IN : install_shortcut()");
-
-	idx = 0;
 
 	accel_group = gtk_accel_group_new();
 
@@ -157,12 +147,12 @@ void install_shortcut_old(){
 }
 
 void uninstall_shortcut(){
-	GList *item;
-	GtkWidget *widget;
 	
 	LOG(LOG_DEBUG, "IN : uninstall_shortcut()");
 
 #if 0
+	GList *item;
+	GtkWidget *widget;
 	item = g_list_first(accel_item_list);
 	while(item){
 		widget = (GtkWidget *)(item->data);

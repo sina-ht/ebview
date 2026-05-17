@@ -36,7 +36,6 @@ void set_log_level(gint level){
 
 void log_func(const gchar *file, gint line, LOG_LEVEL level, const gchar *message, ...){
 	va_list ap;
-	gchar format[1024];
 	gchar str[1024];
 
 	va_start(ap, message);

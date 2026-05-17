@@ -411,7 +411,6 @@ GtkWidget *pref_start_weblist()
 	GtkWidget *scroll;
 	GtkWidget *table;
 	GtkAttachOptions xoption, yoption;
-	GList *charcode_list=NULL;
 
 	GtkSizeGroup *entry_group;
 

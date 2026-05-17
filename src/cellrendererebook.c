@@ -373,7 +373,7 @@ struct special_char {
 static struct special_char special[] = {{'&', "&amp;"}, {'\"', "&quot;"}, {0, NULL}};
 
 
-static gchar *replace_special_char(gchar *text){
+G_GNUC_UNUSED static gchar *replace_special_char(gchar *text){
 	gchar buff[65536];
 	gchar *p;
 	gint i;

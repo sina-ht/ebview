@@ -97,7 +97,7 @@ static void dict_toggled(GtkWidget *widget, gpointer data)
 				i = 0;
 				if(gtk_tree_model_iter_children(GTK_TREE_MODEL(dict_store), &child_iter, &parent_iter) == TRUE){
 					do {
-						if(i == (int)data) {
+						if(i == (gint)(guintptr)data) {
 							gtk_tree_store_set(dict_store, &child_iter,
 									   DICT_ACTIVE_COLUMN, button_active,
 									   -1);
@@ -192,7 +192,7 @@ static void add_dict_buttons(GtkWidget *bar)
 						gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(toggle), active);
 						g_signal_connect(G_OBJECT(toggle),"toggled",
 								 G_CALLBACK(dict_toggled),
-								 (gpointer)idx);
+								 (gpointer)(guintptr)idx);
 				
 						gtk_box_pack_start(GTK_BOX(bar), toggle, FALSE, FALSE, 2);
 						if(binfo->available == FALSE) {

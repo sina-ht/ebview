@@ -541,7 +541,7 @@ gint ebook_end(){
 		
 		free_gaiji(binfo);
 
-		g_list_remove(book_list, book_item->data);
+		book_list = g_list_remove(book_list, book_item->data);
 		book_item = g_list_next(book_item);
 	}
 	
@@ -680,7 +680,6 @@ EB_Error_Code ebook_my_backward_text(BOOK_INFO *binfo)
 	ssize_t length;
 
 	int start_page;
-	int end_page;
 	int current_page;
 	int current_offset;
 	int offset;
@@ -697,7 +696,6 @@ EB_Error_Code ebook_my_backward_text(BOOK_INFO *binfo)
 	}
 
 	start_page = binfo->book->subbook_current->text.start_page;
-	end_page = binfo->book->subbook_current->text.end_page;
 
 	error_code = eb_tell_text(binfo->book, &text_position);
 	if(error_code != EB_SUCCESS){
@@ -851,7 +849,7 @@ static gchar *euc2jis(gchar *inbuf){
 	return(jisbuf);
 }
 
-static gint ebook_full_search_old(BOOK_INFO *binfo, char *word, gint method, gchar *title)
+G_GNUC_UNUSED static gint ebook_full_search_old(BOOK_INFO *binfo, char *word, gint method, gchar *title)
 {
 
 	EB_Error_Code error_code=EB_SUCCESS;
@@ -1056,7 +1054,6 @@ static gint ebook_full_search(BOOK_INFO *binfo, char *word, gint method, gchar *
 	EB_Position text_position;
 	char data[EB_SIZE_PAGE];
 	char *jisword;
-	char *word_p;
 	ssize_t length;
 	char *p;
 	char heading[MAXLEN_TEXT + 1];
@@ -1088,7 +1085,6 @@ static gint ebook_full_search(BOOK_INFO *binfo, char *word, gint method, gchar *
 	stop_code = binfo->book->text_context.auto_stop_code;
 
 	jisword = euc2jis(word);
-	word_p = jisword;
 
 	bmh = bmh_prepare(jisword, TRUE);
 
@@ -2287,12 +2283,9 @@ guchar *read_gaiji_as_bitmap(BOOK_INFO *binfo, gchar *name, gint size, gint *wid
 	size_t image_size;
 	int image_width;
 	int image_height;
-	EB_Subbook *subbook;
 
 
 	char_no = strtol(&name[1], NULL, 16);
-
-	subbook = binfo->book->subbook_current;
 
 	switch (size) {
 	case 16:
@@ -2456,17 +2449,13 @@ gchar **read_gaiji_as_xpm(BOOK_INFO *binfo, gchar *name, gint size, gint *width,
 	EB_Error_Code error_code = EB_SUCCESS;
 	gint char_no;
 	gchar bitmap_data[EB_SIZE_WIDE_FONT_48];
-	guchar *image_data;
 	int image_width;
 	int image_height;
-	EB_Subbook *subbook;
 	gchar **xpm;
 
 	LOG(LOG_DEBUG, "IN : read_gaiji_as_xpm(name=%s, size=%d)", name, size);
 
 	char_no = strtol(&name[1], NULL, 16);
-
-	subbook = binfo->book->subbook_current;
 
 	switch (size) {
 	case 16:
@@ -2551,7 +2540,6 @@ gchar **read_gaiji_as_xpm(BOOK_INFO *binfo, gchar *name, gint size, gint *width,
 		}
 	}
 
-	image_data = malloc((image_width + 4)* (image_height* 5));
 	xpm = ebook_bitmap_to_xpm(bitmap_data, image_width, image_height, color);
 
 	*width = image_width;
@@ -2627,14 +2615,7 @@ static const unsigned char gif_preamble[GIF_PREAMBLE_LENGTH] = {
 };
 
 
-static void ebook_bitmap_to_gif(bitmap, width, height, gif, gif_length, fg, bg)
-    const char *bitmap;
-    int width;
-    int height;
-    char *gif;
-    guint *gif_length;
-    guint fg;
-    guint bg;
+static void ebook_bitmap_to_gif(const char *bitmap, int width, int height, char *gif, guint *gif_length, guint fg, guint bg)
 {
     unsigned char *gif_p = (unsigned char *)gif;
     const unsigned char *bitmap_p = (const unsigned char *)bitmap;
@@ -2732,7 +2713,6 @@ guchar *read_gaiji_as_xbm(BOOK_INFO *binfo, gchar *name, gchar *fname, guint fg,
 	size_t image_size;
 	int image_width;
 	int image_height;
-	EB_Subbook *subbook;
 	FILE *fp;
 
 
@@ -2740,8 +2720,6 @@ guchar *read_gaiji_as_xbm(BOOK_INFO *binfo, gchar *name, gchar *fname, guint fg,
 		return(NULL);
 
 	char_no = strtol(&name[1], NULL, 16);
-
-	subbook = binfo->book->subbook_current;
 
 	error_code = eb_font_height(binfo->book, &image_height);
 	if (error_code != EB_SUCCESS) {
@@ -2805,7 +2783,7 @@ guchar *read_gaiji_as_xbm(BOOK_INFO *binfo, gchar *name, gchar *fname, guint fg,
 
 
 	ebook_bitmap_to_gif(bitmap_data, image_width,
-			    image_height, image_data, &image_size, fg, bg);
+			    image_height, (char *)image_data, (guint *)&image_size, fg, bg);
 
 
 	fp = fopen(fname, "wb");

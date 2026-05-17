@@ -85,11 +85,9 @@ static void show_cancel_dialog(gchar *text)
 
 	search_progress = 0.0;
 	
-//	cancel_dialog = gtk_dialog_new();
-	cancel_dialog = gtk_dialog_new_with_buttons(text,
-	                             GTK_WINDOW(main_window),
-					GTK_DIALOG_DESTROY_WITH_PARENT /* | GTK_DIALOG_NO_SEPARATOR */,
-                                     NULL);
+cancel_dialog = gtk_dialog_new();
+	gtk_window_set_title(GTK_WINDOW(cancel_dialog), text);
+	gtk_window_set_transient_for(GTK_WINDOW(cancel_dialog), GTK_WINDOW(main_window));
 
 	g_signal_connect (G_OBJECT (cancel_dialog), "delete_event",
 			    G_CALLBACK(delete_event), NULL);

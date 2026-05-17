@@ -136,12 +136,14 @@ void web_search()
 			strcat(url, glue);
 
 		if(strcmp(code, "ascii") == 0) {
-			sprintf(url, "%s%s", url, keywords[i]);
+			strcat(url, keywords[i]);
 		} else {
+			char tmp[4];
 			kanji_str = codeconv(keywords[i], code);
 			for(j=0 ; j < strlen(kanji_str) ; j ++){
 				c = kanji_str[j];
-				sprintf(url, "%s%%%02X", url, c);
+				snprintf(tmp, sizeof(tmp), "%%%02X", (unsigned char)c);
+				strcat(url, tmp);
 			}
 			free(kanji_str);
 		}
@@ -182,7 +184,7 @@ void go_home()
 	g_free(home);
 }
 
-static void weblist_selection_changed(GtkTreeSelection *selection, gpointer data)
+G_GNUC_UNUSED static void weblist_selection_changed(GtkTreeSelection *selection, gpointer data)
 {
         GtkTreeIter iter;
         GtkTreeModel *model;
@@ -259,8 +261,6 @@ GtkWidget *create_web_tree()
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
 	GtkTreeSelection *select;
-	gint nmenu_items;
-	gint i;
 
 	LOG(LOG_DEBUG, "IN : create_web_tree()");
 

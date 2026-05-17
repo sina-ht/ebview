@@ -201,7 +201,7 @@ void get_content(gchar *text, gchar *tag_name, gchar **content, gint *content_le
 
 void get_attr(const gchar *tag, gchar *name, gchar *value){
 	gchar buff[512];
-	gchar *p;
+	const gchar *p;
 	gint i;
 
 #ifdef XML_TRACE

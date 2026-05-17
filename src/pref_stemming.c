@@ -147,10 +147,6 @@ GtkWidget *pref_start_stemming()
 	GtkWidget *scroll;
 	GtkWidget *check_ending;
 
-	GtkWidget *menu;
-	GtkWidget *menu_item;
-
-
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
 

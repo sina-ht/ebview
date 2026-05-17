@@ -70,7 +70,7 @@ static void ok_fontsel(GtkWidget *widget, gint response_id, gpointer *data){
 
 }
 
-static void delete_fontsel( GtkWidget *widget,
+G_GNUC_UNUSED static void delete_fontsel( GtkWidget *widget,
 		   GdkEvent  *event,
 		   gpointer   data )
 {
@@ -84,7 +84,7 @@ static void show_fontsel(GtkWidget *widget,gpointer *data){
 
 	LOG(LOG_DEBUG, "IN : show_fontsel()");
 
-	font_no = (gint)data;
+	font_no = (gint)(guintptr)data;
 
 	fontsel_dlg = gtk_font_chooser_dialog_new("Please select font", NULL);
 

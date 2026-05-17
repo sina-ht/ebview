@@ -529,7 +529,7 @@ static void delete_event( GtkWidget *widget,
 	LOG(LOG_DEBUG, "OUT : delete_event()");
 }
 
-static gboolean focus_in_event( GtkWidget *widget,
+G_GNUC_UNUSED static gboolean focus_in_event( GtkWidget *widget,
 		   GdkEvent  *event,
 		   gpointer   data )
 {

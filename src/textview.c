@@ -443,9 +443,6 @@ gint button_press_event(GtkWidget *widget, GdkEventButton *event)
 
 GtkWidget *create_main_view()
 {
-	gint nmenu_items;	
-	gint i;
-
 	LOG(LOG_DEBUG, "IN : create_main_view()");
 
 	dict_scroll = gtk_scrolled_window_new (NULL, NULL);
@@ -679,7 +676,7 @@ static void font_resize(gchar **font, gint increment){
 	gchar *old;
 	gint size;
 	gchar *p;
-	gchar buff[8];
+	gchar buff[16];
 
 	LOG(LOG_DEBUG, "IN : font_resize(%s, %d)", *font, increment);
 
@@ -709,7 +706,7 @@ static void font_resize(gchar **font, gint increment){
 	// Smallest size is 1
 	if(size < 1)
 		size = 1;
-	sprintf(buff, "%d", size);
+	snprintf(buff, sizeof(buff), "%d", size);
 	g_free(*font);
 	*font = g_strconcat(old, " ", buff, NULL);
 	g_free(old);

@@ -1125,6 +1125,7 @@ static void ok_colorsel(GtkWidget *widget, gint response_id, gpointer *data){
 	}
 
 	title = (gchar *)gtk_entry_get_text(GTK_ENTRY(entry_title));
+	(void)title;
 	if(strlen(fg_color) == 0){
 		if(strlen(bg_color) == 0)
 			sprintf(buff, _("Sample"));
@@ -1144,7 +1145,7 @@ static void ok_colorsel(GtkWidget *widget, gint response_id, gpointer *data){
 	LOG(LOG_DEBUG, "OUT : ok_colorsel()");
 }
 
-static void delete_colorsel( GtkWidget *widget,
+G_GNUC_UNUSED static void delete_colorsel( GtkWidget *widget,
 		   GdkEvent  *event,
 		   gpointer   data )
 {
@@ -1161,7 +1162,7 @@ static void show_colorsel(GtkWidget *widget,gpointer *data){
 	
 	LOG(LOG_DEBUG, "IN : show_colorsel()");
 	
-	color_no = (gint)data;
+	color_no = (gint)(guintptr)data;
 
 
 	colorsel_dlg = gtk_color_selection_dialog_new(_("Choose Color"));

@@ -133,8 +133,8 @@ gboolean find_or_copy_file(gchar *filename)
 
 	if(find_file(fullpath) == FALSE){
 		// Copy default file
-		gchar srcfile[512];
-		gchar command[512];
+		gchar srcfile[1024];
+		gchar command[2048];
 #ifdef __WIN32__
 		sprintf(srcfile, "%s%s%s", package_dir, DIR_DELIMITER, filename);
 		sprintf(command, "copy \"%s%s%s\" \"%s\"", package_dir, DIR_DELIMITER, filename, fullpath);

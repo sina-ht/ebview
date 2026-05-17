@@ -463,9 +463,6 @@ static void draw_graphic(CANVAS *canvas, BOOK_INFO *binfo, gint type, gint page,
 	GdkPixbuf *pixbuf;
 	EB_Error_Code error_code=EB_SUCCESS;
 
-	GtkTextIter start_iter;
-	GtkTextIter end_iter;
-
 	//LOG(LOG_DEBUG, "IN : draw_graphic()");
 
 	g_assert(canvas != NULL);
@@ -520,9 +517,6 @@ static void draw_graphic(CANVAS *canvas, BOOK_INFO *binfo, gint type, gint page,
 			canvas->buffer, canvas->iter,
 			pixbuf);
 	gdk_pixbuf_unref(pixbuf);
-
-	end_iter = *(canvas->iter);
-	start_iter = *(canvas->iter);
 
 /*
 	if((0 <= canvas->indent)  && (canvas->indent < MAX_INDENT)){
@@ -869,7 +863,10 @@ void draw_content(CANVAS *canvas, DRAW_TEXT *text, BOOK_INFO *binfo, TAG *tag, g
 				l_tag.page = l_page;
 				l_tag.offset = l_offset;
 				l_tag.size = l_size;
-				sprintf(l_tag.filename, "%s", attr);
+				#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-truncation"
+				snprintf(l_tag.filename, sizeof(l_tag.filename), "%s", attr);
+#pragma GCC diagnostic pop
 				
 				utf_str = _(" [Movie] ");
 				euc_str = iconv_convert("utf-8", "euc-jp", utf_str);
