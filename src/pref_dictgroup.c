@@ -193,7 +193,7 @@ static void cell_edited(GtkCellRendererText *cell,
 			const gchar         *new_text,
 			gpointer             data)
 {
-
+	(void)data;
 	GtkTreePath *path = gtk_tree_path_new_from_string (path_string);
 	GtkTreeIter iter;
 	gint column;
@@ -325,9 +325,10 @@ static void cell_edited(GtkCellRendererText *cell,
 
 
 static gboolean row_drop_possible (GtkTreeDragDest   *drag_dest,
-                                       GtkTreePath       *dest,
-                                       GtkSelectionData  *selection_data)
+                                        GtkTreePath       *dest,
+                                        GtkSelectionData  *selection_data)
 {
+	(void)selection_data;
 	GtkTreeSelection *selection;
 	GtkTreeIter iter;
 	GtkTreePath *src;
@@ -365,6 +366,7 @@ static gboolean row_drop_possible (GtkTreeDragDest   *drag_dest,
 
 static void up_item(GtkWidget *widget,gpointer *data)
 {
+	(void)widget; (void)data;
 	GtkTreeIter iter;
 	GtkTreeIter prev_iter;
 	GtkTreeSelection *selection;
@@ -485,6 +487,7 @@ static void up_item(GtkWidget *widget,gpointer *data)
 
 static void down_item(GtkWidget *widget,gpointer *data)
 {
+	(void)widget; (void)data;
 	GtkTreeIter iter;
 	GtkTreeIter next_iter;
 	GtkTreeSelection *selection;
@@ -600,7 +603,7 @@ static void down_item(GtkWidget *widget,gpointer *data)
 
 static void remove_item(GtkWidget *widget, gpointer *data)
 {
-
+	(void)widget; (void)data;
 	GtkTreeIter iter;
 	GtkTreeSelection *selection;
 
@@ -621,7 +624,7 @@ static void remove_item(GtkWidget *widget, gpointer *data)
 
 static void add_group(GtkWidget *widget,gpointer *data)
 {
-
+	(void)widget; (void)data;
 	GtkTreeIter iter;
 	char *name;
 
@@ -828,6 +831,7 @@ static void search_dictionary_recursive(gchar *dirname, gint depth)
 
 static void search_disk(GtkWidget *widget, gpointer *data)
 {
+	(void)widget; (void)data;
 	gchar *dirname;
 
 	LOG(LOG_DEBUG, "IN : search_disk()");
@@ -861,6 +865,7 @@ static gboolean drag_data_received(GtkTreeDragDest   *drag_dest,
 				   GtkTreePath       *dest,
 				   GtkSelectionData  *selection_data)
 {
+	(void)drag_dest; (void)dest; (void)selection_data;
 	LOG(LOG_DEBUG, "IN : drag_data_received()");
 	last_binfo = NULL;
 	LOG(LOG_DEBUG, "OUT : drag_data_received()");
@@ -984,6 +989,7 @@ static gboolean update_last_dictionary()
 
 static void dict_selection_changed(GtkTreeSelection *selection, gpointer data)
 {
+	(void)data;
 	GtkTreeIter iter;
 
 	gchar *title;
@@ -1098,7 +1104,7 @@ static void dict_selection_changed(GtkTreeSelection *selection, gpointer data)
 }
 
 static void ok_colorsel(GtkWidget *widget, gint response_id, gpointer *data){
-
+	(void)widget; (void)data;
 	GdkColor color;
 	GdkRGBA rgba_color;
 	gchar *color_name;
@@ -1149,6 +1155,7 @@ G_GNUC_UNUSED static void delete_colorsel( GtkWidget *widget,
 		   GdkEvent  *event,
 		   gpointer   data )
 {
+	(void)widget; (void)event; (void)data;
 	LOG(LOG_DEBUG, "IN : delete_colorsel()");
 
 	ok_colorsel(NULL, GTK_RESPONSE_OK, NULL);
@@ -1157,9 +1164,9 @@ G_GNUC_UNUSED static void delete_colorsel( GtkWidget *widget,
 }
 
 static void show_colorsel(GtkWidget *widget,gpointer *data){
-
+	(void)widget;
 	GdkColor color;
-	
+
 	LOG(LOG_DEBUG, "IN : show_colorsel()");
 	
 	color_no = (gint)(guintptr)data;
@@ -1197,9 +1204,9 @@ g_assert(color_no < NUM_COLORS);
 
 
 static void clear_color(GtkWidget *widget,gpointer *data){
-
+	(void)widget; (void)data;
 	gchar buff[128];
-	
+
 	LOG(LOG_DEBUG, "IN : clear_color()");
 
 	fg_color[0] = '\0';

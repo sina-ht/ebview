@@ -362,6 +362,7 @@ gdk_window_get_pointer(gtk_widget_get_window(widget), &x, &y, &mask);
 
 gint leave_notify_event(GtkWidget *widget, GdkEventCrossing *event, gpointer data)
 {
+	(void)widget; (void)event; (void)data;
 #ifdef __WIN32__
 	HCURSOR hCursor;
 #else

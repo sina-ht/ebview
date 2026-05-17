@@ -132,7 +132,7 @@ BOOK_INFO *load_book(const char *book_path, int subbook_no, gchar *appendix_path
 	}
 #endif
 
-	binfo = (BOOK_INFO *)calloc(sizeof(BOOK_INFO),1);
+	binfo = (BOOK_INFO *)calloc(1,sizeof(BOOK_INFO));
 	if(binfo == NULL){
 		LOG(LOG_ERROR, "No memory");
 		exit(1);
@@ -1011,7 +1011,7 @@ G_GNUC_UNUSED static gint ebook_full_search_old(BOOK_INFO *binfo, char *word, gi
 				*p = '\0';
 
 
-			rp = (RESULT *)calloc(sizeof(RESULT),1);
+			rp = (RESULT *)calloc(1,sizeof(RESULT));
 			if(rp == NULL){
 				LOG(LOG_ERROR, "No memory");
 				exit(1);
@@ -1185,7 +1185,7 @@ static gint ebook_full_search(BOOK_INFO *binfo, char *word, gint method, gchar *
 				*p = '\0';
 
 
-			rp = (RESULT *)calloc(sizeof(RESULT),1);
+			rp = (RESULT *)calloc(1,sizeof(RESULT));
 			if(rp == NULL){
 				LOG(LOG_ERROR, "No memory");
 				exit(1);
@@ -1756,7 +1756,7 @@ gint ebook_simple_search2(BOOK_INFO *binfo, char *word, gint method, gchar *titl
 			if(check_duplicate_hit(hits[i].text) == TRUE)
 				continue;
 
-			rp = (RESULT *)calloc(sizeof(RESULT),1);
+			rp = (RESULT *)calloc(1,sizeof(RESULT));
 			if(rp == NULL){
 				LOG(LOG_ERROR, "No memory");
 				exit(1);
@@ -1994,6 +1994,8 @@ gchar *ebook_get_heading(BOOK_INFO *binfo, int page, int offset)
 	EB_Position position;
 	gchar *p;
 
+	(void)page;
+	(void)offset;
 	LOG(LOG_DEBUG, "IN : ebook_get_heading()");
 
 	if((error_code = ebook_set_subbook(binfo)) != EB_SUCCESS)
@@ -2242,18 +2244,21 @@ gint check_gaiji_size(BOOK_INFO *binfo, gint prefered_size){
 			break;
 		}
 		size = 30;
+		/* fall through */
 	case 30:
 		if (eb_have_font(binfo->book, EB_FONT_30)){
 			size = 30;
 			break;
 		}
 		size = 24;
+		/* fall through */
 	case 24:
 		if (eb_have_font(binfo->book, EB_FONT_24)){
 			size = 24;
 			break;
 		}
 		size = 16;
+		/* fall through */
 	case 16:
 		if (eb_have_font(binfo->book, EB_FONT_16)){
 			size = 16;

@@ -41,6 +41,7 @@ static GtkWidget *label_cancel=NULL;
 
 static void cancel_thread(GtkWidget *widget, gpointer *data)
 {
+	(void)widget; (void)data;
 
 	LOG(LOG_DEBUG, "IN : cancel_thread()");
 
@@ -70,6 +71,7 @@ static void delete_event( GtkWidget *widget,
 		   GdkEvent  *event,
 		   gpointer   data )
 {
+	(void)widget; (void)event; (void)data;
 	LOG(LOG_DEBUG, "IN : delete_event()");
 
 	cancel_thread(NULL, NULL);
@@ -120,6 +122,7 @@ cancel_dialog = gtk_dialog_new();
 }
 
 static gint watch_thread(gpointer data){
+	(void)data;
 
 	char msg[256];
 

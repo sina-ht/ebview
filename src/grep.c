@@ -986,6 +986,7 @@ void open_file(RESULT *rp)
 
 static gint ignore_case_toggled(GtkWidget *widget, gpointer data)
 {
+	(void)data;
 	LOG(LOG_DEBUG, "IN : ignore_case_toggled()");
 
 	bignore_case = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget));
@@ -997,6 +998,7 @@ static gint ignore_case_toggled(GtkWidget *widget, gpointer data)
 
 static gint suppress_hidden_toggled(GtkWidget *widget, gpointer data)
 {
+	(void)data;
 	LOG(LOG_DEBUG, "IN : suppress_hidden_toggled()");
 
 	bsuppress_hidden_files = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget));
@@ -1011,6 +1013,7 @@ static gint dirgroup_changed (GtkWidget *combo){
 	const gchar *text;
 	GtkTreeIter   iter;
 
+	(void)combo;
 	LOG(LOG_DEBUG, "IN : dirgroup_changed()");
 
 	text = gtk_combo_box_get_active_id(GTK_COMBO_BOX(combo_dirgroup));

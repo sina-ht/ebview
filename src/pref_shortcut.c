@@ -122,6 +122,7 @@ gboolean pref_end_shortcut()
 }
 
 gboolean ungrab_server(gpointer data){
+	(void)data;
 	LOG(LOG_DEBUG, "IN : ungrab_server()");
 
 	if(grab == FALSE)
@@ -141,6 +142,7 @@ gboolean ungrab_server(gpointer data){
 }
 
 static void grab_server(GtkWidget *widget,gpointer *data){
+	(void)widget; (void)data;
 
 	LOG(LOG_DEBUG, "IN : grab_server()");
 
@@ -224,6 +226,7 @@ void key_val_to_string(guint state, guint keyval, gchar *key){
 }
 
 static gint window_key_event(GtkWidget *widget, GdkEventKey *event){
+	(void)widget;
 	gchar key[256];
 
 	LOG(LOG_DEBUG, "IN : window_key_event(keyval=%d)", event->keyval);
@@ -268,6 +271,7 @@ static gint window_key_event(GtkWidget *widget, GdkEventKey *event){
 }
 
 static void remove_entry(GtkWidget *widget,gpointer *data){
+	(void)widget; (void)data;
 	GtkTreeIter iter;
 	GtkTreeSelection *selection;
 
@@ -284,6 +288,7 @@ static void remove_entry(GtkWidget *widget,gpointer *data){
 }
 
 static void add_entry(GtkWidget *widget, gpointer *data){
+	(void)widget; (void)data;
 
 	struct _shortcut_command *command;
 
@@ -333,6 +338,7 @@ static void add_entry(GtkWidget *widget, gpointer *data){
 
 static void lock_changed(GtkWidget *widget,gpointer *data)
 {
+	(void)widget; (void)data;
 
 	LOG(LOG_DEBUG, "IN : lock_changed()");
 

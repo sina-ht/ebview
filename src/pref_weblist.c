@@ -61,6 +61,7 @@ gboolean pref_end_weblist()
 
 static void up_item(GtkWidget *widget, gpointer *data)
 {
+	(void)widget; (void)data;
 	GtkTreeIter iter;
 	GtkTreeIter prev_iter;
 	GtkTreeSelection *selection;
@@ -96,6 +97,7 @@ static void up_item(GtkWidget *widget, gpointer *data)
 
 static void down_item(GtkWidget *widget,gpointer *data)
 {
+	(void)widget; (void)data;
 	GtkTreeIter iter;
 	GtkTreeIter next_iter;
 	GtkTreeSelection *selection;
@@ -133,6 +135,7 @@ static void down_item(GtkWidget *widget,gpointer *data)
 
 static void remove_item(GtkWidget *widget, gpointer *data)
 {
+	(void)widget; (void)data;
 
 	GtkTreeIter iter;
 	GtkTreeSelection *selection;
@@ -153,6 +156,7 @@ static void remove_item(GtkWidget *widget, gpointer *data)
 
 static void add_group(GtkWidget *widget,gpointer *data)
 {
+	(void)widget; (void)data;
 
 	GtkTreeIter iter;
 	gchar *name;
@@ -179,6 +183,7 @@ static void add_group(GtkWidget *widget,gpointer *data)
 
 static void add_engine(GtkWidget *widget,gpointer *data)
 {
+	(void)widget; (void)data;
 
 	GtkTreeIter iter;
 	GtkTreeSelection *selection;
@@ -240,6 +245,7 @@ static void add_engine(GtkWidget *widget,gpointer *data)
 
 static void web_selection_changed(GtkTreeSelection *selection, gpointer data)
 {
+	(void)data;
 	GtkTreeIter iter;
 
 	gint type;
@@ -392,6 +398,7 @@ static gboolean drag_data_received(GtkTreeDragDest   *drag_dest,
 				   GtkTreePath       *dest,
 				   GtkSelectionData  *selection_data)
 {
+	(void)drag_dest; (void)dest; (void)selection_data;
 	LOG(LOG_DEBUG, "IN : drag_data_received()");
 	edited = FALSE;
 	LOG(LOG_DEBUG, "OUT : drag_data_received()");

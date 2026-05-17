@@ -66,6 +66,8 @@ extern GtkWidget *note_tree;
 void exit_program( GtkWidget *widget,
 		   gpointer   data )
 {
+	(void)widget;
+	(void)data;
 #if 0
 #ifndef __WIN32__
 	void *p;

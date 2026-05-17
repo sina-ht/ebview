@@ -35,7 +35,7 @@ void set_link(TAG *tag)
 
 	g_assert(tag != NULL);
 
-	t = calloc(sizeof(TAG), 1);
+	t = calloc(1, sizeof(TAG));
 	t->type = tag->type;
 	t->start = tag->start;
 	t->end = tag->end;

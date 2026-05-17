@@ -30,6 +30,7 @@ static gchar last_dir[1024];
 
 static void add_dirgroup(GtkWidget *widget,gpointer *data)
 {
+	(void)widget; (void)data;
 
 	GtkTreeIter iter;
 //	GtkTreeSelection *selection;
@@ -73,6 +74,7 @@ static void add_dirgroup(GtkWidget *widget,gpointer *data)
 
 static void dirgroup_selection_changed(GtkTreeSelection *selection, gpointer data)
 {
+	(void)data;
 	GtkTreeIter iter;
 
 	gchar *title;
@@ -113,6 +115,7 @@ static void dirgroup_selection_changed(GtkTreeSelection *selection, gpointer dat
 
 static void change_dirgroup(GtkWidget *widget, gpointer *data)
 {
+	(void)widget; (void)data;
 
 	GtkTreeIter iter;
 //	GtkTreeSelection *selection;
@@ -152,6 +155,7 @@ static void change_dirgroup(GtkWidget *widget, gpointer *data)
 
 static void remove_item(GtkWidget *widget, gpointer *data)
 {
+	(void)widget; (void)data;
 
 	GtkTreeIter iter;
 //	GtkTreeSelection *selection;
@@ -173,6 +177,7 @@ static void remove_item(GtkWidget *widget, gpointer *data)
 
 static void filesel_ok(GtkWidget *filesel, gint response_id, gpointer *data)
 {
+	(void)data;
 	gchar *dir;
 	gchar *text;
 	GtkTextBuffer *buffer;
@@ -207,6 +212,7 @@ static void filesel_ok(GtkWidget *filesel, gint response_id, gpointer *data)
 
 static void open_filesel(GtkWidget *widget, gpointer *data)
 {
+	(void)widget; (void)data;
 	GtkWidget *filesel;
 
 	LOG(LOG_DEBUG, "IN : open_filesel()");

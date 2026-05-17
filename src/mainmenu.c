@@ -70,7 +70,7 @@ void set_tab_position(GtkPositionType position);
 
 gint menuitem_handler (GtkWidget *widget, gchar *string)
 {
-
+	(void)widget;
 	LOG(LOG_DEBUG, "IN : menuitem_handler(%s)", string);
 
 	if(bstarting_up)

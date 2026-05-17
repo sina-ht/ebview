@@ -177,6 +177,7 @@ void show_multi()
 
 void multi_select_row(GtkWidget *widget, gint row, gint column, GdkEventButton *bevent, gpointer user_data)
 {
+	(void)widget; (void)row; (void)column; (void)bevent; (void)user_data;
 /*
 	GtkWidget *node;
 	MULTI_SEARCH *idata;
@@ -469,6 +470,7 @@ static void show_candidate_tree(BOOK_INFO *binfo, gint page, gint offset, GtkTre
 //void candidate_select_row(GtkWidget *widget, gint row, gint column, GdkEventButton *bevent, gpointer user_data)
 static void candidate_selection_changed(GtkTreeSelection *selection, gpointer data)
 {
+	(void)data;
         GtkTreeIter iter;
         GtkTreeModel *model;
 	gchar *title;
@@ -540,6 +542,7 @@ static void candidate_selection_changed(GtkTreeSelection *selection, gpointer da
 
 static void candidate_pressed(GtkWidget *widget, gpointer data)
 {
+	(void)widget;
 	EB_Position position;
 	EB_Error_Code error_code;
 
@@ -675,6 +678,7 @@ void search_multi(gchar *word)
 
 static void start_multi_search(GtkWidget *widget, gpointer data)
 {
+	(void)widget; (void)data;
 	const gchar *text;
 	gchar word[256];
 	gchar *euc_str;
@@ -739,6 +743,7 @@ static void start_multi_search(GtkWidget *widget, gpointer data)
 	
 static void multi_selection_changed(GtkTreeSelection *selection, gpointer data)
 {
+	(void)data;
         GtkTreeIter iter;
         GtkTreeModel *model;
         gint type;

@@ -42,7 +42,7 @@ void log_func(const gchar *file, gint line, LOG_LEVEL level, const gchar *messag
 	vsnprintf(str, 1024, message, ap);
 	va_end(ap);
 
-	if(level <= ebview_log_level) {
+	if((gint)level <= ebview_log_level) {
 		char *prefix;
 
 		switch(level){

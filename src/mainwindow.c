@@ -217,7 +217,7 @@ void toggle_popup(){
 #endif
 
 static gint method_changed (GtkWidget *combo){
-
+	(void)combo;
 	gint method;
 	
 	// You cannot show menu and copyright here
@@ -265,7 +265,7 @@ static gint method_changed (GtkWidget *combo){
 
 
 static gint entry_activate_event(GtkWidget *widget, GdkEventKey *event){
-
+	(void)widget; (void)event;
 	LOG(LOG_DEBUG, "IN : entry_activate_event()");
 
 	start_search();
@@ -362,6 +362,7 @@ void show_home()
 
 static void dict_history_back(GtkWidget *widget, gpointer *data)
 {
+	(void)widget; (void)data;
 	LOG(LOG_DEBUG, "IN : dict_history_back()");
 	history_back();
 	LOG(LOG_DEBUG, "OUT : dict_history_back()");
@@ -369,6 +370,7 @@ static void dict_history_back(GtkWidget *widget, gpointer *data)
 
 static void dict_history_forward(GtkWidget *widget, gpointer *data)
 {
+	(void)widget; (void)data;
 	LOG(LOG_DEBUG, "IN : dict_history_forward()");
 	history_forward();
 	LOG(LOG_DEBUG, "OUT : dict_history_forward()");
@@ -377,6 +379,7 @@ static void dict_history_forward(GtkWidget *widget, gpointer *data)
 
 static void dict_forward_text(GtkWidget *widget, gpointer *data)
 {
+	(void)widget; (void)data;
 	gint page, offset;
 	EB_Error_Code error_code;
 	RESULT result;
@@ -415,6 +418,7 @@ static void dict_forward_text(GtkWidget *widget, gpointer *data)
 
 static void dict_backward_text(GtkWidget *widget, gpointer *data)
 {
+	(void)widget; (void)data;
 	gint page, offset;
 	EB_Error_Code error_code;
 	RESULT result;
@@ -465,6 +469,7 @@ void go_down(){
 
 void note_switch_page(GtkNotebook *notebook, GtkWidget *page, gint page_num, gpointer data)
 {
+	(void)notebook; (void)page; (void)data;
 	LOG(LOG_DEBUG, "IN : note_switch_page()");
 
 	g_signal_handler_block(G_OBJECT(GTK_COMBO_BOX(combo_method)),
@@ -522,6 +527,7 @@ static void delete_event( GtkWidget *widget,
 		   GdkEvent  *event,
 		   gpointer   data )
 {
+	(void)event; (void)data;
 	LOG(LOG_DEBUG, "IN : delete_event()");
 
 	exit_program(widget, data);
@@ -533,6 +539,7 @@ G_GNUC_UNUSED static gboolean focus_in_event( GtkWidget *widget,
 		   GdkEvent  *event,
 		   gpointer   data )
 {
+	(void)widget; (void)event; (void)data;
 	LOG(LOG_DEBUG, "IN : focus_in_event()");
 
 	gtk_window_set_focus(GTK_WINDOW(main_window), word_entry);
@@ -546,6 +553,7 @@ static void style_set_event( GtkWidget *widget,
 		   GdkEvent  *event,
 		   gpointer   data )
 {
+	(void)widget; (void)event; (void)data;
 	LOG(LOG_DEBUG, "IN : style_set_event()");
 
 	style_set = TRUE;
@@ -554,7 +562,7 @@ static void style_set_event( GtkWidget *widget,
 }
 
 static gint key_press_event(GtkWidget *widget, GdkEventKey *event){
-
+	(void)widget; (void)event;
 	if(entry_focus_in)
 		return(FALSE);
 
@@ -567,6 +575,7 @@ static gint key_press_event(GtkWidget *widget, GdkEventKey *event){
 }
 static gint entry_focus_out_event(GtkWidget *widget, GdkEventKey *event)
 {
+	(void)widget; (void)event;
 	entry_focus_in = FALSE;
 #ifdef __WIN32__
 	gtk_editable_select_region(GTK_EDITABLE(word_entry),
@@ -578,11 +587,13 @@ static gint entry_focus_out_event(GtkWidget *widget, GdkEventKey *event)
 
 static gint entry_focus_in_event(GtkWidget *widget, GdkEventKey *event)
 {
+	(void)widget; (void)event;
 	entry_focus_in = TRUE;
 	return(FALSE);
 }
 
 static void unset_focus(GtkWidget *widget, gpointer data){
+	(void)data;
 	gtk_widget_set_can_focus(widget, FALSE);
 	if(GTK_IS_CONTAINER(widget))
 		gtk_container_foreach(GTK_CONTAINER(widget), unset_focus, NULL);

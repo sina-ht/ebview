@@ -59,6 +59,7 @@ gboolean idle_warning(gpointer data){
 	GtkWidget *dialog;
 	GtkWidget *parent;
 
+	(void)data;
 	LOG(LOG_DEBUG, "IN : idle_warning");
 
 	if(active == TRUE)
@@ -88,6 +89,7 @@ gboolean idle_error(gpointer data){
 	GtkWidget *dialog;
 	GtkWidget *parent;
 
+	(void)data;
 	LOG(LOG_DEBUG, "IN : idle_error");
 
 	if(active == TRUE)

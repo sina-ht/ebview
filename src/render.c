@@ -138,7 +138,7 @@ GdkPixbuf *load_xbm(BOOK_INFO *binfo, gchar *name, gint *w, gint *h, gchar *colo
 			return(NULL);
 		}
 		pixbuf = gdk_pixbuf_new_from_xpm_data((const char **)data);
-		gaiji_p = (GAIJI_CACHE *)calloc(sizeof(GAIJI_CACHE), 1);
+		gaiji_p = (GAIJI_CACHE *)calloc(1, sizeof(GAIJI_CACHE));
 		if(gaiji_p == NULL){
 			LOG(LOG_ERROR, "No memory");
 			exit(1);

@@ -53,7 +53,7 @@ extern GtkTextTagTable *tag_table;
 
 gint close_popup(GtkWidget *widget, gpointer data)
 {
-
+	(void)widget; (void)data;
 	LOG(LOG_DEBUG, "IN : close_popup()");
 
 	if(popup != NULL){
@@ -133,6 +133,7 @@ static gint popup_button_press_event(GtkWidget *widget, GdkEventButton *event)
 
 static gint title_click_event (GtkWidget *widget, GdkEventButton *event, gpointer data)
 {
+	(void)widget;
 	RESULT *rp;
 	GdkModifierType mask;
 	static GdkWindow *root_win = NULL;
@@ -209,12 +210,14 @@ root_win = gdk_screen_get_root_window(gdk_screen_get_default());
 
 static gint title_release_event (GtkWidget *widget, GdkEventButton *event, gpointer data)
 {
+	(void)widget; (void)event; (void)data;
 	bbutton_down = FALSE;
 	return(FALSE);
 }
 
 gint title_motion_event(GtkWidget *widget, GdkEventMotion *event)
 {
+	(void)widget;
 	gint mov_x, mov_y;
 	gint win_x, win_y;
 
@@ -447,6 +450,7 @@ static void create_popup_window(){
 
 static gboolean scroll_to_top(gpointer data)
 {
+	(void)data;
 	GtkTextIter iter;
 	GtkTextMark *mark;
 

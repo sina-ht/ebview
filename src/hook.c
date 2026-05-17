@@ -179,17 +179,19 @@ static void pop_hook_stack()
 
 G_GNUC_UNUSED static EB_Error_Code hook_nop(EB_Book *book, EB_Appendix *appendix, void *container, EB_Hook_Code code, int argc, const unsigned int *argv)
 {
+	(void)book; (void)appendix; (void)container; (void)code; (void)argc; (void)argv;
 	return EB_SUCCESS;
 }
 
 G_GNUC_UNUSED static EB_Error_Code hook_initialize(EB_Book *book, EB_Appendix *appendix, void *container, EB_Hook_Code code, int argc, const unsigned int *argv)
 {
+	(void)book; (void)appendix; (void)container; (void)code; (void)argc; (void)argv;
 	return EB_SUCCESS;
 }
 
 static EB_Error_Code hook_narrow_font(EB_Book *book, EB_Appendix *appendix, void *container, EB_Hook_Code code, int argc, const unsigned int *argv)
 {
-	
+	(void)appendix; (void)container; (void)code; (void)argc;
 	char text[64];
 
 	sprintf (text, "<gaiji code=h%04x>", argv[0]);
@@ -200,6 +202,7 @@ static EB_Error_Code hook_narrow_font(EB_Book *book, EB_Appendix *appendix, void
 
 static EB_Error_Code hook_wide_font(EB_Book *book, EB_Appendix *appendix, void *container, EB_Hook_Code code, int argc, const unsigned int *argv)
 {
+	(void)appendix; (void)container; (void)code; (void)argc;
 	char text[64];
 
 	sprintf (text, "<gaiji code=z%04x>", argv[0]);
@@ -210,6 +213,7 @@ static EB_Error_Code hook_wide_font(EB_Book *book, EB_Appendix *appendix, void *
 
 static EB_Error_Code hook_indent(EB_Book *book, EB_Appendix *appendix, void *container, EB_Hook_Code code, int argc, const unsigned int *argv)
 {
+	(void)appendix; (void)container; (void)code; (void)argc;
 	char text[64];
 
 	sprintf (text, "<indent position=%d>", argv[1]);
@@ -224,7 +228,7 @@ static EB_Error_Code hook_indent(EB_Book *book, EB_Appendix *appendix, void *con
 
 static EB_Error_Code hook_newline(EB_Book *book, EB_Appendix *appendix, void *container, EB_Hook_Code code, int argc, const unsigned int *argv)
 {
-
+	(void)appendix; (void)container; (void)code; (void)argc; (void)argv;
         eb_write_text_string(book, "\n");
 	return EB_SUCCESS;
 }
@@ -232,6 +236,7 @@ static EB_Error_Code hook_newline(EB_Book *book, EB_Appendix *appendix, void *co
 
 G_GNUC_UNUSED static EB_Error_Code hook_narrow(EB_Book *book, EB_Appendix *appendix, void *container, EB_Hook_Code code, int argc, const unsigned int *argv)
 {
+	(void)book; (void)appendix; (void)container; (void)argc; (void)argv;
 	switch (code) {
 	case EB_HOOK_BEGIN_NARROW:
 //		eb_write_text_string(book, "<narrow>");
@@ -246,6 +251,7 @@ G_GNUC_UNUSED static EB_Error_Code hook_narrow(EB_Book *book, EB_Appendix *appen
 
 G_GNUC_UNUSED static EB_Error_Code hook_no_newline(EB_Book *book, EB_Appendix *appendix, void *container, EB_Hook_Code code, int argc, const unsigned int *argv)
 {
+	(void)book; (void)appendix; (void)container; (void)argc; (void)argv;
 	switch (code) {
 	case EB_HOOK_BEGIN_NO_NEWLINE:
 //		eb_write_text_string(book, "<nonewline>");
@@ -260,6 +266,7 @@ G_GNUC_UNUSED static EB_Error_Code hook_no_newline(EB_Book *book, EB_Appendix *a
 
 static EB_Error_Code hook_reference(EB_Book *book, EB_Appendix *appendix, void *container, EB_Hook_Code code, int argc, const unsigned int *argv)
 {
+	(void)appendix; (void)container; (void)argc;
 	gchar text[64];
 
 
@@ -279,6 +286,7 @@ static EB_Error_Code hook_reference(EB_Book *book, EB_Appendix *appendix, void *
 
 static EB_Error_Code hook_candidate(EB_Book *book, EB_Appendix *appendix, void *container, EB_Hook_Code code, int argc, const unsigned int *argv)
 {
+	(void)appendix; (void)container; (void)argc;
 	gchar text[64];
 
 
@@ -301,6 +309,7 @@ static EB_Error_Code hook_candidate(EB_Book *book, EB_Appendix *appendix, void *
 
 static EB_Error_Code hook_superscript(EB_Book *book, EB_Appendix *appendix, void *container, EB_Hook_Code code, int argc, const unsigned int *argv)
 {
+	(void)appendix; (void)container; (void)argc; (void)argv;
 	gchar text[64];
 
 
@@ -322,6 +331,7 @@ static EB_Error_Code hook_superscript(EB_Book *book, EB_Appendix *appendix, void
 
 static EB_Error_Code hook_subscript(EB_Book *book, EB_Appendix *appendix, void *container, EB_Hook_Code code, int argc, const unsigned int *argv)
 {
+	(void)appendix; (void)container; (void)argc; (void)argv;
 	gchar text[64];
 
 
@@ -343,6 +353,7 @@ static EB_Error_Code hook_subscript(EB_Book *book, EB_Appendix *appendix, void *
 
 static EB_Error_Code hook_emphasis(EB_Book *book, EB_Appendix *appendix, void *container, EB_Hook_Code code, int argc, const unsigned int *argv)
 {
+	(void)appendix; (void)container; (void)argc; (void)argv;
 	gchar text[64];
 
 
@@ -364,6 +375,7 @@ static EB_Error_Code hook_emphasis(EB_Book *book, EB_Appendix *appendix, void *c
 
 static EB_Error_Code hook_keyword(EB_Book *book, EB_Appendix *appendix, void *container, EB_Hook_Code code, int argc, const unsigned int *argv)
 {
+	(void)appendix; (void)container; (void)argc;
 	gchar text[64];
 
 
@@ -387,6 +399,7 @@ static EB_Error_Code hook_keyword(EB_Book *book, EB_Appendix *appendix, void *co
 
 static EB_Error_Code hook_modification(EB_Book *book, EB_Appendix *appendix, void *container, EB_Hook_Code code, int argc, const unsigned int *argv)
 {
+	(void)book; (void)appendix; (void)container; (void)argc;
 	gchar text[64];
 
 #ifdef EB_HOOK_BEGIN_DECORATION
@@ -418,6 +431,7 @@ static EB_Error_Code hook_modification(EB_Book *book, EB_Appendix *appendix, voi
  */
 static EB_Error_Code hook_color(EB_Book *book, EB_Appendix *appendix, void *container, EB_Hook_Code code, int argc, const unsigned int *argv)
 {
+	(void)appendix; (void)container; (void)argc;
 	gchar text[64];
 	
 	switch (code) {
@@ -446,6 +460,7 @@ static EB_Error_Code hook_color(EB_Book *book, EB_Appendix *appendix, void *cont
  */
 static EB_Error_Code hook_mono(EB_Book *book, EB_Appendix *appendix, void *container, EB_Hook_Code code, int argc, const unsigned int *argv)
 {
+	(void)appendix; (void)container; (void)argc;
 	gchar text[64];
 
 	switch (code) {
@@ -473,6 +488,7 @@ static EB_Error_Code hook_mono(EB_Book *book, EB_Appendix *appendix, void *conta
  */
 static EB_Error_Code hook_gray(EB_Book *book, EB_Appendix *appendix, void *container, EB_Hook_Code code, int argc, const unsigned int *argv)
 {
+	(void)appendix; (void)container; (void)argc;
 	gchar text[64];
 
 	switch (code) {
@@ -497,6 +513,7 @@ static EB_Error_Code hook_gray(EB_Book *book, EB_Appendix *appendix, void *conta
  */
 static EB_Error_Code hook_wave(EB_Book *book, EB_Appendix *appendix, void *container, EB_Hook_Code code, int argc, const unsigned int *argv)
 {
+	(void)appendix; (void)container; (void)argc;
 	off_t start_location;
 	off_t end_location;
 	size_t data_size;
@@ -527,6 +544,7 @@ static EB_Error_Code hook_wave(EB_Book *book, EB_Appendix *appendix, void *conta
  */
 static EB_Error_Code hook_mpeg(EB_Book *book, EB_Appendix *appendix, void *container, EB_Hook_Code code, int argc, const unsigned int *argv)
 {
+	(void)appendix; (void)container; (void)argc;
     char file_name[EB_MAX_DIRECTORY_NAME_LENGTH + 1];
     char text[256];
 
@@ -549,6 +567,7 @@ static EB_Error_Code hook_mpeg(EB_Book *book, EB_Appendix *appendix, void *conta
  */
 G_GNUC_UNUSED static EB_Error_Code hook_graphic_reference(EB_Book *book, EB_Appendix *appendix, void *container, EB_Hook_Code code, int argc, const unsigned int *argv)
 {
+	(void)appendix; (void)container; (void)argc;
     char text[256];
 
 	switch (code) {
@@ -656,6 +675,7 @@ const char *latin1_entity_name_table[] = {
 
 G_GNUC_UNUSED static EB_Error_Code hook_euc_to_ascii(EB_Book *book, EB_Appendix *appendix, void *container, EB_Hook_Code code, int argc, const unsigned int *argv)
 {
+	(void)appendix; (void)container; (void)code; (void)argc;
     int in_code1, in_code2;
     int out_code = 0;
     const char *entity;

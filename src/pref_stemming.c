@@ -30,6 +30,7 @@ GtkWidget *option_lang;
 GtkWidget *stemming_view;
 
 static void check_changed(GtkWidget *widget,gpointer *data){
+	(void)data;
 
 	LOG(LOG_DEBUG, "IN : check_changed()");
 
@@ -51,6 +52,7 @@ static void check_changed(GtkWidget *widget,gpointer *data){
 }
 
 static void check_changed2(GtkWidget *widget,gpointer *data){
+	(void)data;
 
 	LOG(LOG_DEBUG, "IN : check_changed2()");
 
@@ -65,6 +67,7 @@ static void check_changed2(GtkWidget *widget,gpointer *data){
 
 
 static void lang_changed(GtkWidget *widget,gpointer *data){
+	(void)widget; (void)data;
 	gint index;
 	
 	LOG(LOG_DEBUG, "IN : check_changed()");
@@ -86,6 +89,7 @@ static void lang_changed(GtkWidget *widget,gpointer *data){
 }
 
 static void remove_entry(GtkWidget *widget,gpointer *data){
+	(void)widget; (void)data;
 
 	GtkTreeIter iter;
 	GtkTreeSelection *selection;
@@ -103,6 +107,7 @@ static void remove_entry(GtkWidget *widget,gpointer *data){
 }
 
 static void add_entry(GtkWidget *widget,gpointer *data){
+	(void)widget; (void)data;
 	const gchar *pattern;
 	const gchar *normal;
 	GtkTreeIter  iter;

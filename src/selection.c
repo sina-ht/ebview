@@ -182,6 +182,7 @@ static void search_selected(gchar *str)
 void
 selection_received (GtkWidget *widget, GtkSelectionData *data)
 {
+	(void)widget;
 	gchar *str;
 	gchar **list;
 	gint count;
@@ -235,6 +236,7 @@ selection_received (GtkWidget *widget, GtkSelectionData *data)
 
 
 gint copy_clipboard_win(gpointer data){
+	(void)data;
 	gchar *str=NULL;
 	GtkClipboard* clipboard;
 
@@ -265,6 +267,7 @@ gint copy_clipboard_win(gpointer data){
 }
 
 gint copy_clipboard_x(gpointer data){
+	(void)data;
 	static GdkAtom ctext_atom = GDK_NONE;
 
 	LOG(LOG_DEBUG, "IN : copy_clipboard()");

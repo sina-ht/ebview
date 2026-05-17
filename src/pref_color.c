@@ -33,7 +33,7 @@ static 	GtkWidget *entry_reverse_bg;
 gint color_no;
 
 static void ok_colorsel(GtkWidget *widget, gint response_id, gpointer *data){
-
+	(void)widget; (void)data;
 	GdkColor color;
 	GdkRGBA rgba_color;
 	gchar *color_name;
@@ -82,6 +82,7 @@ static void delete_colorsel( GtkWidget *widget,
 		   GdkEvent  *event,
 		   gpointer   data )
 {
+	(void)widget; (void)event; (void)data;
 	LOG(LOG_DEBUG, "IN : delete_colorsel()");
 
 	ok_colorsel(NULL, GTK_RESPONSE_OK, NULL);
@@ -90,7 +91,7 @@ static void delete_colorsel( GtkWidget *widget,
 }
 
 static void show_colorsel(GtkWidget *widget,gpointer *data){
-
+	(void)widget;
 	GdkColor color;
 	const gchar *text=NULL;
 	

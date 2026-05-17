@@ -33,6 +33,8 @@ GtkWidget *hex_dlg=NULL;
 GtkWidget *text_dlg=NULL;
 
 static void hex_close(GtkWidget *widget,gpointer *data){
+	(void)widget;
+	(void)data;
 
 	LOG(LOG_DEBUG, "IN : hex_close()");
 
@@ -43,6 +45,8 @@ static void hex_close(GtkWidget *widget,gpointer *data){
 }
 
 static void text_close(GtkWidget *widget,gpointer *data){
+	(void)widget;
+	(void)data;
 
 	LOG(LOG_DEBUG, "IN : text_close()");
 
@@ -53,6 +57,8 @@ static void text_close(GtkWidget *widget,gpointer *data){
 }
 
 static void hex_dump_page(GtkWidget *widget, gpointer *data){
+	(void)widget;
+	(void)data;
 	gint page;
 	const gchar *p;
 	gchar *p_hex=NULL;
@@ -151,6 +157,8 @@ static void hex_dump_page(GtkWidget *widget, gpointer *data){
 }
 
 static void back_page(GtkWidget *widget,gpointer *data){
+	(void)widget;
+	(void)data;
 	gint page;
 	const gchar *p;
 	gchar buff[64];
@@ -173,6 +181,8 @@ static void back_page(GtkWidget *widget,gpointer *data){
 }
 
 static void forward_page(GtkWidget *widget,gpointer *data){
+	(void)widget;
+	(void)data;
 	gint page;
 	const gchar *p;
 	gchar buff[64];
@@ -289,6 +299,8 @@ void dump_hex(){
 }
 
 static void text_dump_page(GtkWidget *widget,gpointer *data){
+	(void)widget;
+	(void)data;
 
 	gint page, offset;
 	const gchar *p;

@@ -46,13 +46,13 @@ xmlDoc *xml_doc_new()
 	LOG(LOG_DEBUG, "IN : xml_doc_new()");
 #endif
 
-	doc = (xmlDoc *)calloc(sizeof(xmlDoc), 1);
+	doc = (xmlDoc *)calloc(1, sizeof(xmlDoc));
 	g_assert(doc != NULL);
 
 	doc->version = NULL;
 	doc->encoding = NULL;
 	
-	node_data = (NODE_DATA *)calloc(sizeof(NODE_DATA), 1);
+	node_data = (NODE_DATA *)calloc(1, sizeof(NODE_DATA));
 	g_assert(node_data != NULL);
 
 	node_data->name = NULL;
@@ -97,11 +97,11 @@ xmlDoc *xml_parse_file(gchar *filename)
 		return(NULL);
 	}
 	
-	doc = (xmlDoc *)calloc(sizeof(xmlDoc), 1);
+	doc = (xmlDoc *)calloc(1, sizeof(xmlDoc));
 	doc->version = NULL;
 	doc->encoding = NULL;
 	
-	node_data = (NODE_DATA *)calloc(sizeof(NODE_DATA), 1);
+	node_data = (NODE_DATA *)calloc(1, sizeof(NODE_DATA));
 	node_data->name = NULL;
 	node_data->content = NULL;
 	node_data->attr = NULL;
@@ -247,6 +247,7 @@ static void print_indent2(int l){
 }
 
 static void xml_print_tree_internal(GNode *node, gpointer data){
+	(void)data;
 	NODE_DATA *node_data;
 
 	node_data = (NODE_DATA *)(node->data);
@@ -297,7 +298,7 @@ xmlNode *xml_add_child(xmlNode *parent, gchar *name, gchar *content){
 		return(NULL);
 	}
 
-	node_data = (NODE_DATA *)calloc(sizeof(NODE_DATA), 1);
+	node_data = (NODE_DATA *)calloc(1, sizeof(NODE_DATA));
 	if(!node_data){
 #ifdef XML_TRACE
 		LOG(LOG_DEBUG, "OUT : xml_add_child() = NULL");
@@ -356,6 +357,7 @@ gchar *xml_get_name(xmlNode *node){
 
 
 static void xml_destroy_tree_internal(GNode *node, gpointer data){
+	(void)data;
 	NODE_DATA *node_data;
 
 #ifdef XML_TRACE
@@ -540,7 +542,7 @@ xmlResult xml_set_attr(xmlNode *node, gchar *name, gchar *value){
 	LOG(LOG_DEBUG, "IN : xml_set_attr(%s, %s)", name, value);
 #endif
 
-	attr = (NODE_ATTR *)calloc(sizeof(NODE_ATTR), 1);
+	attr = (NODE_ATTR *)calloc(1, sizeof(NODE_ATTR));
 	attr->name = g_strdup(name);
 	attr->value = g_strdup(value);
 
@@ -585,7 +587,7 @@ xmlResult parse_attribute(GNode *node, gchar *tag){
 			return(XML_OK);
 		}
 
-		attr = (NODE_ATTR *)calloc(sizeof(NODE_ATTR), 1);
+		attr = (NODE_ATTR *)calloc(1, sizeof(NODE_ATTR));
 		attr->name = g_strndup(p, p2 - p);
 		p2 ++;
 

@@ -35,7 +35,7 @@ gboolean accel_handler(GtkAccelGroup *accelgroup,
 		       GdkModifierType arg3,
 		       gpointer user_data)
 {
-
+	(void)accelgroup; (void)arg1; (void)arg2;
 	GdkEventKey event;
 	gboolean ret;
 

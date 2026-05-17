@@ -245,6 +245,7 @@ static gint group_changed (GtkWidget *combo){
 
 	GtkTreeIter   iter;
 
+	(void)combo;
 	LOG(LOG_DEBUG, "IN : group_changed()");
 
 	text = gtk_combo_box_get_active_id(GTK_COMBO_BOX(combo_group));

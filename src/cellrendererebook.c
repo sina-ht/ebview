@@ -103,18 +103,17 @@ gtk_cell_renderer_ebook_get_type (void)
 
 	if (!cell_ebook_type)
 	{
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcast-function-type"
 		static const GTypeInfo cell_ebook_info =
 		{
-			sizeof (GtkCellRendererEbookClass),
-			NULL,		/* base_init */
-			NULL,		/* base_finalize */
-			(GClassInitFunc) gtk_cell_renderer_ebook_class_init,
-			NULL,		/* class_finalize */
-			NULL,		/* class_data */
-			sizeof (GtkCellRendererEbook),
-			0,              /* n_preallocs */
-			(GInstanceInitFunc) gtk_cell_renderer_ebook_init,
+			.class_size = sizeof (GtkCellRendererEbookClass),
+			.class_init = (GClassInitFunc) gtk_cell_renderer_ebook_class_init,
+			.instance_size = sizeof (GtkCellRendererEbook),
+			.instance_init = (GInstanceInitFunc) gtk_cell_renderer_ebook_init,
+			.value_table = NULL,
 		};
+#pragma GCC diagnostic pop
 
 		cell_ebook_type = g_type_register_static (GTK_TYPE_CELL_RENDERER, "GtkCellRendererEbook", &cell_ebook_info, 0);
 	}
@@ -273,6 +272,7 @@ gtk_cell_renderer_ebook_get_size (GtkCellRenderer *cell,
 				  gint            *height)
 {
 	GtkCellRendererEbook *cellebook = (GtkCellRendererEbook *) cell;
+	(void)cell_area;
 
 //	LOG(LOG_DEBUG, "IN : gtk_cell_renderer_ebook_get_size()");
 
@@ -322,6 +322,7 @@ static void cell_renderer_ebook_render_gaiji(GtkCellRenderer *cell,
 					     gchar *code,
 					     gboolean render)
 {
+	(void)state;
 	GtkCellRendererEbook *cellebook = (GtkCellRendererEbook *) cell;
 	gchar *color_name;
 	gint width, height;
@@ -413,6 +414,7 @@ static void cell_renderer_ebook_render_string(GtkCellRenderer *cell,
 					      gint *x, gint *y,
 					      gboolean render)
 {
+	(void)state;
 	GtkCellRendererEbook *cellebook = (GtkCellRendererEbook *) cell;
 	PangoLayout *layout;
 	gchar *str;
@@ -628,6 +630,7 @@ gtk_cell_renderer_ebook_render (GtkCellRenderer      *cell,
 
 {
 	GtkCellRendererEbook *cellebook = (GtkCellRendererEbook *) cell;
+	(void)background_area;
 	GtkStateFlags state;
 
 

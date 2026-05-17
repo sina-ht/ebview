@@ -34,6 +34,7 @@ static  gint font_no;
 
 
 static void ok_fontsel(GtkWidget *widget, gint response_id, gpointer *data){
+	(void)widget; (void)data;
 	gchar *fontname;
 
 	LOG(LOG_DEBUG, "IN : ok_fontsel()");
@@ -74,12 +75,14 @@ G_GNUC_UNUSED static void delete_fontsel( GtkWidget *widget,
 		   GdkEvent  *event,
 		   gpointer   data )
 {
+	(void)widget; (void)event; (void)data;
 	LOG(LOG_DEBUG, "IN : delete_fontsel()");
 	ok_fontsel(NULL, GTK_RESPONSE_OK, NULL);
 	LOG(LOG_DEBUG, "OUT : delete_fontsel()");
 }
 
 static void show_fontsel(GtkWidget *widget,gpointer *data){
+	(void)widget;
 	const gchar *fontname=NULL;
 
 	LOG(LOG_DEBUG, "IN : show_fontsel()");

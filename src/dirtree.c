@@ -190,6 +190,7 @@ static gint button_press_event(GtkWidget *widget, GdkEventButton *event)
 	GtkTreeSelection *selection;
 	GtkTreePath *path;
 
+	(void)widget;
 	LOG(LOG_DEBUG, "IN : button_press_event()");
 	if ((event->type == GDK_BUTTON_PRESS) &&
 	    (event->button == 1)){
@@ -351,6 +352,10 @@ static void row_collapsed(GtkTreeView *treeview,
 			GtkTreePath *path,
 			gpointer user_data)
 {
+	(void)treeview;
+	(void)iter;
+	(void)path;
+	(void)user_data;
 /*
 	// Closed folder icon
 	gtk_tree_store_set(directory_store, 
@@ -367,6 +372,8 @@ static void row_expanded(GtkTreeView *treeview,
 			GtkTreePath *path,
 			gpointer user_data)
 {
+	(void)treeview;
+	(void)user_data;
 	gchar *dirname=NULL;
 	gchar *tmpp;
 	gchar *name;
@@ -515,6 +522,8 @@ static void item_toggled (GtkCellRendererToggle *cell, gchar *path_str, gpointer
 	GtkTreeIter iter;
 	gboolean toggle_item;
 
+	(void)cell;
+	(void)data;
 	gchar *dirname;
 	GList *l;
 

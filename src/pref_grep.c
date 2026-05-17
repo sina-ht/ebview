@@ -40,6 +40,7 @@ gboolean pref_end_grep()
 
 static void add_filter(GtkWidget *widget,gpointer *data)
 {
+	(void)widget; (void)data;
 
 	GtkTreeIter iter;
 
@@ -58,6 +59,7 @@ static void add_filter(GtkWidget *widget,gpointer *data)
 
 static void remove_filter(GtkWidget *widget, gpointer *data)
 {
+	(void)widget; (void)data;
 
 	GtkTreeIter iter;
 	GtkTreeSelection *selection;
@@ -79,6 +81,7 @@ static void cell_edited(GtkCellRendererText *cell,
 			const gchar         *new_text,
 			gpointer             data)
 {
+	(void)data;
 
 	GtkTreePath *path = gtk_tree_path_new_from_string (path_string);
 	GtkTreeIter iter;
@@ -342,6 +345,7 @@ static void remove_recursive(gchar *dirname)
 
 static gint clear_cache(GtkWidget *widget,gpointer *data)
 {
+	(void)widget; (void)data;
 
 	LOG(LOG_DEBUG, "IN : clear_cache()");
 

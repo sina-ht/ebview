@@ -28,6 +28,7 @@ extern GtkWidget *display_statusbar;
 
 gint clear_status_message(gpointer data)
 {
+	(void)data;
 	gtk_statusbar_pop(GTK_STATUSBAR(status_bar), context_id);
 	tag = 0;
 	return(FALSE);

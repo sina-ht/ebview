@@ -367,6 +367,7 @@ void initialize_preference(){
 }
 
 static gboolean ok_pref(GtkWidget *widget,gpointer *data){
+	(void)widget; (void)data;
 	gint i;
 
 	LOG(LOG_DEBUG, "IN : ok_pref()");
@@ -479,6 +480,7 @@ static gboolean delete_event( GtkWidget *widget,
 		   GdkEvent  *event,
 		   gpointer   data )
 {
+	(void)widget; (void)event; (void)data;
 	gboolean ret;
 
 	LOG(LOG_DEBUG, "IN : delete_event()");
@@ -500,6 +502,7 @@ enum
 
 static void preflist_selection_changed(GtkTreeSelection *selection, gpointer data)
 {
+	(void)data;
         GtkTreeIter iter;
         GtkTreeModel *model;
         gint number;

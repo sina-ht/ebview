@@ -50,6 +50,7 @@ static gchar *replace_table[] = {
  };
 
 void replace_char(const guchar *icode, const guchar *ocode, guchar **inbuf, guchar **outbuf, gint *isize, gint *osize){
+	(void)ocode;
 	guchar *in, *out;
 	guchar *str;
 	guchar *utf_str;

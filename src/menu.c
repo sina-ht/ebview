@@ -65,7 +65,7 @@ void show_menu()
 						if(err != EB_SUCCESS)
 							continue;
 
-						rp = (RESULT *)calloc(sizeof(RESULT), 1);
+						rp = (RESULT *)calloc(1, sizeof(RESULT));
 //						rp->heading = strdup(_("menu"));
 						rp->heading = g_strdup_printf("%s : %s", _("menu"), binfo->subbook_title);
 
@@ -125,7 +125,7 @@ void show_copyright()
 						if(err != EB_SUCCESS)
 							continue;
 
-						rp = (RESULT *)calloc(sizeof(RESULT), 1);
+						rp = (RESULT *)calloc(1, sizeof(RESULT));
 //						rp->heading = strdup(_("copyright"));
 						rp->heading = g_strdup_printf("%s : %s", _("copyright"), binfo->subbook_title);
 						rp->type = RESULT_TYPE_EB;

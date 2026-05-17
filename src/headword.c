@@ -347,6 +347,7 @@ static gint button_press_event(GtkWidget *widget, GdkEventButton *event)
 	gint type;
 	RESULT *rp;
 
+	(void)widget;
 	LOG(LOG_DEBUG, "IN : button_press_event()");
 
 	if ((event->type == GDK_BUTTON_PRESS) && 
@@ -607,6 +608,7 @@ heading_selection_changed(GtkTreeSelection *selection, gpointer data)
         gint type;
         RESULT *rp;
 
+	(void)data;
 	LOG(LOG_DEBUG, "IN : heading_selection_changed");
 
         if (gtk_tree_selection_get_selected (selection, &model, &iter) == FALSE)
@@ -633,10 +635,12 @@ void update_tree_view()
 
 void next_heading(GtkWidget *widget, gpointer *data){
 
+	(void)widget;
+	(void)data;
 	LOG(LOG_DEBUG, "IN : next_heading()");
 
 	skip_result += num_heading;
-	if(skip_result >= g_list_length(search_result)) {
+	if(skip_result >= (gint)g_list_length(search_result)) {
 		skip_result -= num_heading;
 		return;
 	}
@@ -649,6 +653,8 @@ void next_heading(GtkWidget *widget, gpointer *data){
 }
 
 void previous_heading(GtkWidget *widget, gpointer *data){
+	(void)widget;
+	(void)data;
 
 	LOG(LOG_DEBUG, "IN : previous_heading()");
 
@@ -668,6 +674,9 @@ void previous_heading(GtkWidget *widget, gpointer *data){
 
 gboolean headword_tree_draw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 {
+	(void)widget;
+	(void)cr;
+	(void)user_data;
 	if(bheading_auto_calc){
 		num_heading = (gtk_widget_get_allocated_height(tree_scroll) - 12) / (font_height + 10);
 		if(num_heading < 1)

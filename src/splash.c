@@ -33,6 +33,7 @@ GtkWidget *splash_label=NULL;
 
 static void *load_thread(void *arg)
 {
+	(void)arg;
 	load_dictgroup();
 
 	loading_dictgroup=0;
@@ -62,6 +63,7 @@ void load_dictgroup_background()
 }
 
 static gint load_watch_thread(gpointer data){
+	(void)data;
 	if(loading_dictgroup){
 //		LOG(LOG_DEBUG, "OUT : watch_thread() : CONTINUE");
 		return(1);

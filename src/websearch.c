@@ -140,7 +140,7 @@ void web_search()
 		} else {
 			char tmp[4];
 			kanji_str = codeconv((unsigned char *)keywords[i], code);
-			for(j=0 ; j < strlen((char *)kanji_str) ; j ++){
+			for(j=0 ; j < (gint)strlen((char *)kanji_str) ; j ++){
 				c = kanji_str[j];
 				snprintf(tmp, sizeof(tmp), "%%%02X", (unsigned char)c);
 				strcat(url, tmp);
@@ -186,6 +186,7 @@ void go_home()
 
 G_GNUC_UNUSED static void weblist_selection_changed(GtkTreeSelection *selection, gpointer data)
 {
+	(void)data;
         GtkTreeIter iter;
         GtkTreeModel *model;
         gint type;
@@ -213,6 +214,7 @@ G_GNUC_UNUSED static void weblist_selection_changed(GtkTreeSelection *selection,
 
 static gint button_press_event(GtkWidget *widget, GdkEventButton *event)
 {
+	(void)widget;
 	LOG(LOG_DEBUG, "IN : button_press_event()");
 //KENKEN
 	if ((event->type == GDK_BUTTON_PRESS) && 
