@@ -806,21 +806,21 @@ gint ascii_to_jisx2080_table [] = {
 };
 
 static gchar *euc2jis(gchar *inbuf){
-	guchar *euc_p;
-	guchar *jisbuf=NULL;
-	guchar *jis_p;
+	gchar *euc_p;
+	gchar *jisbuf=NULL;
+	gchar *jis_p;
 
 	euc_p = inbuf;
 	jis_p = jisbuf = malloc(strlen(euc_p)*2);
 
 	while(*euc_p != '\0'){
-		if(( 0x20 <= *euc_p) && (*euc_p <= 0x7e) && (ascii_to_jisx2080_table[*euc_p] != 0x00)){
-			*jis_p = (ascii_to_jisx2080_table[*euc_p] & 0xff00) >> 8;
+		if(( 0x20 <= (unsigned char)*euc_p) && ((unsigned char)*euc_p <= 0x7e) && (ascii_to_jisx2080_table[(unsigned char)*euc_p] != 0x00)){
+			*jis_p = (ascii_to_jisx2080_table[(unsigned char)*euc_p] & 0xff00) >> 8;
 			jis_p ++;
-			*jis_p = ascii_to_jisx2080_table[*euc_p] & 0xff;
+			*jis_p = ascii_to_jisx2080_table[(unsigned char)*euc_p] & 0xff;
 			jis_p ++;
 		}
-		else if(iseuc(euc_p)){
+		else if(iseuc((const guchar *)euc_p)){
 			*jis_p = *euc_p - 0x80;
 			jis_p ++;
 			euc_p++;
@@ -1086,7 +1086,7 @@ static gint ebook_full_search(BOOK_INFO *binfo, char *word, gint method, gchar *
 
 	jisword = euc2jis(word);
 
-	bmh = bmh_prepare(jisword, TRUE);
+	bmh = bmh_prepare((guchar *)jisword, TRUE);
 
 	word_len = strlen(jisword);
 	memset(data, 0, word_len);
@@ -1119,7 +1119,7 @@ static gint ebook_full_search(BOOK_INFO *binfo, char *word, gint method, gchar *
 		start_p = data;
 		while(start_p){
 
-			start_p = bmh_search(bmh, start_p, EB_SIZE_PAGE + word_len - (start_p - data));
+			start_p = (gchar *)bmh_search(bmh, (guchar *)start_p, EB_SIZE_PAGE + word_len - (start_p - data));
 		
 			if(start_p == NULL)
 				break;
@@ -1405,7 +1405,7 @@ static void plain_heading()
 	ssize_t len;
 	gchar *p;
 	gchar *pp;
-	guchar body[65536];
+	gchar body[65536];
 	gint i;
 	gunichar ch;
 
@@ -1815,7 +1815,7 @@ gint ebook_simple_search(BOOK_INFO *binfo, char *word, gint method, gchar *title
 
 	// If the keyword is Japanese, try Hiragana and Katakana
 
-	if(iseuc(word)){
+	if(iseuc((const guchar *)word)){
 		l_word = g_strdup(word);
 		katakana_to_hiragana(l_word);
 		error_code = ebook_simple_search2(binfo, l_word, method, title);
@@ -1962,11 +1962,11 @@ static gint ebook_ending_search(BOOK_INFO *binfo, char *word, gint method, gchar
 
 		// If there is no hit, try using only Kanji part.
 		if((count_result(search_result) == 0) && 
-		   (iseuckanji(keywords[0]))){
+		   (iseuckanji((const guchar *)keywords[0]))){
 			len_word = strlen(keywords[0]);
 			strcpy(new_key, keywords[0]);
 			for(i=0; i<len_word; i+=2){
-				if(!iseuckanji(&new_key[i])) {
+				if(!iseuckanji((const guchar *)&new_key[i])) {
 					new_key[i] = '\0';
 					break;
 				}
@@ -2372,7 +2372,7 @@ guchar *read_gaiji_as_bitmap(BOOK_INFO *binfo, gchar *name, gint size, gint *wid
 
 	image_data = malloc(image_width * image_height / 8);
 	ebook_bitmap_to_xbm(bitmap_data, image_width,
-			    image_height, image_data, &image_size);
+			    image_height, (char *)image_data, &image_size);
 	
 	*width = image_width;
 	*height = image_height;
@@ -2398,13 +2398,13 @@ static gchar **ebook_bitmap_to_xpm(const gchar *bitmap, gint width, gint height,
 		xpm[2] = g_strdup_printf(". 	c %s", color);
 
 	for (i = 0; i < gaiji_adjustment; i++) {
-		xpm[i+3] = g_new(guchar, width + 1);
+		xpm[i+3] = g_new(gchar, width + 1);
 		memset(xpm[i+3], ' ', width);
 		xpm[i+3][width] = '\0';
 	}
 
 	for (;i < height + gaiji_adjustment; i++) {
-		xpm[i+3] = g_new(guchar, width + 1);
+		xpm[i+3] = g_new(gchar, width + 1);
 		xpm_p = xpm[i+3];
 		for (j = 0; j + 7 < width; j += 8, bitmap_p++) {
 			*xpm_p++ = (*bitmap_p & 0x80) ? '.' : ' ';
@@ -3076,7 +3076,7 @@ EB_Error_Code ebook_output_mono(BOOK_INFO *binfo, gchar *filename, gint page, gi
 				  width,
 				  height,
 				  bmp_data,
-				  &bmp_length);
+				  (size_t *)&bmp_length);
 
 		fwrite(bmp_data, bmp_length, 1, fp);
 

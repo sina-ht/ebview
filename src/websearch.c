@@ -64,15 +64,15 @@ static unsigned char *codeconv(unsigned char *str, const char *ocode)
 {
 	g_assert(str != NULL);
 	if(ocode == NULL)
-		return(strdup(str));
+		return(unsigned char *)strdup((char *)str);
 
 	if((strcmp(ocode, "euc-jp") != 0) &&
 	   (strcmp(ocode, "shift_jis") != 0) &&
 	   (strcmp(ocode, "iso-2022-jp") != 0) &&
 	   (strcmp(ocode, "utf-8") != 0))
-		return(strdup(str));
+		return(unsigned char *)strdup((char *)str);
 
-	return(iconv_convert("utf-8", ocode, str));
+	return(unsigned char *)iconv_convert("utf-8", ocode, (gchar *)str);
 }
 
 
@@ -139,8 +139,8 @@ void web_search()
 			strcat(url, keywords[i]);
 		} else {
 			char tmp[4];
-			kanji_str = codeconv(keywords[i], code);
-			for(j=0 ; j < strlen(kanji_str) ; j ++){
+			kanji_str = codeconv((unsigned char *)keywords[i], code);
+			for(j=0 ; j < strlen((char *)kanji_str) ; j ++){
 				c = kanji_str[j];
 				snprintf(tmp, sizeof(tmp), "%%%02X", (unsigned char)c);
 				strcat(url, tmp);

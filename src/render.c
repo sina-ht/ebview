@@ -344,7 +344,7 @@ static void draw_string(CANVAS *canvas, DRAW_TEXT *text, TAG *tag, gchar *word)
 		p0 = text->text;
 		len = strlen(word);
 		while(p - text->text < text->length) {
-			r = simple_search(word, p, len, TRUE);
+			r = (gchar *)simple_search((guchar *)word, (guchar *)p, len, TRUE);
 			if(r == p){
 				if(p0 != p){
 					l_text.text = p0;

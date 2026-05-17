@@ -38,10 +38,10 @@ BMH_TABLE *bmh_prepare(guchar *pat, gboolean ignore_case)
 
 	table = g_new(BMH_TABLE, 1);
 
-	table->pat = g_strdup(pat);
+	table->pat = (guchar *)g_strdup((char *)pat);
 	table->u_pat = NULL;
 	table->l_pat = NULL;
-	table->length = strlen(pat);
+	table->length = strlen((char *)pat);
 	table->ignore_case = ignore_case;
 
 	// skip[x] will be the length of chars after the occurrence of x in pat.
@@ -122,7 +122,7 @@ guchar *simple_search(guchar *pat, guchar *text, gint n, gboolean ignore_case)
 {
 	gint i, j, k, m;
 
-	m = strlen(pat);
+	m = strlen((char *)pat);
 	if( m==0 ) return( text );
 
 	for( k=m-1; k < n; k ++) {

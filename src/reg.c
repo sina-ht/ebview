@@ -25,13 +25,13 @@ REG_TABLE *regex_prepare(guchar *pat, gboolean ignore_case)
 	reg = g_new(REG_TABLE, 1);
 
 	if(ignore_case == TRUE){
-		if(0 != regcomp(reg, pat, REG_ICASE|REG_EXTENDED)){
+		if(0 != regcomp(reg, (char *)pat, REG_ICASE|REG_EXTENDED)){
 			LOG(LOG_CRITICAL, "regcomp: %s", strerror(errno));
 			g_free(reg);
 			return(NULL);
 		}
 	} else {
-		if(0 != regcomp(reg, pat, REG_EXTENDED)){
+		if(0 != regcomp(reg, (char *)pat, REG_EXTENDED)){
 			LOG(LOG_CRITICAL, "regcomp: %s", strerror(errno));
 			g_free(reg);
 			return(NULL);
@@ -50,7 +50,7 @@ void regex_free(REG_TABLE *reg)
 guchar *regex_search(REG_TABLE *reg, guchar *text){
 	regmatch_t pmatch[1];
 
-	if(REG_NOMATCH == regexec(reg, text, 1, pmatch, 0)){
+	if(REG_NOMATCH == regexec(reg, (char *)text, 1, pmatch, 0)){
 		return(FALSE);
 	} else {
 		if(pmatch[0].rm_so == -1){

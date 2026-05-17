@@ -109,7 +109,7 @@ static void search_selected(gchar *str)
 	} else {
 
 		euc_str = iconv_convert("utf-8", "euc-jp", str);
-		if(validate_euc_str(euc_str) == FALSE) {
+		if(validate_euc_str((guchar *)euc_str) == FALSE) {
 			g_free(euc_str);
 			LOG(LOG_DEBUG, "OUT : search_selected() = INVALID");
 			return;
@@ -195,7 +195,7 @@ selection_received (GtkWidget *widget, GtkSelectionData *data)
 
 	// No conversion required for STRING type.
 	if (gtk_selection_data_get_target(data) == GDK_TARGET_STRING){
-		str = g_strndup(gtk_selection_data_get_data(data), gtk_selection_data_get_length(data));
+		str = g_strndup((char *)gtk_selection_data_get_data(data), gtk_selection_data_get_length(data));
 
 	// Convert to UTF-8 for COMPOUND_TEXT type.
 	} else if ((gtk_selection_data_get_target(data) == gdk_atom_intern ("COMPOUND_TEXT", FALSE)) ||

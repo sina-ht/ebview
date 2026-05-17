@@ -58,27 +58,27 @@ void replace_char(const guchar *icode, const guchar *ocode, guchar **inbuf, guch
 	in = *inbuf;
 	out = *outbuf;
 
-	if(strcasecmp(icode, "euc-jp") == 0) {
+	if(strcasecmp((char *)icode, "euc-jp") == 0) {
 		if((in[0] != 0xad) || (in[1] < 0xa1) || (in[1] > 0xfc))
 			goto UNKNOWN;
 	
-		str = replace_table[in[1] - 0xa1];
+		str = (guchar *)replace_table[in[1] - 0xa1];
 		if(str == NULL)
 			goto UNKNOWN;
 
-	} else if(strcasecmp(icode, "shift_jis") == 0) {
+	} else if(strcasecmp((char *)icode, "shift_jis") == 0) {
 		if((in[0] != 0x87) || (in[1] < 0x40) || (in[1] > 0x9c))
 			goto UNKNOWN;
 	
-		str = replace_table[in[1] - 0x40];
+		str = (guchar *)replace_table[in[1] - 0x40];
 		if(str == NULL)
 			goto UNKNOWN;
 
-	} else if(strcasecmp(icode, "iso-2022-jp") == 0){
+	} else if(strcasecmp((char *)icode, "iso-2022-jp") == 0){
 		if((in[0] != 0x2d) || (in[1] < 0x21) || (in[1] > 0x7c))
 			goto UNKNOWN;
 	
-		str = replace_table[in[1] - 0x21];
+		str = (guchar *)replace_table[in[1] - 0x21];
 		if(str == NULL)
 			goto UNKNOWN;
 
@@ -86,11 +86,11 @@ void replace_char(const guchar *icode, const guchar *ocode, guchar **inbuf, guch
 		goto UNKNOWN;
 	}
 	
-	utf_str = iconv_convert("euc-jp", "utf-8", str);
+	utf_str = (guchar *)iconv_convert("euc-jp", "utf-8", (gchar *)str);
 	if(utf_str == NULL)
 		goto UNKNOWN;
-	len = strlen(utf_str);
-	strcpy(out, utf_str);
+	len = strlen((char *)utf_str);
+	strcpy((char *)out, (char *)utf_str);
 	g_free(utf_str);
 
 	*osize -= len;
@@ -130,7 +130,7 @@ gchar *iconv_convert(const gchar *icode, const gchar *ocode, const gchar *orig){
 		result = malloc(1);
 		result[0] = '\0';
 		LOG(LOG_DEBUG, "OUT : iconv_convert() OUT1");
-		return(result);
+		return((gchar *)result);
 	}
 
 	if(strcasecmp(icode, ocode) == 0){
@@ -146,9 +146,9 @@ gchar *iconv_convert(const gchar *icode, const gchar *ocode, const gchar *orig){
 
 	//hex_dump(inbuf);
 
-	inbuf = (gchar *)orig;
+	inbuf = (guchar *)orig;
 		
-	origsize = isize = strlen(inbuf);
+	origsize = isize = strlen((char *)inbuf);
 	osize = buflen = isize * 2;
 	result = outbuf = malloc(osize);
 	memset(result, 0x00, osize);
@@ -200,12 +200,12 @@ gchar *iconv_convert(const gchar *icode, const gchar *ocode, const gchar *orig){
 		result[0] = '\0';
 
 		LOG(LOG_DEBUG, "OUT : iconv_convert() OUT4");
-		return(result);
+		return((gchar *)result);
 	}
 
 	//LOG(LOG_DEBUG, "OUT : iconv_convert()");
 
-	return(result);
+	return((gchar *)result);
 }
 
 
@@ -322,8 +322,8 @@ void katakana_to_hiragana(gchar *word)
 			i++;
 			continue;
 		}
-		if(iseuc(&word[i])) {
-			if(iseuckatakana(&word[i])) {
+		if(iseuc((const guchar *)&word[i])) {
+			if(iseuckatakana((const guchar *)&word[i])) {
 				word[i] = 0xa4;
 			}
 			i += 2;
@@ -345,8 +345,8 @@ void hiragana_to_katakana(gchar *word)
 			i++;
 			continue;
 		}
-		if(iseuc(&word[i])) {
-			if(iseuchiragana(&word[i])) {
+		if(iseuc((const guchar *)&word[i])) {
+			if(iseuchiragana((const guchar *)&word[i])) {
 				word[i] = 0xa5;
 			}
 			i += 2;
@@ -403,13 +403,13 @@ gint guess_kanji(gint imax, guchar *buf)
 	for (i = 0; i < imax; i++) {
 		if(buf[i+5] == '\0')
 			break;
-		if((strncmp(&buf[i], JIS0208_1978, strlen(JIS0208_1978)) == 0) ||
-		   (strncmp(&buf[i], JIS0208_1983, strlen(JIS0208_1983)) == 0) ||
-		   (strncmp(&buf[i], JIS0208_1990, strlen(JIS0208_1990)) == 0) ||
-		   (strncmp(&buf[i], JIS0212, strlen(JIS0212)) == 0) ||
-		   (strncmp(&buf[i], JIS_ASC, strlen(JIS_ASC)) == 0) ||
-		   (strncmp(&buf[i], JIS_ASC2, strlen(JIS_ASC2)) == 0) ||
-		   (strncmp(&buf[i], JIS_KANA, strlen(JIS_KANA)) == 0))
+		if((strncmp((char *)&buf[i], JIS0208_1978, strlen(JIS0208_1978)) == 0) ||
+		   (strncmp((char *)&buf[i], JIS0208_1983, strlen(JIS0208_1983)) == 0) ||
+		   (strncmp((char *)&buf[i], JIS0208_1990, strlen(JIS0208_1990)) == 0) ||
+		   (strncmp((char *)&buf[i], JIS0212, strlen(JIS0212)) == 0) ||
+		   (strncmp((char *)&buf[i], JIS_ASC, strlen(JIS_ASC)) == 0) ||
+		   (strncmp((char *)&buf[i], JIS_ASC2, strlen(JIS_ASC2)) == 0) ||
+		   (strncmp((char *)&buf[i], JIS_KANA, strlen(JIS_KANA)) == 0))
 			return(KCODE_JIS);
 	}
 

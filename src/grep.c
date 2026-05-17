@@ -137,7 +137,7 @@ void remember_line(gchar *file, gint page, gint line, gint offset, gchar *headin
 
 	// Extract 10 characters before/ after keyword
 
-	here = simple_search(rp->word, tmp, strlen(tmp), bignore_case);
+	here = (gchar *)simple_search((guchar *)rp->word, (guchar *)tmp, strlen(tmp), bignore_case);
 	if(here != NULL){
 		p = here;
 		for(i=0; i < additional_chars ; i ++){
@@ -215,7 +215,7 @@ void grep_file(gchar *file, gchar *word, gint method){
 
 	// For higher performance, specially handle EUC and SJIS
 
-	code = guess_kanji(max_bytes_to_guess, contents);
+	code = guess_kanji(max_bytes_to_guess, (guchar *)contents);
 
 	switch(code){
 		gchar *tmp;
@@ -274,14 +274,14 @@ void grep_file(gchar *file, gchar *word, gint method){
 				for(i=0; i < EBOOK_MAX_KEYWORDS; i++) {
 					if(bmh[i] == NULL)
 						break;
-					r = bmh_search(bmh[i], p, pp - p);
+					r = (gchar *)bmh_search(bmh[i], (guchar *)p, pp - p);
 					if(r == NULL)
 						break;
 				}
 			} else if (method == METHOD_REGEX)
-				r = regex_search(reg, p);
+				r = (gchar *)regex_search(reg, (guchar *)p);
 			else
-				r = simple_search(word, p, pp - p, bignore_case);
+				r = (gchar *)simple_search((guchar *)word, (guchar *)p, pp - p, bignore_case);
 
 			if(r != NULL)
 				remember_line(file, page, line, p - contents, p, word, code);
@@ -294,14 +294,14 @@ void grep_file(gchar *file, gchar *word, gint method){
 				for(i=0; i < EBOOK_MAX_KEYWORDS; i++) {
 					if(bmh[i] == NULL)
 						break;
-					r = bmh_search(bmh[i], p, pp - p);
+					r = (gchar *)bmh_search(bmh[i], (guchar *)p, pp - p);
 					if(r == NULL)
 						break;
 				}
 			else if (method == METHOD_REGEX)
-				r = regex_search(reg, p);
+				r = (gchar *)regex_search(reg, (guchar *)p);
 			else
-				r = simple_search(word, p, pp - p, bignore_case);
+				r = (gchar *)simple_search((guchar *)word, (guchar *)p, pp - p, bignore_case);
 
 			if(r != NULL)
 				remember_line(file, page, line, p - contents, p, word, code);
@@ -396,21 +396,21 @@ static gint compare_func(gconstpointer a, gconstpointer b){
 
 static gboolean includes_meta_char(guchar *word)
 {
-	if((strchr(word, '^') != NULL) ||
-	   (strchr(word, '$') != NULL) ||
-	   (strchr(word, '[') != NULL) ||
-	   //(strchr(word, ']') != NULL) || // Because there must be '['
-	   //(strchr(word, '-') != NULL) || // Because there must be '['
-	   (strchr(word, '.') != NULL) ||
-	   (strchr(word, '*') != NULL) ||
-	   (strchr(word, '+') != NULL) ||
-	   (strchr(word, '?') != NULL) ||
-	   (strchr(word, '|') != NULL) ||
-	   (strchr(word, '{') != NULL) ||
-	   (strchr(word, '}') != NULL) ||
-	   //(strchr(word, ',') != NULL) || // Because there must be '{'
-	   (strchr(word, '(') != NULL) ||
-	   (strchr(word, ')') != NULL)){
+	if((strchr((char *)word, '^') != NULL) ||
+	   (strchr((char *)word, '$') != NULL) ||
+	   (strchr((char *)word, '[') != NULL) ||
+	   //(strchr((char *)word, ']') != NULL) || // Because there must be '['
+	   //(strchr((char *)word, '-') != NULL) || // Because there must be '['
+	   (strchr((char *)word, '.') != NULL) ||
+	   (strchr((char *)word, '*') != NULL) ||
+	   (strchr((char *)word, '+') != NULL) ||
+	   (strchr((char *)word, '?') != NULL) ||
+	   (strchr((char *)word, '|') != NULL) ||
+	   (strchr((char *)word, '{') != NULL) ||
+	   (strchr((char *)word, '}') != NULL) ||
+	   //(strchr((char *)word, ',') != NULL) || // Because there must be '{'
+	   (strchr((char *)word, '(') != NULL) ||
+	   (strchr((char *)word, ')') != NULL)){
 		return(TRUE);
 	} else {
 		return(FALSE);
@@ -553,7 +553,7 @@ static void *grep_search_thread(void *arg)
 		l_word = g_strndup(&word[1], strlen(word) - 2);
 
 		push_message(_("Force ordinary text.\n"));
-	} else if(includes_meta_char(word) == TRUE){
+	} else if(includes_meta_char((guchar *)word) == TRUE){
 		method = METHOD_REGEX;
 		l_word = g_strdup(word);
 
@@ -583,9 +583,9 @@ static void *grep_search_thread(void *arg)
 			if(keywords[i] == NULL)
 				break;
 			if(keywords[i][0] != '\0'){
-				bmh_euc[j] = bmh_prepare(keywords[i], bignore_case);
+				bmh_euc[j] = bmh_prepare((guchar *)keywords[i], bignore_case);
 				sjis_word = iconv_convert("euc-jp", "Shift_JIS", keywords[i]);
-				bmh_sjis[j] = bmh_prepare(sjis_word, bignore_case);
+				bmh_sjis[j] = bmh_prepare((guchar *)sjis_word, bignore_case);
 				g_free(sjis_word);
 				j++;
 			}
@@ -593,9 +593,9 @@ static void *grep_search_thread(void *arg)
 		free_words(keywords);
 	}
 	else if (method == METHOD_REGEX) {
-		reg_euc = regex_prepare(l_word, bignore_case);
+		reg_euc = regex_prepare((guchar *)l_word, bignore_case);
 		sjis_word = iconv_convert("euc-jp", "Shift_JIS", l_word);
-		reg_sjis = regex_prepare(sjis_word, bignore_case);
+		reg_sjis = regex_prepare((guchar *)sjis_word, bignore_case);
 		g_free(sjis_word);
 		if((reg_euc == NULL) || (reg_sjis == NULL)){
 			push_message(_("Failed to compile pattern.\n"));
@@ -696,7 +696,7 @@ void show_file(RESULT *rp)
 	if(contents == NULL)
 		return;
 
-	code = guess_kanji(max_bytes_to_guess, contents);
+	code = guess_kanji(max_bytes_to_guess, (guchar *)contents);
 
 	switch(code){
 		gchar *tmp;
@@ -812,7 +812,7 @@ void show_file(RESULT *rp)
 
 	// Emphasize keyword
 
-	if((includes_meta_char(rp->word) == TRUE) ||
+	if((includes_meta_char((guchar *)rp->word) == TRUE) ||
 	   ((rp->word[0] == '/') && (rp->word[strlen(rp->word) -1] == '/'))){
 		goto END;
 	}
@@ -832,7 +832,7 @@ void show_file(RESULT *rp)
 
 				p = line_text;
 				while(1){
-					r = simple_search(keywords[i], (guchar *)p, strlen(p), bignore_case);
+					r = (gchar *)simple_search((guchar *)keywords[i], (guchar *)p, strlen(p), bignore_case);
 					if(r == NULL)
 						break;
 					gtk_text_iter_set_line_index(bol, r - line_text);
