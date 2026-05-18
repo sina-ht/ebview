@@ -3,6 +3,7 @@
 *.patch
 *.o
 *.lo
+core
 Makefile
 Makefile.in
 !intl/Makefile.in
@@ -28,6 +29,7 @@ stamp-h*
 .deps
 aclocal.m4
 config.h.in
+compile
 ltconfig
 ltmain.sh
 libtool
@@ -39,3 +41,13 @@ autom4te.cache
 TODO.tasks
 POTFILES
 src/ebview
+INSTALL
+m4/libtool.m4
+m4/ltoptions.m4
+m4/ltsugar.m4
+m4/ltversion.m4
+m4/lt~obsolete.m4
+po/cat-id-tbl.c
+po/ebview.pot
+po/ja.gmo
+po/ja.po.utf-8
