@@ -1,2 +1,2 @@
 ACLOCAL_AMFLAGS = -I m4
-SUBDIRS = src po data doc
+SUBDIRS = src po data doc util
