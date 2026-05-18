@@ -1,5 +1,6 @@
 dir = ja en
 data = index.html menu.html body.html
+EXTRA_DIST := en ja
 
 all: 
 

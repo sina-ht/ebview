@@ -1,4 +1,5 @@
 data = about.jp about.en endinglist.xml endinglist-ja.xml searchengines.xml shortcut.xml filter.xml
+EXTRA_DIST := endinglist-ja.xml endinglist.xml filter.xml searchengines.xml shortcut.xml
 
 all: $(data)
 

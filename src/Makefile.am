@@ -114,5 +114,7 @@ ebview_SOURCES = \
 	xml.h \
 	xmlinternal.h
 
+EXTRA_DIST := ebview-client.c
+
 ebview.res:	ebview.rc
 	windres -i $< -O coff -o $@
