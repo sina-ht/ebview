@@ -26,8 +26,7 @@ static GtkWidget *spin_popup_height;
 static GtkWidget *check_beep;
 static GtkWidget *check_popup_title;
 
-gboolean pref_end_selection(GtkWidget *widget,gpointer *data){
-	(void)widget; (void)data;
+gboolean pref_end_selection(){
 
 	LOG(LOG_DEBUG, "IN : pref_end_selection()");
 

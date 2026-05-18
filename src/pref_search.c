@@ -22,8 +22,7 @@
 static GtkWidget *spin_max_search;
 static GtkWidget *check_word_search;
 
-gboolean pref_end_search(GtkWidget *widget,gpointer *data){
-	(void)widget; (void)data;
+gboolean pref_end_search(){
 
 	LOG(LOG_DEBUG, "IN : pref_end_search()");
 
