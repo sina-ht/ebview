@@ -44,8 +44,8 @@ main(int argc, char *argv[])
 	ssize_t read_length;
 	int block_no;
 	
-	gchar *p_hex;
-	gchar *p_char;
+	gchar *p_hex = NULL;
+	gchar *p_char = NULL;
 	gchar hex_buff[512];
 	gchar char_buff[512];
 	int i;
