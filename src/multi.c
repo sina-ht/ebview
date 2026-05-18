@@ -565,7 +565,7 @@ void search_multi(gchar *word)
 	EB_Error_Code error_code;
 	GtkTreeIter iter;
 	GtkTreeIter parent;
-	gchar *dic_title;
+	gchar *dic_title = NULL;
 	gint i;
 
 #ifdef MULTI_HACK
