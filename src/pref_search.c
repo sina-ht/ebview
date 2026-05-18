@@ -45,24 +45,19 @@ GtkWidget *pref_start_search()
 	GtkWidget *label;
 	GtkAdjustment *adj;
 	GtkWidget *table;
-	GtkAttachOptions xoption=0, yoption=0;
 
 	LOG(LOG_DEBUG, "IN : pref_start_search()");
 
-	vbox = gtk_vbox_new(FALSE,10);
+	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 10);
 	gtk_widget_set_size_request(vbox, 300, 200);
 
-	xoption = GTK_SHRINK|GTK_FILL;
-	yoption = GTK_SHRINK;
-
-	table = gtk_table_new(3, 5, FALSE);
+	table = gtk_grid_new();
 	gtk_box_pack_start (GTK_BOX(vbox)
 			    , table,FALSE, FALSE, 0);
 
-	hbox = gtk_hbox_new(FALSE,10);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
 	gtk_container_set_border_width(GTK_CONTAINER(hbox), 2);
-	gtk_table_attach(GTK_TABLE(table), hbox, 0, 1, 0, 1,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), hbox, 0, 0, 1, 1);
 
 	label = gtk_label_new(_("Maximum hits to search"));
 	gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_LEFT);
@@ -78,8 +73,7 @@ GtkWidget *pref_start_search()
 	spin_max_search = gtk_spin_button_new(GTK_ADJUSTMENT(adj), 1.0, 0);
 	gtk_spin_button_set_value(GTK_SPIN_BUTTON(spin_max_search), max_search );
 	gtk_widget_set_size_request(spin_max_search,60,20);
-	gtk_table_attach(GTK_TABLE(table), spin_max_search, 1, 2, 0, 1,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), spin_max_search, 1, 0, 1, 1);
 
 	gtk_widget_set_tooltip_text(spin_max_search, _("Maximum number of hits to be searched.\nIf you increase this number, it takes time to search."));
 
@@ -87,8 +81,7 @@ GtkWidget *pref_start_search()
 	check_word_search = gtk_check_button_new_with_label(_("Perform word search in automatic search"));
 	gtk_widget_set_tooltip_text(check_word_search, _("Perform word search in automatic search."));
 
-	gtk_table_attach(GTK_TABLE(table), check_word_search, 0, 1, 2, 3,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), check_word_search, 0, 2, 1, 1);
 
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(check_word_search), bword_search_automatic);
 

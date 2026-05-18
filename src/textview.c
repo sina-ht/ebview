@@ -292,7 +292,6 @@ void create_text_buffer()
 gint motion_notify_event(GtkWidget *widget, GdkEventMotion *event)
 {
 	gint x, y;
-	GdkModifierType mask;
 	GtkTextIter iter;
 	guint offset;
 	gint buffer_x, buffer_y;
@@ -342,14 +341,14 @@ gint motion_notify_event(GtkWidget *widget, GdkEventMotion *event)
 	SetCursor(hCursor);
 #else
 	if(scan_link(offset) && !too_far){
-		cursor = gdk_cursor_new (CURSOR_LINK);
+		cursor = gdk_cursor_new_for_display(gdk_display_get_default(), CURSOR_LINK);
 	} else {
-		cursor = gdk_cursor_new(CURSOR_NORMAL);
+		cursor = gdk_cursor_new_for_display(gdk_display_get_default(), CURSOR_NORMAL);
 	}
 	gdk_window_set_cursor(gtk_text_view_get_window(GTK_TEXT_VIEW(widget), GTK_TEXT_WINDOW_TEXT), cursor);
 	g_object_unref (cursor);
 
-gdk_window_get_pointer(gtk_widget_get_window(widget), &x, &y, &mask);
+gdk_window_get_device_position(gtk_widget_get_window(widget), gdk_seat_get_pointer(gdk_display_get_default_seat(gdk_display_get_default())), &x, &y, NULL);
 #endif
 
 //	LOG(LOG_DEBUG, "OUT : motion_notify_event()");
@@ -375,9 +374,9 @@ gint leave_notify_event(GtkWidget *widget, GdkEventCrossing *event, gpointer dat
 	hCursor = LoadCursor(NULL, IDC_ARROW);
 	SetCursor(hCursor);
 #else
-	cursor = gdk_cursor_new(CURSOR_NORMAL);
-	gdk_window_set_cursor(gtk_text_view_get_window(GTK_TEXT_VIEW(widget), 
-						       GTK_TEXT_WINDOW_TEXT),
+cursor = gdk_cursor_new_for_display(gdk_display_get_default(), CURSOR_NORMAL);
+	gdk_window_set_cursor(gtk_text_view_get_window(GTK_TEXT_VIEW(widget),
+					       GTK_TEXT_WINDOW_TEXT),
 			      cursor);
 	g_object_unref (cursor);
 #endif
@@ -431,7 +430,7 @@ gint button_press_event(GtkWidget *widget, GdkEventButton *event)
 
 	} else 	if((event->type == GDK_BUTTON_PRESS) &&
 		((event->button == 2) || (event->button == 3))){
-		gtk_menu_popup(GTK_MENU(text_menu), NULL, NULL, NULL, NULL, event->button, event->time);
+		gtk_menu_popup_at_pointer(GTK_MENU(text_menu), NULL);
 		LOG(LOG_DEBUG, "OUT : button_press_event() = TRUE");
 		return(TRUE);
 

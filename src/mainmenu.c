@@ -1109,7 +1109,7 @@ void split_vertical()
 	position = gtk_paned_get_position(GTK_PANED(pane));
 
 	// Create new pane
-	new_pane = gtk_vpaned_new();
+	new_pane = gtk_paned_new(GTK_ORIENTATION_VERTICAL);
 	
 	g_object_ref(G_OBJECT(note_tree));
 	g_object_ref(G_OBJECT(note_text));
@@ -1154,7 +1154,7 @@ void split_horizontal()
 
 
 	// Create new pane
-	new_pane = gtk_hpaned_new();
+	new_pane = gtk_paned_new(GTK_ORIENTATION_HORIZONTAL);
 	
 	g_object_ref(G_OBJECT(note_tree));
 	g_object_ref(G_OBJECT(note_text));

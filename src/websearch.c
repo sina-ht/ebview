@@ -219,7 +219,7 @@ static gint button_press_event(GtkWidget *widget, GdkEventButton *event)
 //KENKEN
 	if ((event->type == GDK_BUTTON_PRESS) && 
 	    ((event->button == 2) || (event->button == 3))){
-		gtk_menu_popup(GTK_MENU(tree_menu), NULL, NULL, NULL, NULL, event->button, event->time);
+		gtk_menu_popup_at_pointer(GTK_MENU(tree_menu), NULL);
 		return(TRUE);
 	} else 	if ((event->type == GDK_2BUTTON_PRESS) && 
 		    (event->button == 1)){

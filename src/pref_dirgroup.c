@@ -264,14 +264,14 @@ GtkWidget *pref_start_dirgroup()
 
 	LOG(LOG_DEBUG, "IN : pref_start_dirgroup()");
 
-	hbox = gtk_hbox_new(TRUE,0);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 
 	gtk_container_set_border_width(GTK_CONTAINER(hbox), 5);
 
 	frame = gtk_frame_new(_("Directory group list"));
 	gtk_box_pack_start (GTK_BOX(hbox), frame,TRUE, TRUE, 5);
 
-	vbox = gtk_vbox_new(FALSE,0);
+	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 	gtk_container_set_border_width(GTK_CONTAINER(vbox), 5);
 	gtk_container_add(GTK_CONTAINER(frame), vbox);
 
@@ -310,7 +310,7 @@ GtkWidget *pref_start_dirgroup()
 //	gtk_tree_view_append_column (GTK_TREE_VIEW (dirgroup_view), column);
 
 
-	hbox2 = gtk_hbox_new(FALSE,5);
+	hbox2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
 	gtk_container_set_border_width(GTK_CONTAINER(hbox2), 2);
 	gtk_box_pack_start(GTK_BOX(vbox),
 			    hbox2,FALSE, FALSE, 0);
@@ -318,7 +318,7 @@ GtkWidget *pref_start_dirgroup()
 	frame = gtk_frame_new(_("Detail"));
 	gtk_box_pack_start(GTK_BOX(hbox), frame,TRUE, TRUE, 5);
 
-	vbox = gtk_vbox_new(FALSE,0);
+	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 	gtk_container_set_border_width(GTK_CONTAINER(vbox), 5);
 	gtk_container_add(GTK_CONTAINER(frame), vbox);
 
@@ -354,7 +354,7 @@ GtkWidget *pref_start_dirgroup()
 
 
 
-	hbox2 = gtk_hbox_new(FALSE,5);
+	hbox2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
 	gtk_container_set_border_width(GTK_CONTAINER(hbox2), 5);
 	gtk_box_pack_start(GTK_BOX(vbox),
 			   hbox2,FALSE, FALSE, 0);

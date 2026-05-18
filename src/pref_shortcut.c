@@ -258,7 +258,7 @@ static gint window_key_event(GtkWidget *widget, GdkEventKey *event){
 
 	gtk_label_set_text(GTK_LABEL(label_key), key);
 
-	gdk_keyboard_ungrab(GDK_CURRENT_TIME);
+	gdk_seat_ungrab(gdk_display_get_default_seat(gdk_display_get_default()));
 
 	ungrab_server(NULL);
 
@@ -367,9 +367,9 @@ GtkWidget *pref_start_shortcut()
 
 	LOG(LOG_DEBUG, "IN : pref_start_shortcut()");
 
-	hbox = gtk_hbox_new(TRUE, 0);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 
-	vbox = gtk_vbox_new(FALSE,0);
+	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 	gtk_box_pack_start (GTK_BOX(hbox)
 			    , vbox, TRUE, TRUE, 0);
 
@@ -383,7 +383,7 @@ GtkWidget *pref_start_shortcut()
 	frame = gtk_frame_new(_("Shortcut"));
 	gtk_box_pack_start (GTK_BOX(vbox), frame,TRUE, TRUE, 0);
 
-	vbox2 = gtk_vbox_new(FALSE,2);
+	vbox2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
 	gtk_container_set_border_width(GTK_CONTAINER(vbox2), 2);
 	gtk_container_add (GTK_CONTAINER (frame), vbox2);
 
@@ -421,7 +421,7 @@ GtkWidget *pref_start_shortcut()
 
 
 
-	hbox2 = gtk_vbox_new(FALSE,2);
+	hbox2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
 	gtk_box_pack_start (GTK_BOX (vbox2), hbox2,
 			    FALSE, FALSE, 0);
 
@@ -437,7 +437,7 @@ GtkWidget *pref_start_shortcut()
 
 	// Right half
 
-	vbox = gtk_vbox_new(FALSE,0);
+	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 	gtk_box_pack_start (GTK_BOX(hbox)
 			    , vbox,TRUE, TRUE, 0);
 
@@ -447,14 +447,13 @@ GtkWidget *pref_start_shortcut()
 	frame = gtk_frame_new(_("Add"));
 	gtk_box_pack_start (GTK_BOX(vbox), frame,TRUE, TRUE, 0);
 
-	vbox2 = gtk_vbox_new(FALSE,2);
+	vbox2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
 	gtk_container_set_border_width(GTK_CONTAINER(vbox2), 2);
 	gtk_container_add (GTK_CONTAINER (frame), vbox2);
 
 
 
-
-	hbox2 = gtk_hbox_new(FALSE,0);
+	hbox2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_box_pack_start (GTK_BOX(vbox2)
 			    , hbox2, FALSE, FALSE, 0);
 

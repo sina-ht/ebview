@@ -388,7 +388,6 @@ static void draw_gaiji(CANVAS *canvas, BOOK_INFO *binfo, TAG *tag, gchar *code)
 	GtkTextIter end_iter;
 
 	gchar color[128];
-	gchar *color_name;
 
 	g_assert(canvas != NULL);
 	g_assert(binfo != NULL);
@@ -407,9 +406,7 @@ static void draw_gaiji(CANVAS *canvas, BOOK_INFO *binfo, TAG *tag, gchar *code)
 	gdk_color.red = fg_color.red * 257;
 	gdk_color.green = fg_color.green * 257;
 	gdk_color.blue = fg_color.blue * 257;
-	color_name = gtk_color_selection_palette_to_string(&gdk_color, 1);
-	strcpy(color, color_name);
-	g_free(color_name);
+	sprintf(color, "#%02x%02x%02x", gdk_color.red / 257, gdk_color.green / 257, gdk_color.blue / 257);
 
 	if(tag == NULL){
 	} else if(tag->type & TAG_TYPE_LINK){
@@ -427,7 +424,7 @@ static void draw_gaiji(CANVAS *canvas, BOOK_INFO *binfo, TAG *tag, gchar *code)
 	gtk_text_buffer_insert_pixbuf(
 			canvas->buffer, canvas->iter,
 			pixbuf);
-	gdk_pixbuf_unref(pixbuf);
+	g_object_unref(pixbuf);
 
 	end_iter = *(canvas->iter);
 	start_iter = *(canvas->iter);
@@ -516,7 +513,7 @@ static void draw_graphic(CANVAS *canvas, BOOK_INFO *binfo, gint type, gint page,
 	gtk_text_buffer_insert_pixbuf(
 			canvas->buffer, canvas->iter,
 			pixbuf);
-	gdk_pixbuf_unref(pixbuf);
+	g_object_unref(pixbuf);
 
 /*
 	if((0 <= canvas->indent)  && (canvas->indent < MAX_INDENT)){

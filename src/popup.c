@@ -135,7 +135,6 @@ static gint title_click_event (GtkWidget *widget, GdkEventButton *event, gpointe
 {
 	(void)widget;
 	RESULT *rp;
-	GdkModifierType mask;
 	static GdkWindow *root_win = NULL;
 
 	LOG(LOG_DEBUG, "IN : title_click_event()");
@@ -174,7 +173,7 @@ static gint title_click_event (GtkWidget *widget, GdkEventButton *event, gpointe
 		} else if(strcmp(data, "t") == 0){
 			bbutton_down = TRUE;
 root_win = gdk_screen_get_root_window(gdk_screen_get_default());
-			gdk_window_get_pointer (root_win, &prev_x, &prev_y, &mask);
+			gdk_window_get_device_position(root_win, gdk_seat_get_pointer(gdk_display_get_default_seat(gdk_display_get_default())), &prev_x, &prev_y, NULL);
 			previous_x = event->x;
 			previous_y = event->y;
 		} else if(strcmp(data, "p") == 0){
@@ -222,7 +221,6 @@ gint title_motion_event(GtkWidget *widget, GdkEventMotion *event)
 	gint win_x, win_y;
 
 	gint xp, yp;
-	GdkModifierType mask;
 	static GdkWindow *root_win = NULL;
 
 	//LOG(LOG_DEBUG, "IN : title_motion_event()");
@@ -231,7 +229,7 @@ gint title_motion_event(GtkWidget *widget, GdkEventMotion *event)
 	   bbutton_down){
 
 root_win = gdk_screen_get_root_window(gdk_screen_get_default());
-		gdk_window_get_pointer (root_win, &xp, &yp, &mask);
+		gdk_window_get_device_position(root_win, gdk_seat_get_pointer(gdk_display_get_default_seat(gdk_display_get_default())), &xp, &yp, NULL);
 
 	        mov_x = xp - prev_x;
 	        mov_y = yp - prev_y;
@@ -251,7 +249,6 @@ root_win = gdk_screen_get_root_window(gdk_screen_get_default());
 
 static void create_popup_window(){
 
-	GdkModifierType mask;
 	gint pos_x, pos_y;
 	gint pointer_x, pointer_y;
 	gint root_x, root_y;
@@ -291,7 +288,7 @@ static void create_popup_window(){
 	window_height = popup_height;
 
 	// If there is no window, determine from the mouse position.
-	gdk_window_get_pointer(root_win, &pointer_x, &pointer_y, &mask);
+	gdk_window_get_device_position(root_win, gdk_seat_get_pointer(gdk_display_get_default_seat(gdk_display_get_default())), &pointer_x, &pointer_y, NULL);
 	pos_x = pointer_x + align_x;
 	pos_y = pointer_y + align_y;
 
@@ -316,12 +313,12 @@ static void create_popup_window(){
 
 				NULL);
 	gtk_window_move(GTK_WINDOW(popup), pos_x, pos_y);
-	gtk_window_set_wmclass(GTK_WINDOW(popup), "Popup", "EBView");
+	g_set_prgname("EBView");
 	g_signal_connect(G_OBJECT(popup), "delete_event",
 			 G_CALLBACK(close_popup), NULL);
 
 
-	vbox = gtk_vbox_new(FALSE, 0);
+	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 	gtk_container_add (GTK_CONTAINER (popup), vbox);
 
 
@@ -331,7 +328,7 @@ static void create_popup_window(){
 		gtk_frame_set_shadow_type(GTK_FRAME(frame), GTK_SHADOW_ETCHED_IN);
 		gtk_box_pack_start(GTK_BOX(vbox), frame, FALSE, FALSE, 0);
 
-		hbox = gtk_hbox_new(FALSE, 0);
+		hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 		gtk_container_add( GTK_CONTAINER(frame), hbox);
 
 
@@ -342,7 +339,7 @@ static void create_popup_window(){
 		image_pushpin = create_image(IMAGE_PUSH_OFF);
 		gtk_container_add( GTK_CONTAINER(eventbox), image_pushpin);
 
-		separator = gtk_vseparator_new();
+		separator = gtk_separator_new(GTK_ORIENTATION_VERTICAL);
 		gtk_box_pack_start(GTK_BOX(hbox), separator, FALSE, FALSE, 0);
 
 
@@ -353,7 +350,7 @@ static void create_popup_window(){
 		image = create_image(IMAGE_SMALL_LEFT);
 		gtk_container_add( GTK_CONTAINER(eventbox), image);
 
-		separator = gtk_vseparator_new();
+		separator = gtk_separator_new(GTK_ORIENTATION_VERTICAL);
 		gtk_box_pack_start(GTK_BOX(hbox), separator, FALSE, FALSE, 0);
 
 		eventbox = gtk_event_box_new();
@@ -368,7 +365,7 @@ static void create_popup_window(){
 		title_label = gtk_label_new("x of x");
 		gtk_container_add( GTK_CONTAINER(eventbox), title_label);
 
-		separator = gtk_vseparator_new();
+		separator = gtk_separator_new(GTK_ORIENTATION_VERTICAL);
 		gtk_box_pack_start(GTK_BOX(hbox), separator, FALSE, FALSE, 0);
 
 		eventbox = gtk_event_box_new();
@@ -379,7 +376,7 @@ static void create_popup_window(){
 		image = create_image(IMAGE_SMALL_CLOSE);
 		gtk_container_add( GTK_CONTAINER(eventbox), image);
 
-		separator = gtk_vseparator_new();
+		separator = gtk_separator_new(GTK_ORIENTATION_VERTICAL);
 		gtk_box_pack_end(GTK_BOX(hbox), separator, FALSE, FALSE, 0);
 
 		eventbox = gtk_event_box_new();

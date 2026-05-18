@@ -416,7 +416,7 @@ if(g_list_length(list) != 0){
 
 
 	// Re-create buttons
-	dict_box = gtk_hbox_new(FALSE, 0);
+	dict_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_box_pack_start(GTK_BOX (dict_bar), dict_box, FALSE, FALSE, 0);
 	add_dict_buttons(dict_box);
 

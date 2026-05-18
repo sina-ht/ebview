@@ -157,10 +157,10 @@ GtkWidget *pref_start_stemming()
 
 	LOG(LOG_DEBUG, "IN : pref_start_stemming()");
 
-	hbox1 = gtk_hbox_new(FALSE, 3);
+	hbox1 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 3);
 	gtk_widget_set_size_request(hbox1, 240, 300);
 
-	vbox = gtk_vbox_new(FALSE, 3);
+	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 3);
 	gtk_box_pack_start (GTK_BOX(hbox1)
 			    , vbox,TRUE,FALSE, 0);
 
@@ -192,12 +192,12 @@ GtkWidget *pref_start_stemming()
 			 G_CALLBACK(lang_changed), NULL);
 
 
-	hbox = gtk_hbox_new(FALSE,0);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_box_pack_start (GTK_BOX(vbox)
 			    , hbox,FALSE, FALSE, 0);
 
 
-	vbox2 = gtk_vbox_new(FALSE,0);
+	vbox2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 	gtk_box_pack_start (GTK_BOX(hbox)
 			    , vbox2, TRUE, TRUE, 0);
 
@@ -210,7 +210,7 @@ GtkWidget *pref_start_stemming()
 			    , entry_pattern, FALSE, FALSE, 0);
 
 
-	vbox2 = gtk_vbox_new(FALSE,0);
+	vbox2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 	gtk_box_pack_start (GTK_BOX(hbox)
 			    , vbox2, TRUE, TRUE, 0);
 

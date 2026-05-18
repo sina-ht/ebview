@@ -208,7 +208,6 @@ static void show_candidate(BOOK_INFO *binfo, gint code){
 	GtkWidget *label;
 	GtkWidget *button;
 	GtkWidget *frame;
-	GtkAttachOptions xoption, yoption;
 	gboolean have_candidate=FALSE;
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
@@ -218,8 +217,6 @@ static void show_candidate(BOOK_INFO *binfo, gint code){
 
 //	xoption = GTK_EXPAND | GTK_SHRINK;
 //	yoption = GTK_EXPAND | GTK_SHRINK;
-	xoption = 0;
-	yoption = 0;
 
 	error_code = eb_multi_entry_count(binfo->book, code, &entry_count);
 	if(error_code != EB_SUCCESS) {
@@ -242,7 +239,7 @@ static void show_candidate(BOOK_INFO *binfo, gint code){
 	frame = gtk_frame_new(_("Keyword"));
 	gtk_box_pack_start(GTK_BOX(entry_box), frame, FALSE, FALSE, 0);
 
-	entry_table = gtk_table_new(3, EB_MAX_MULTI_ENTRIES+1, FALSE);
+	entry_table = gtk_grid_new();
 	gtk_container_add (GTK_CONTAINER (frame), entry_table);
 
 	for(i=0 ; i < entry_count ; i ++){
@@ -271,14 +268,12 @@ static void show_candidate(BOOK_INFO *binfo, gint code){
 		label = gtk_label_new(utf_str);
 		g_free(utf_str);
 
-		gtk_table_attach(GTK_TABLE(entry_table), label, 0, 1, i, i+1,
-				 xoption, yoption, 5, 1);
+		gtk_grid_attach(GTK_GRID(entry_table), label, 0, i, 1, 1);
 		multi_entry[i] = gtk_entry_new();
 		g_signal_connect(G_OBJECT (multi_entry[i]), "activate",
 				 G_CALLBACK(start_multi_search),
 				 (gpointer)NULL);
-		gtk_table_attach(GTK_TABLE(entry_table), multi_entry[i], 1, 2, i, i+1,
-				 xoption, yoption, 5, 1);
+		gtk_grid_attach(GTK_GRID(entry_table), multi_entry[i], 1, i, 1, 1);
 		
 		if(have_candidate == TRUE){
 			button = gtk_button_new_with_label(_("Candidates"));
@@ -286,8 +281,7 @@ static void show_candidate(BOOK_INFO *binfo, gint code){
 					 G_CALLBACK(candidate_pressed),
 					 (gpointer)(guintptr)i);
 
-			gtk_table_attach(GTK_TABLE(entry_table), button, 2, 3, i, i+1,
-					 xoption, yoption, 5, 1);
+			gtk_grid_attach(GTK_GRID(entry_table), button, 2, i, 1, 1);
 		}
 
 	}

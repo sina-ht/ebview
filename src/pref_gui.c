@@ -51,26 +51,21 @@ GtkWidget *pref_start_gui(){
 	GtkWidget *table;
 	GtkWidget *label;
 	GtkAdjustment *adj;
-	GtkAttachOptions xoption, yoption;
 
 	LOG(LOG_DEBUG, "IN : pref_start_gui()");
 
-	vbox = gtk_vbox_new(FALSE, 0);
+	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 	gtk_widget_set_size_request(vbox, 300, 200);
 	gtk_container_set_border_width(GTK_CONTAINER(vbox), 5);
 
-	xoption = GTK_SHRINK|GTK_FILL;
-	yoption = GTK_SHRINK;
-
-	table = gtk_table_new(2, 12, FALSE);
+	table = gtk_grid_new();
 	gtk_box_pack_start (GTK_BOX(vbox)
 			    , table,FALSE, FALSE, 0);
 
 
-	hbox = gtk_hbox_new(FALSE,10);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
 	gtk_container_set_border_width(GTK_CONTAINER(hbox), 2);
-	gtk_table_attach(GTK_TABLE(table), hbox, 0, 1, 0, 1,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), hbox, 0, 0, 1, 1);
 
 	label = gtk_label_new(_("Maximum words in history"));
 	gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_LEFT);
@@ -87,16 +82,14 @@ GtkWidget *pref_start_gui(){
 	spin_words = gtk_spin_button_new(GTK_ADJUSTMENT(adj), 1.0, 0);
 	gtk_spin_button_set_value(GTK_SPIN_BUTTON(spin_words), max_remember_words );
 	gtk_widget_set_size_request(spin_words,60,20);
-	gtk_table_attach(GTK_TABLE(table), spin_words, 1, 2, 0, 1,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), spin_words, 1, 0, 1, 1);
 
 	gtk_widget_set_tooltip_text(spin_words, _("Maximum number of words to remember in word history"));
 
 
-	hbox = gtk_hbox_new(FALSE,10);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
 	gtk_container_set_border_width(GTK_CONTAINER(hbox), 2);
-	gtk_table_attach(GTK_TABLE(table), hbox, 0, 1, 1, 2,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), hbox, 0, 1, 1, 1);
 
 
 	label = gtk_label_new(_("Chars in dictionary bar"));
@@ -114,8 +107,7 @@ GtkWidget *pref_start_gui(){
 	gtk_spin_button_set_value(GTK_SPIN_BUTTON(spin_dict_label), dict_button_length );
 	gtk_spin_button_set_snap_to_ticks(GTK_SPIN_BUTTON(spin_dict_label), TRUE);
 	gtk_widget_set_size_request(spin_dict_label,60,20);
-	gtk_table_attach(GTK_TABLE(table), spin_dict_label, 1, 2, 1, 2,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), spin_dict_label, 1, 1, 1, 1);
 
 	gtk_widget_set_tooltip_text(spin_dict_label, _("Specify the number of characters to display on top of each toggle buttons in dictionary bar."));
 
@@ -124,8 +116,7 @@ GtkWidget *pref_start_gui(){
 	check_splash = gtk_check_button_new_with_label(_("Show splash screen"));
 	gtk_widget_set_tooltip_text(check_splash, _("Show splash screen on loading."));
 
-	gtk_table_attach(GTK_TABLE(table), check_splash, 0, 1, 5, 6,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), check_splash, 0, 5, 1, 1);
 
 	// 
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(check_splash), bshow_splash);
@@ -133,17 +124,15 @@ GtkWidget *pref_start_gui(){
 	check_heading_auto = gtk_check_button_new_with_label(_("Calculate heading automatically"));
 	gtk_widget_set_tooltip_text(check_heading_auto, _("Calculate the number of cells in heading list to suit the window size."));
 
-	gtk_table_attach(GTK_TABLE(table), check_heading_auto, 0, 1, 6, 7,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), check_heading_auto, 0, 6, 1, 1);
 
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(check_heading_auto), bheading_auto_calc);
 
 
 	// 
-	hbox = gtk_hbox_new(FALSE,10);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
 	gtk_container_set_border_width(GTK_CONTAINER(hbox), 2);
-	gtk_table_attach(GTK_TABLE(table), hbox, 0, 1, 7, 8,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), hbox, 0, 7, 1, 1);
 
 	label = gtk_label_new(_("Maximum hits to display"));
 	gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_LEFT);
@@ -160,8 +149,7 @@ GtkWidget *pref_start_gui(){
 	spin_max_heading = gtk_spin_button_new(GTK_ADJUSTMENT(adj), 1.0, 0);
 	gtk_spin_button_set_value(GTK_SPIN_BUTTON(spin_max_heading), max_heading );
 	gtk_widget_set_size_request(spin_max_heading,60,20);
-	gtk_table_attach(GTK_TABLE(table), spin_max_heading, 1, 2, 7, 8,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), spin_max_heading, 1, 7, 1, 1);
 
 	gtk_widget_set_tooltip_text(spin_max_heading, _("Maximum number of hits to be displayed at once.\nYou can go forward and backward using buttons. Valid only if automatic calculation is disabled."));
 
@@ -169,8 +157,7 @@ GtkWidget *pref_start_gui(){
 	check_button_color = gtk_check_button_new_with_label(_("Enable dictionary button color"));
 	gtk_widget_set_tooltip_text(check_button_color, _("Enable background color of dictionary button."));
 
-	gtk_table_attach(GTK_TABLE(table), check_button_color, 0, 1, 8, 9,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), check_button_color, 0, 8, 1, 1);
 
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(check_button_color), benable_button_color);
 

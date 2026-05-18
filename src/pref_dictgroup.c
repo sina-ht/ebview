@@ -1122,7 +1122,7 @@ static void ok_colorsel(GtkWidget *widget, gint response_id, gpointer *data){
 	color.red = rgba_color.red * 257;
 	color.green = rgba_color.green * 257;
 	color.blue = rgba_color.blue * 257;
-	color_name = gtk_color_selection_palette_to_string(&color, 1);
+	color_name = g_strdup_printf("#%02x%02x%02x", (gint)(color.red >> 8), (gint)(color.green >> 8), (gint)(color.blue >> 8));
 
 	if(color_no == 0){
 		sprintf(fg_color, "%s", color_name);
@@ -1165,14 +1165,11 @@ G_GNUC_UNUSED static void delete_colorsel( GtkWidget *widget,
 
 static void show_colorsel(GtkWidget *widget,gpointer *data){
 	(void)widget;
-	GdkColor color;
-
 	LOG(LOG_DEBUG, "IN : show_colorsel()");
-	
+
 	color_no = (gint)(guintptr)data;
 
-
-	colorsel_dlg = gtk_color_selection_dialog_new(_("Choose Color"));
+	colorsel_dlg = gtk_color_chooser_dialog_new(_("Choose Color"), NULL);
 
 	gtk_dialog_add_button(GTK_DIALOG(colorsel_dlg), _("OK"), GTK_RESPONSE_OK);
 	gtk_dialog_add_button(GTK_DIALOG(colorsel_dlg), _("Cancel"), GTK_RESPONSE_CANCEL);
@@ -1180,16 +1177,12 @@ static void show_colorsel(GtkWidget *widget,gpointer *data){
 
 g_assert(color_no < NUM_COLORS);
 
-	if(color_no == 0){
-		gdk_color_parse(fg_color, &color);
-	} else {
-		gdk_color_parse(bg_color, &color);
-	}
-
 	GdkRGBA rgba;
-	rgba.red = color.red / 65535.0;
-	rgba.green = color.green / 65535.0;
-	rgba.blue = color.blue / 65535.0;
+	if(color_no == 0){
+		gdk_rgba_parse(&rgba, fg_color);
+	} else {
+		gdk_rgba_parse(&rgba, bg_color);
+	}
 	rgba.alpha = 1.0;
 	gtk_color_chooser_set_rgba(GTK_COLOR_CHOOSER(colorsel_dlg), &rgba);
 
@@ -1240,10 +1233,10 @@ GtkWidget *pref_start_dictgroup()
 	LOG(LOG_DEBUG, "IN : pref_start_dictgroup()");
 
 
-	hbox = gtk_hbox_new(FALSE,0);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_container_set_border_width(GTK_CONTAINER(hbox), 2);
 
-	vbox_l = gtk_vbox_new(FALSE,0);
+	vbox_l = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 	gtk_container_set_border_width(GTK_CONTAINER(vbox_l), 2);
 	gtk_box_pack_start (GTK_BOX(hbox)
 			    , vbox_l,TRUE, TRUE, 0);
@@ -1395,7 +1388,7 @@ GtkWidget *pref_start_dictgroup()
 
 */
 
-	hbox2 = gtk_hbox_new(FALSE, 0);
+	hbox2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_box_pack_start(GTK_BOX(vbox_l),
 			   hbox2,FALSE, FALSE, 2);
 
@@ -1436,7 +1429,7 @@ GtkWidget *pref_start_dictgroup()
 			 G_CALLBACK(down_item), (gpointer)button);
 
 
-	hbox2 = gtk_hbox_new(FALSE,5);
+	hbox2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
 	gtk_box_pack_start(GTK_BOX(vbox_l),
 			   hbox2,FALSE, FALSE, 2);
 
@@ -1480,7 +1473,7 @@ GtkWidget *pref_start_dictgroup()
 	gtk_box_pack_start (GTK_BOX(hbox)
 			    , frame,TRUE, TRUE, 0);
 	
-	vbox_r = gtk_vbox_new(FALSE,5);
+	vbox_r = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
 	gtk_container_set_border_width(GTK_CONTAINER(vbox_r), 5);
 	gtk_container_add(GTK_CONTAINER(frame), vbox_r);
 
@@ -1530,7 +1523,7 @@ GtkWidget *pref_start_dictgroup()
 			    FALSE, FALSE, 0);
 
 	
-	hbox2 = gtk_hbox_new(FALSE,2);
+	hbox2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
 	gtk_container_set_border_width(GTK_CONTAINER(hbox2), 2);
 	gtk_box_pack_start (GTK_BOX(vbox_r), hbox2,
 			    FALSE, FALSE, 0);

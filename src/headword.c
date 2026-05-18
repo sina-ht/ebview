@@ -697,7 +697,7 @@ GtkWidget *create_headword_tree(){
 	GtkWidget *vbox;
 	GtkWidget *hbox;
 
-	vbox = gtk_vbox_new(FALSE, 0);
+	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 
 
 	tree_scroll = gtk_scrolled_window_new (NULL, NULL);
@@ -754,7 +754,7 @@ GtkWidget *create_headword_tree(){
 			  G_CALLBACK (heading_selection_changed),
 			  NULL);
 
-	hbox = gtk_hbox_new(TRUE, 0);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, TRUE, 0);
 
 /*
@@ -772,7 +772,7 @@ GtkWidget *create_headword_tree(){
 	gtk_box_pack_start(GTK_BOX(hbox), button_prev_hit, TRUE, TRUE, 0);
 	gtk_widget_set_tooltip_text(button_prev_hit, _("Go to previous hit list."));
 
-	image_prev = gtk_image_new_from_stock(GTK_STOCK_GO_BACK, GTK_ICON_SIZE_SMALL_TOOLBAR);
+	image_prev = gtk_image_new_from_icon_name("go-previous-symbolic", GTK_ICON_SIZE_SMALL_TOOLBAR);
 	gtk_container_add(GTK_CONTAINER(button_prev_hit), image_prev);
 
 /*
@@ -791,7 +791,7 @@ GtkWidget *create_headword_tree(){
 	gtk_box_pack_start(GTK_BOX(hbox), button_next_hit, TRUE, TRUE, 0);
 	gtk_widget_set_tooltip_text(button_next_hit, _("Go to next hit list."));
 
-	image_next = gtk_image_new_from_stock(GTK_STOCK_GO_FORWARD, GTK_ICON_SIZE_SMALL_TOOLBAR);
+	image_next = gtk_image_new_from_icon_name("go-next-symbolic", GTK_ICON_SIZE_SMALL_TOOLBAR);
 	gtk_container_add(GTK_CONTAINER(button_next_hit), image_next);
 
 	gtk_widget_set_sensitive(button_next_hit, FALSE);

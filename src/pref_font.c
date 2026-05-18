@@ -110,7 +110,7 @@ static void show_fontsel(GtkWidget *widget,gpointer *data){
 		break;
 	}
 
-	gtk_font_selection_dialog_set_font_name(GTK_FONT_SELECTION_DIALOG(fontsel_dlg), fontname);
+	gtk_font_chooser_set_font(GTK_FONT_CHOOSER(fontsel_dlg), fontname);
 
 	gtk_widget_show_all(fontsel_dlg);
 	gtk_grab_add(fontsel_dlg);
@@ -154,82 +154,69 @@ GtkWidget *pref_start_font(){
 	GtkWidget *button;
 	GtkWidget *table;
 	GtkWidget *label;
-	GtkAttachOptions xoption=0, yoption=0;
 
 	LOG(LOG_DEBUG, "IN : pref_start_font()");
 
-	vbox = gtk_vbox_new(FALSE, 0);
+	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 
-	table = gtk_table_new(3, 5, FALSE);
+	table = gtk_grid_new();
 	gtk_box_pack_start (GTK_BOX(vbox)
 			    , table,FALSE, FALSE, 0);
 
 	label = gtk_label_new(_("Normal"));
-	gtk_table_attach(GTK_TABLE(table), label, 0, 1, 0, 1,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), label, 0, 0, 1, 1);	
 
 	entry_normal = gtk_entry_new();
 	gtk_entry_set_text(GTK_ENTRY(entry_normal), fontset_normal);
 	gtk_widget_set_size_request(entry_normal,200,20);
-	gtk_table_attach(GTK_TABLE(table), entry_normal, 1, 2, 0, 1,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), entry_normal, 1, 0, 1, 1);	
 
 	button = gtk_button_new_with_label(_("Choose"));
 	g_signal_connect(G_OBJECT (button), "clicked",
 			 G_CALLBACK(show_fontsel), (gpointer)0);
-	gtk_table_attach(GTK_TABLE(table), button, 2, 3, 0, 1,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), button, 2, 0, 1, 1);	
 
 
 	label = gtk_label_new(_("Bold"));
-	gtk_table_attach(GTK_TABLE(table), label, 0, 1, 1, 2,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), label, 0, 1, 1, 1);	
 
 	entry_bold = gtk_entry_new();
 	gtk_entry_set_text(GTK_ENTRY(entry_bold), fontset_bold);
 	gtk_widget_set_size_request(entry_bold,200,20);
-	gtk_table_attach(GTK_TABLE(table), entry_bold, 1, 2, 1, 2,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), entry_bold, 1, 1, 1, 1);	
 
 	button = gtk_button_new_with_label(_("Choose"));
 	g_signal_connect(G_OBJECT (button), "clicked",
 			 G_CALLBACK(show_fontsel), (gpointer)1);
-	gtk_table_attach(GTK_TABLE(table), button, 2, 3, 1, 2,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), button, 2, 1, 1, 1);	
 
 
 	label = gtk_label_new(_("Italic"));
-	gtk_table_attach(GTK_TABLE(table), label, 0, 1, 2, 3,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), label, 0, 2, 1, 1);	
 
 	entry_italic = gtk_entry_new();
 	gtk_entry_set_text(GTK_ENTRY(entry_italic), fontset_italic);
 	gtk_widget_set_size_request(entry_italic,200,20);
-	gtk_table_attach(GTK_TABLE(table), entry_italic, 1, 2, 2, 3,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), entry_italic, 1, 2, 1, 1);	
 
 	button = gtk_button_new_with_label(_("Choose"));
 	g_signal_connect(G_OBJECT (button), "clicked",
 			 G_CALLBACK(show_fontsel), (gpointer)2);
-	gtk_table_attach(GTK_TABLE(table), button, 2, 3, 2, 3,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), button, 2, 2, 1, 1);	
 
 	label = gtk_label_new(_("Superscript"));
-	gtk_table_attach(GTK_TABLE(table), label, 0, 1, 3, 4,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), label, 0, 3, 1, 1);	
 
 
 	entry_super = gtk_entry_new();
 	gtk_entry_set_text(GTK_ENTRY(entry_super), fontset_superscript);
 	gtk_widget_set_size_request(entry_super,200,20);
-	gtk_table_attach(GTK_TABLE(table), entry_super, 1, 2, 3, 4,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), entry_super, 1, 3, 1, 1);	
 
 	button = gtk_button_new_with_label(_("Choose"));
 	g_signal_connect(G_OBJECT (button), "clicked",
 			 G_CALLBACK(show_fontsel), (gpointer)3);
-	gtk_table_attach(GTK_TABLE(table), button, 2, 3, 3, 4,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), button, 2, 3, 1, 1);	
 
 	LOG(LOG_DEBUG, "OUT : pref_start_font()");
 

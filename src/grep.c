@@ -1101,7 +1101,7 @@ GtkTreeIter iter;
 		}
 		g_list_free(children);
 	} else {
-		grep_bar = gtk_hbox_new(FALSE, 0);
+		grep_bar = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 	}
 
 	gtk_container_set_border_width(GTK_CONTAINER(grep_bar), 1);

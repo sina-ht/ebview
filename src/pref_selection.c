@@ -54,21 +54,19 @@ GtkWidget *pref_start_selection()
 	GtkWidget *label;
 	GtkAdjustment *adj;
 	GtkWidget *table;
-	GtkAttachOptions xoption=GTK_SHRINK|GTK_FILL, yoption=0;
 
 	LOG(LOG_DEBUG, "IN : pref_start_selection()");
 
-	vbox = gtk_vbox_new(FALSE,10);
+	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 10);
 	gtk_widget_set_size_request(vbox, 400, 300);
 
-	table = gtk_table_new(4, 8, FALSE);
+	table = gtk_grid_new();
 	gtk_box_pack_start (GTK_BOX(vbox)
 			    , table, FALSE, FALSE, 0);
 
-	hbox = gtk_hbox_new(FALSE,10);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
 	gtk_container_set_border_width(GTK_CONTAINER(hbox), 2);
-	gtk_table_attach(GTK_TABLE(table), hbox, 0, 1, 0, 1,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), hbox, 0, 0, 1, 1);
 	
 	label = gtk_label_new(_("Lookup interval (ms)"));
 	gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_LEFT);
@@ -85,15 +83,13 @@ GtkWidget *pref_start_selection()
 	gtk_spin_button_set_value(GTK_SPIN_BUTTON(spin_interval), auto_interval );
 	gtk_widget_set_size_request(spin_interval,60,20);
 //	gtk_box_pack_end (GTK_BOX(hbox), spin_interval, FALSE, FALSE, 0);
-	gtk_table_attach(GTK_TABLE(table), spin_interval, 3, 4, 0, 1,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), spin_interval, 3, 0, 1, 1);	
 
 	gtk_widget_set_tooltip_text(spin_interval, _("Interval to check selection. \nIncreasing this number may eat up your CPU.\nIgnored on Windows."));
 
-	hbox = gtk_hbox_new(FALSE,10);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
 	gtk_container_set_border_width(GTK_CONTAINER(hbox), 2);
-	gtk_table_attach(GTK_TABLE(table), hbox, 0, 1, 1, 2,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), hbox, 0, 1, 1, 1);
 
 
 	label = gtk_label_new(_("Minimum chars for selection lookup"));
@@ -113,16 +109,14 @@ GtkWidget *pref_start_selection()
 	gtk_spin_button_set_value(GTK_SPIN_BUTTON(spin_minchar), auto_minchar );
 	gtk_widget_set_size_request(spin_minchar,60,20);
 //	gtk_box_pack_end (GTK_BOX(hbox), spin_minchar, FALSE, FALSE, 0);
-	gtk_table_attach(GTK_TABLE(table), spin_minchar, 3, 4, 1, 2,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), spin_minchar, 3, 1, 1, 1);	
 
 	gtk_widget_set_tooltip_text(spin_minchar, _("When the number of characters in selection is less than this number, it will not be looked up."));
 
 
-	hbox = gtk_hbox_new(FALSE,10);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
 	gtk_container_set_border_width(GTK_CONTAINER(hbox), 2);
-	gtk_table_attach(GTK_TABLE(table), hbox, 0, 1, 2, 3,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), hbox, 0, 2, 1, 1);
 //	gtk_box_pack_start (GTK_BOX(vbox)
 //			    , hbox,FALSE, FALSE, 0);
 
@@ -143,16 +137,14 @@ GtkWidget *pref_start_selection()
 	gtk_spin_button_set_value(GTK_SPIN_BUTTON(spin_maxchar), auto_maxchar );
 	gtk_widget_set_size_request(spin_maxchar,60,20);
 //	gtk_box_pack_end (GTK_BOX(hbox), spin_maxchar, FALSE, FALSE, 0);
-	gtk_table_attach(GTK_TABLE(table), spin_maxchar, 3, 4, 2, 3,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), spin_maxchar, 3, 2, 1, 1);	
 
 	gtk_widget_set_tooltip_text(spin_maxchar, _("When the number of characters in selection is larger than this number, it will not be looked up."));
 
 
-	hbox = gtk_hbox_new(FALSE,10);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
 	gtk_container_set_border_width(GTK_CONTAINER(hbox), 2);
-	gtk_table_attach(GTK_TABLE(table), hbox, 0, 1, 3, 4,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), hbox, 0, 3, 1, 1);
 //	gtk_box_pack_start (GTK_BOX(vbox)
 //			    , hbox,FALSE, FALSE, 0);
 
@@ -174,16 +166,14 @@ GtkWidget *pref_start_selection()
 	gtk_spin_button_set_value(GTK_SPIN_BUTTON(spin_popup_height), popup_height );
 	gtk_widget_set_size_request(spin_popup_height,60,20);
 //	gtk_box_pack_end (GTK_BOX(hbox), spin_popup_height, FALSE, FALSE, 0);
-	gtk_table_attach(GTK_TABLE(table), spin_popup_height, 1, 2, 3, 4,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), spin_popup_height, 1, 3, 1, 1);	
 
 
 	label = gtk_label_new(" x ");
 	gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_LEFT);
 //	gtk_widget_set_size_request( label, 120, 20 );
 //	gtk_box_pack_end(GTK_BOX(hbox), label,FALSE, FALSE, 0);
-	gtk_table_attach(GTK_TABLE(table), label, 2, 3, 3, 4,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), label, 2, 3, 1, 1);	
 
 
 	adj = gtk_adjustment_new(100, //value
@@ -196,8 +186,7 @@ GtkWidget *pref_start_selection()
 	gtk_spin_button_set_value(GTK_SPIN_BUTTON(spin_popup_width), popup_width );
 	gtk_widget_set_size_request(spin_popup_width,60,20);
 //	gtk_box_pack_end(GTK_BOX(hbox), spin_popup_width, FALSE, FALSE, 0);
-	gtk_table_attach(GTK_TABLE(table), spin_popup_width, 3, 4, 3, 4,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), spin_popup_width, 3, 3, 1, 1);	
 
 
 
@@ -212,8 +201,7 @@ GtkWidget *pref_start_selection()
 	gtk_widget_set_tooltip_text(check_popup_title, _("Show title of popup window."));
 //	gtk_box_pack_start (GTK_BOX(hbox)
 //			    , check_popup_title,FALSE,FALSE, 0);
-	gtk_table_attach(GTK_TABLE(table), check_popup_title, 0, 1, 4, 5,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), check_popup_title, 0, 4, 1, 1);	
 
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(check_popup_title), bshow_popup_title);
 
@@ -228,8 +216,7 @@ GtkWidget *pref_start_selection()
 	gtk_widget_set_tooltip_text(check_beep, _("Beep when no hit."));
 //	gtk_box_pack_start (GTK_BOX(hbox)
 //			    , check_beep,FALSE,FALSE, 0);
-	gtk_table_attach(GTK_TABLE(table), check_beep, 0, 1, 5, 6,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), check_beep, 0, 5, 1, 1);	
 
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(check_beep), bbeep_on_nohit);
 

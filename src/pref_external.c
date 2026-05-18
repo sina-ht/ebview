@@ -73,7 +73,7 @@ GtkWidget *pref_start_external()
 
 	LOG(LOG_DEBUG, "IN : pref_start_external()");
 
-	vbox = gtk_vbox_new(FALSE, 0);
+	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 	gtk_container_set_border_width(GTK_CONTAINER(vbox), 5);
 //	gtk_container_add(GTK_CONTAINER(frame), vbox);
 
@@ -85,7 +85,7 @@ GtkWidget *pref_start_external()
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(check_sound), bplay_sound_internally);
 
 
-	hbox = gtk_hbox_new(FALSE,10);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
 	gtk_container_set_border_width(GTK_CONTAINER(hbox), 2);
 	gtk_box_pack_start (GTK_BOX(vbox)
 			    , hbox,FALSE, FALSE, 5);
@@ -106,7 +106,7 @@ GtkWidget *pref_start_external()
 	gtk_entry_set_text(GTK_ENTRY(entry_wave), wave_template);
 
 
-	hbox = gtk_hbox_new(FALSE,10);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
 	gtk_container_set_border_width(GTK_CONTAINER(hbox), 2);
 	gtk_box_pack_start (GTK_BOX(vbox)
 			    , hbox,FALSE, FALSE, 5);
@@ -126,7 +126,7 @@ GtkWidget *pref_start_external()
 	gtk_entry_set_text(GTK_ENTRY(entry_mpeg), mpeg_template);
 
 
-	hbox = gtk_hbox_new(FALSE,10);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
 	gtk_container_set_border_width(GTK_CONTAINER(hbox), 2);
 	gtk_box_pack_start (GTK_BOX(vbox)
 			    , hbox,FALSE, FALSE, 5);
@@ -148,7 +148,7 @@ GtkWidget *pref_start_external()
 
 
 
-	hbox = gtk_hbox_new(FALSE,10);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
 	gtk_container_set_border_width(GTK_CONTAINER(hbox), 2);
 	gtk_box_pack_start (GTK_BOX(vbox)
 			    , hbox,FALSE, FALSE, 5);

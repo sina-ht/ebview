@@ -111,68 +111,61 @@ GtkWidget *pref_start_grep()
 	GtkWidget *hbox;
 	GtkWidget *label;
 	GtkAdjustment *adj;
-	GtkWidget *table;
-	GtkAttachOptions xoption=0, yoption=0;
+GtkWidget *table;
 
 	LOG(LOG_DEBUG, "IN : pref_start_grep()");
 
-	vbox = gtk_vbox_new(FALSE,10);
+	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 10);
 	gtk_widget_set_size_request(vbox, 300, 200);
 
-	xoption = GTK_SHRINK|GTK_FILL;
-	yoption = GTK_SHRINK;
-
-	table = gtk_table_new(3, 4, FALSE);
+	table = gtk_grid_new();
 	gtk_box_pack_start (GTK_BOX(vbox)
 			    , table,FALSE, FALSE, 0);
 
 
-	hbox = gtk_hbox_new(FALSE,10);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
 	gtk_container_set_border_width(GTK_CONTAINER(hbox), 2);
-	gtk_table_attach(GTK_TABLE(table), hbox, 0, 1, 1, 2,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), hbox, 0, 1, 1, 1);	
 
 	label = gtk_label_new(_("Additional Lines To Display"));
 	gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_LEFT);
-	gtk_box_pack_start (GTK_BOX(hbox), 
+	gtk_box_pack_start (GTK_BOX(hbox),
 			    label, FALSE, FALSE, 0);
 
 	adj = gtk_adjustment_new( 5, //value
 				  0, // lower
 				  1000, //upper
-                                  1, // step increment
-                                  10,// page_increment,
-                                  0.0);
+                                   1, // step increment
+                                   10,// page_increment,
+                                   0.0);
 	spin_additional_line = gtk_spin_button_new(GTK_ADJUSTMENT(adj), 1.0, 0);
 	gtk_spin_button_set_value(GTK_SPIN_BUTTON(spin_additional_line), additional_lines);
 	gtk_widget_set_size_request(spin_additional_line,60,20);
-	gtk_table_attach(GTK_TABLE(table), spin_additional_line, 1, 2, 1, 2,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), spin_additional_line, 1, 1, 1, 1);	
 
 	gtk_widget_set_tooltip_text(spin_additional_line, _("In addition to matched line, additional lines will be shown in contents."));
 
-	hbox = gtk_hbox_new(FALSE,10);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
 	gtk_container_set_border_width(GTK_CONTAINER(hbox), 2);
-	gtk_table_attach(GTK_TABLE(table), hbox, 0, 1, 2, 3,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), hbox, 0, 2, 1, 1);	
 
 	label = gtk_label_new(_("Additional Chars To Display"));
 	gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_LEFT);
-	gtk_box_pack_start (GTK_BOX(hbox), 
+	gtk_box_pack_start (GTK_BOX(hbox),
 			    label, FALSE, FALSE, 0);
-	
+
+
 
 	adj = gtk_adjustment_new( 16, //value
 				  1, // lower
 				  100, //upper
-                                  1, // step increment
-                                  10,// page_increment,
-                                  0.0);
+                                   1, // step increment
+                                   10,// page_increment,
+                                   0.0);
 	spin_additional_char = gtk_spin_button_new(GTK_ADJUSTMENT(adj), 1.0, 0);
 	gtk_spin_button_set_value(GTK_SPIN_BUTTON(spin_additional_char), additional_chars);
 	gtk_widget_set_size_request(spin_additional_char,60,20);
-	gtk_table_attach(GTK_TABLE(table), spin_additional_char, 1, 2, 2, 3,
-			 xoption, yoption, 10, 10);	
+gtk_grid_attach(GTK_GRID(table), spin_additional_char, 1, 2, 1, 1);
 
 	gtk_widget_set_tooltip_text(spin_additional_char, _("When matched line is too long, several characters around keyword will be shown in heading."));
 
@@ -211,7 +204,7 @@ GtkWidget *pref_start_filter()
 
 	// Left half
 
-	vbox = gtk_vbox_new(FALSE,0);
+	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 	gtk_container_set_border_width(GTK_CONTAINER(vbox), 2);
 
 	frame = gtk_frame_new(NULL);
@@ -279,7 +272,7 @@ GtkWidget *pref_start_filter()
 
 
 
-	hbox = gtk_hbox_new(FALSE, 0);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_box_pack_start(GTK_BOX(vbox),
 			   hbox,FALSE, FALSE, 2);
 
@@ -375,40 +368,36 @@ GtkWidget *pref_start_cache()
 	GtkAdjustment *adj;
 	GtkWidget *table;
 	GtkWidget *button;
-	GtkAttachOptions xoption=0, yoption=0;
 
 	LOG(LOG_DEBUG, "IN : pref_start_cache()");
 
-	vbox = gtk_vbox_new(FALSE,10);
+vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 10);
 	gtk_widget_set_size_request(vbox, 300, 200);
 
-	table = gtk_table_new(3, 1, FALSE);
+	table = gtk_grid_new();
 	gtk_box_pack_start (GTK_BOX(vbox)
 			    , table,FALSE, FALSE, 0);
 
 	label = gtk_label_new(_("Maximum Cache Size (MB)"));
 	gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_LEFT);
-	gtk_table_attach(GTK_TABLE(table), label, 0, 1, 0, 1,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), label, 0, 0, 1, 1);	
 	
 
 	adj = gtk_adjustment_new( 50, //value
 				  1, // lower
 				  1000, //upper
-                                  1, // step increment
-                                  10,// page_increment,
-                                  0.0);
+                                   1, // step increment
+                                   10,// page_increment,
+                                   0.0);
 	spin_cache_size = gtk_spin_button_new(GTK_ADJUSTMENT(adj), 1.0, 0);
 	gtk_spin_button_set_value(GTK_SPIN_BUTTON(spin_cache_size), cache_size);
 	gtk_widget_set_size_request(spin_cache_size,60,20);
-	gtk_table_attach(GTK_TABLE(table), spin_cache_size, 1, 2, 0, 1,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), spin_cache_size, 1, 0, 1, 1);	
 
 	gtk_widget_set_tooltip_text(spin_cache_size, _("Specify maximum cache size in MB."));
 
 	button = gtk_button_new_with_label(_("Clear Cache"));
-	gtk_table_attach(GTK_TABLE(table), button, 2, 3, 0, 1,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), button, 2, 0, 1, 1);
 	g_signal_connect(G_OBJECT(button), "clicked",
 			 G_CALLBACK(clear_cache), NULL);
 

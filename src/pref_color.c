@@ -34,7 +34,6 @@ gint color_no;
 
 static void ok_colorsel(GtkWidget *widget, gint response_id, gpointer *data){
 	(void)widget; (void)data;
-	GdkColor color;
 	GdkRGBA rgba_color;
 	gchar *color_name;
 	
@@ -46,10 +45,10 @@ static void ok_colorsel(GtkWidget *widget, gint response_id, gpointer *data){
 	}
 
 	gtk_color_chooser_get_rgba(GTK_COLOR_CHOOSER(colorsel_dlg), &rgba_color);
-	color.red = rgba_color.red * 257;
-	color.green = rgba_color.green * 257;
-	color.blue = rgba_color.blue * 257;
-	color_name = gtk_color_selection_palette_to_string(&color, 1);
+	color_name = g_strdup_printf("#%02x%02x%02x",
+		(gint)(rgba_color.red * 255),
+		(gint)(rgba_color.green * 255),
+		(gint)(rgba_color.blue * 255));
 
 	switch(color_no){
 	case COLOR_LINK:
@@ -92,7 +91,6 @@ static void delete_colorsel( GtkWidget *widget,
 
 static void show_colorsel(GtkWidget *widget,gpointer *data){
 	(void)widget;
-	GdkColor color;
 	const gchar *text=NULL;
 	
 	LOG(LOG_DEBUG, "IN : show_colorsel()");
@@ -100,7 +98,7 @@ static void show_colorsel(GtkWidget *widget,gpointer *data){
 	color_no = (gint)(guintptr)data;
 
 
-	colorsel_dlg = gtk_color_selection_dialog_new(_("Choose Color"));
+	colorsel_dlg = gtk_color_chooser_dialog_new(_("Choose Color"), GTK_WINDOW(main_window));
 
 	g_signal_connect (G_OBJECT(colorsel_dlg), "delete_event",
 			  G_CALLBACK(delete_colorsel), NULL);
@@ -151,12 +149,8 @@ static void show_colorsel(GtkWidget *widget,gpointer *data){
 		color.blue = color_val * 256;
 	} else {
 */
-	gdk_color_parse(text, &color);
 	GdkRGBA rgba;
-	rgba.red = color.red / 65535.0;
-	rgba.green = color.green / 65535.0;
-	rgba.blue = color.blue / 65535.0;
-	rgba.alpha = 1.0;
+	gdk_rgba_parse(&rgba, text);
 	gtk_color_chooser_set_rgba(GTK_COLOR_CHOOSER(colorsel_dlg), &rgba);
 
 	gtk_widget_show_all(colorsel_dlg);
@@ -210,127 +204,105 @@ GtkWidget *pref_start_color(){
 	GtkWidget *button;
 	GtkWidget *table;
 	GtkWidget *label;
-	GtkAttachOptions xoption, yoption;
 
 	LOG(LOG_DEBUG, "IN : pref_start_colrosel()");
 
-	vbox = gtk_vbox_new(FALSE, 0);
+	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 	gtk_widget_set_size_request(vbox, 300, 200);
 	gtk_container_set_border_width(GTK_CONTAINER(vbox), 5);
 
-	xoption = GTK_SHRINK;
-	yoption = GTK_SHRINK;
-
-	table = gtk_table_new(3, 7, FALSE);
+	table = gtk_grid_new();
+	gtk_grid_set_column_spacing(GTK_GRID(table), 10);
+	gtk_grid_set_row_spacing(GTK_GRID(table), 10);
 	gtk_box_pack_start (GTK_BOX(vbox)
 			    , table,FALSE, FALSE, 0);
 
 	label = gtk_label_new(_("Link"));
-	gtk_table_attach(GTK_TABLE(table), label, 0, 1, 0, 1,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), label, 0, 0, 1, 1);
 
 	entry_link = gtk_entry_new();
 	gtk_entry_set_text(GTK_ENTRY(entry_link), color_str[COLOR_LINK]);
 	gtk_widget_set_size_request(entry_link,100,20);
-	gtk_table_attach(GTK_TABLE(table), entry_link, 1, 2, 0, 1,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), entry_link, 1, 0, 1, 1);
 
 	button = gtk_button_new_with_label(_("Choose"));
 	g_signal_connect(G_OBJECT (button), "clicked",
 			 G_CALLBACK(show_colorsel), (gpointer)0);
-	gtk_table_attach(GTK_TABLE(table), button, 2, 3, 0, 1,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), button, 2, 0, 1, 1);	
 
 
 
 	label = gtk_label_new(_("Keyword"));
-	gtk_table_attach(GTK_TABLE(table), label, 0, 1, 1, 2,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), label, 0, 1, 1, 1);
 
 	entry_keyword = gtk_entry_new();
 	gtk_entry_set_text(GTK_ENTRY(entry_keyword), color_str[COLOR_KEYWORD]);
 	gtk_widget_set_size_request(entry_keyword,100,20);
-	gtk_table_attach(GTK_TABLE(table), entry_keyword, 1, 2, 1, 2,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), entry_keyword, 1, 1, 1, 1);
 
 	button = gtk_button_new_with_label(_("Choose"));
 	g_signal_connect(G_OBJECT (button), "clicked",
 			 G_CALLBACK(show_colorsel), (gpointer)1);
-	gtk_table_attach(GTK_TABLE(table), button, 2, 3, 1, 2,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), button, 2, 1, 1, 1);	
 
 
 
 	label = gtk_label_new(_("Sound"));
-	gtk_table_attach(GTK_TABLE(table), label, 0, 1, 2, 3,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), label, 0, 2, 1, 1);
 
 	entry_sound = gtk_entry_new();
 	gtk_entry_set_text(GTK_ENTRY(entry_sound), color_str[COLOR_SOUND]);
 	gtk_widget_set_size_request(entry_sound,100,20);
-	gtk_table_attach(GTK_TABLE(table), entry_sound, 1, 2, 2, 3,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), entry_sound, 1, 2, 1, 1);
 
 	button = gtk_button_new_with_label(_("Choose"));
 	g_signal_connect(G_OBJECT (button), "clicked",
 			 G_CALLBACK(show_colorsel), (gpointer)2);
-	gtk_table_attach(GTK_TABLE(table), button, 2, 3, 2, 3,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), button, 2, 2, 1, 1);	
 
-	label = gtk_label_new(_("Movie"));
-	gtk_table_attach(GTK_TABLE(table), label, 0, 1, 3, 4,
-			 xoption, yoption, 10, 10);	
-
+label = gtk_label_new(_("Movie"));
+	gtk_grid_attach(GTK_GRID(table), label, 0, 3, 1, 1);
 
 	entry_movie = gtk_entry_new();
 	gtk_entry_set_text(GTK_ENTRY(entry_movie), color_str[COLOR_MOVIE]);
 	gtk_widget_set_size_request(entry_movie,100,20);
-	gtk_table_attach(GTK_TABLE(table), entry_movie, 1, 2, 3, 4,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), entry_movie, 1, 3, 1, 1);
 
 	button = gtk_button_new_with_label(_("Choose"));
 	g_signal_connect(G_OBJECT (button), "clicked",
 			 G_CALLBACK(show_colorsel), (gpointer)3);
-	gtk_table_attach(GTK_TABLE(table), button, 2, 3, 3, 4,
-			 xoption, yoption, 10, 10);	
+gtk_grid_attach(GTK_GRID(table), button, 2, 3, 1, 1);
+
 
 
 	label = gtk_label_new(_("Emphasis"));
-	gtk_table_attach(GTK_TABLE(table), label, 0, 1, 4, 5,
-			 xoption, yoption, 10, 10);	
-
+	gtk_grid_attach(GTK_GRID(table), label, 0, 4, 1, 1);
 
 	entry_emphasis = gtk_entry_new();
 	gtk_entry_set_text(GTK_ENTRY(entry_emphasis), color_str[COLOR_EMPHASIS]);
 	gtk_widget_set_size_request(entry_emphasis,100,20);
-	gtk_table_attach(GTK_TABLE(table), entry_emphasis, 1, 2, 4, 5,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), entry_emphasis, 1, 4, 1, 1);
 
 	button = gtk_button_new_with_label(_("Choose"));
 	g_signal_connect(G_OBJECT (button), "clicked",
 			 G_CALLBACK(show_colorsel), (gpointer)4);
-	gtk_table_attach(GTK_TABLE(table), button, 2, 3, 4, 5,
-			 xoption, yoption, 10, 10);	
+gtk_grid_attach(GTK_GRID(table), button, 2, 4, 1, 1);
 
 
 
 
 	label = gtk_label_new(_("Reverse Background"));
-	gtk_table_attach(GTK_TABLE(table), label, 0, 1, 5, 6,
-			 xoption, yoption, 10, 10);	
-
+	gtk_grid_attach(GTK_GRID(table), label, 0, 5, 1, 1);
 
 	entry_reverse_bg = gtk_entry_new();
 	gtk_entry_set_text(GTK_ENTRY(entry_reverse_bg), color_str[COLOR_REVERSE_BG]);
 	gtk_widget_set_size_request(entry_reverse_bg,100,20);
-	gtk_table_attach(GTK_TABLE(table), entry_reverse_bg, 1, 2, 5, 6,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), entry_reverse_bg, 1, 5, 1, 1);
 
 	button = gtk_button_new_with_label(_("Choose"));
 	g_signal_connect(G_OBJECT (button), "clicked",
 			 G_CALLBACK(show_colorsel), (gpointer)5);
-	gtk_table_attach(GTK_TABLE(table), button, 2, 3, 5, 6,
-			 xoption, yoption, 10, 10);	
+	gtk_grid_attach(GTK_GRID(table), button, 2, 5, 1, 1);
 
 	LOG(LOG_DEBUG, "OUT : pref_start_colrosel()");
 

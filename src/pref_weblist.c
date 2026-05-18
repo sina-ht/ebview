@@ -417,7 +417,6 @@ GtkWidget *pref_start_weblist()
 	GtkWidget *frame;
 	GtkWidget *scroll;
 	GtkWidget *table;
-	GtkAttachOptions xoption, yoption;
 
 	GtkSizeGroup *entry_group;
 
@@ -427,14 +426,14 @@ GtkWidget *pref_start_weblist()
 
 	LOG(LOG_DEBUG, "IN : pref_start_weblist()");
 
-	hbox = gtk_hbox_new(FALSE,0);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 
 	gtk_container_set_border_width(GTK_CONTAINER(hbox), 5);
 
 	frame = gtk_frame_new(_("Search engines"));
 	gtk_box_pack_start (GTK_BOX(hbox), frame,TRUE, TRUE, 5);
 
-	vbox = gtk_vbox_new(FALSE,0);
+	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 	gtk_container_set_border_width(GTK_CONTAINER(vbox), 5);
 	gtk_container_add(GTK_CONTAINER(frame), vbox);
 
@@ -478,7 +477,7 @@ GtkWidget *pref_start_weblist()
 //	gtk_tree_view_append_column (GTK_TREE_VIEW (web_view), column);
 
 
-	hbox2 = gtk_hbox_new(FALSE,5);
+	hbox2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
 	gtk_container_set_border_width(GTK_CONTAINER(hbox2), 2);
 	gtk_box_pack_start(GTK_BOX(vbox),
 			    hbox2,FALSE, FALSE, 0);
@@ -497,7 +496,7 @@ GtkWidget *pref_start_weblist()
 	g_signal_connect(G_OBJECT (button), "clicked",
 			 G_CALLBACK(add_group), (gpointer)button);
 
-	hbox2 = gtk_hbox_new(FALSE,5);
+	hbox2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
 	gtk_container_set_border_width(GTK_CONTAINER(hbox2), 2);
 	gtk_box_pack_start(GTK_BOX(vbox),
 			   hbox2,FALSE, FALSE, 0);
@@ -525,78 +524,65 @@ GtkWidget *pref_start_weblist()
 	frame = gtk_frame_new(_("Search engine"));
 	gtk_box_pack_start(GTK_BOX(hbox), frame,TRUE, TRUE, 5);
 
-	vbox = gtk_vbox_new(FALSE,0);
+	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 	gtk_container_set_border_width(GTK_CONTAINER(vbox), 5);
 	gtk_container_add(GTK_CONTAINER(frame), vbox);
 
 	entry_group = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
 
-	xoption = GTK_EXPAND | GTK_SHRINK;
-	yoption = GTK_EXPAND | GTK_SHRINK;
-
-	table = gtk_table_new(6, 2, FALSE);
+	table = gtk_grid_new();
+	gtk_grid_set_row_spacing(GTK_GRID(table), 5);
+	gtk_grid_set_column_spacing(GTK_GRID(table), 5);
 	gtk_box_pack_start(GTK_BOX(vbox),
 			   table,FALSE, FALSE, 0);
 
 	label = gtk_label_new(_("Name"));
-	gtk_table_attach(GTK_TABLE(table), label, 0, 1, 0, 1, 
-			 xoption, yoption, 5, 5);
+	gtk_grid_attach(GTK_GRID(table), label, 0, 0, 1, 1);
 
 	entry_engine_name = gtk_entry_new();
 //	gtk_widget_set_usize(entry_engine_name,250,20);
-	gtk_table_attach(GTK_TABLE(table), entry_engine_name, 1, 2, 0, 1,
-			 xoption, yoption, 5, 5);	
+	gtk_grid_attach(GTK_GRID(table), entry_engine_name, 1, 0, 1, 1);	
 	gtk_size_group_add_widget (entry_group, entry_engine_name);
 
 	label = gtk_label_new(_("Homepage"));
-	gtk_table_attach(GTK_TABLE(table), label, 0, 1, 1, 2,
-			 xoption, yoption, 5, 5);
+	gtk_grid_attach(GTK_GRID(table), label, 0, 1, 1, 1);
 
 	entry_engine_home = gtk_entry_new();
 //	gtk_widget_set_usize(entry_engine_home,250,20);
-	gtk_table_attach(GTK_TABLE(table), entry_engine_home, 1, 2, 1, 2,
-			 xoption, yoption, 5, 5);
+	gtk_grid_attach(GTK_GRID(table), entry_engine_home, 1, 1, 1, 1);
 	gtk_size_group_add_widget (entry_group, entry_engine_home);
 
 	label = gtk_label_new(_("Pre string"));
-	gtk_table_attach(GTK_TABLE(table), label, 0, 1, 2, 3,
-			 xoption, yoption, 5, 5);
+	gtk_grid_attach(GTK_GRID(table), label, 0, 2, 1, 1);
 
 	entry_engine_pre = gtk_entry_new();
 //	gtk_widget_set_usize(entry_engine_pre,250,20);
-	gtk_table_attach(GTK_TABLE(table), entry_engine_pre, 1, 2, 2, 3,
-			 xoption, yoption, 5, 5);
+	gtk_grid_attach(GTK_GRID(table), entry_engine_pre, 1, 2, 1, 1);
 	gtk_size_group_add_widget (entry_group, entry_engine_pre);
 
 	label = gtk_label_new(_("Post string"));
-	gtk_table_attach(GTK_TABLE(table), label, 0, 1, 3, 4,
-			 xoption, yoption, 5, 5);
+	gtk_grid_attach(GTK_GRID(table), label, 0, 3, 1, 1);
 
 	entry_engine_post = gtk_entry_new();
 //	gtk_widget_set_usize(entry_engine_post,250,20);
-	gtk_table_attach(GTK_TABLE(table), entry_engine_post, 1, 2, 3, 4,
-			 xoption, yoption, 5, 5);
+	gtk_grid_attach(GTK_GRID(table), entry_engine_post, 1, 3, 1, 1);
 	gtk_size_group_add_widget (entry_group, entry_engine_post);
 
 	label = gtk_label_new(_("Glue string"));
 	gtk_label_set_justify(GTK_LABEL(label), GTK_JUSTIFY_LEFT);
-	gtk_table_attach(GTK_TABLE(table), label, 0, 1, 4, 5,
-			 xoption, yoption, 5, 5);
+	gtk_grid_attach(GTK_GRID(table), label, 0, 4, 1, 1);
 
 	entry_engine_glue = gtk_entry_new();
 //	gtk_widget_set_usize(entry_engine_glue,250,20);
-	gtk_table_attach(GTK_TABLE(table), entry_engine_glue, 1, 2, 4, 5,
-			 xoption, yoption, 5, 5);
+	gtk_grid_attach(GTK_GRID(table), entry_engine_glue, 1, 4, 1, 1);
 	gtk_size_group_add_widget (entry_group, entry_engine_glue);
 
 	label = gtk_label_new(_("Character Code"));
 	gtk_label_set_justify(GTK_LABEL(label), GTK_JUSTIFY_LEFT);
-	gtk_table_attach(GTK_TABLE(table), label, 0, 1, 5, 6,
-			 xoption, yoption, 5, 5);
+	gtk_grid_attach(GTK_GRID(table), label, 0, 5, 1, 1);
 
 	combo_charcode = gtk_combo_box_text_new();
-	gtk_table_attach(GTK_TABLE(table), combo_charcode, 1, 2, 5, 6,
-			 xoption, yoption, 5, 5);
+	gtk_grid_attach(GTK_GRID(table), combo_charcode, 1, 5, 1, 1);
 	gtk_size_group_add_widget (entry_group, combo_charcode);
 
 	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_charcode), "euc-jp");
@@ -606,7 +592,7 @@ GtkWidget *pref_start_weblist()
 	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combo_charcode), "ascii");
 
 
-	hbox2 = gtk_hbox_new(FALSE,5);
+	hbox2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
 	gtk_container_set_border_width(GTK_CONTAINER(hbox2), 5);
 	gtk_box_pack_start(GTK_BOX(vbox),
 			   hbox2,FALSE, FALSE, 0);

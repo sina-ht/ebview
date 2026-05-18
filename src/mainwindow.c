@@ -629,7 +629,7 @@ void create_main_window()
 				NULL);
 
 	gtk_window_move(GTK_WINDOW(main_window), window_x, window_y);
-	gtk_window_set_wmclass(GTK_WINDOW(main_window), "Main", "EBView");
+	g_set_prgname("EBView");
 
 	g_signal_connect (G_OBJECT (main_window), "delete_event",
 			    G_CALLBACK(delete_event), NULL);
@@ -650,7 +650,7 @@ void create_main_window()
 	gtk_window_set_icon (GTK_WINDOW(main_window), pixbuf);
 	destroy_pixbuf(pixbuf);
 
-	vbox = gtk_vbox_new(FALSE, 0);
+	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 	gtk_container_add (GTK_CONTAINER (main_window), vbox);
 
 	widget = create_dict_window();
@@ -736,20 +736,20 @@ GtkWidget *create_dict_window()
 
 	LOG(LOG_DEBUG, "IN : create_dict_window()");
 
-	vbox = gtk_vbox_new(FALSE, 0);
+	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 
-	menu_box = gtk_hbox_new(FALSE, 0);
+	menu_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_box_pack_start(GTK_BOX(vbox), menu_box, FALSE, TRUE, 0);
 
 
 	menubar = create_main_menu();
 	gtk_box_pack_start(GTK_BOX(menu_box), menubar, TRUE, TRUE, 0);
 
-	separator = gtk_hseparator_new();
+	separator = gtk_separator_new(GTK_ORIENTATION_HORIZONTAL);
 	gtk_box_pack_start(GTK_BOX(vbox),separator, FALSE, FALSE, 0);
 
 
-	hbox = gtk_hbox_new(FALSE, 0);
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, FALSE, 0);
 	gtk_container_set_border_width(GTK_CONTAINER(hbox), 1);
 
@@ -789,11 +789,11 @@ GtkWidget *create_dict_window()
 			 (gpointer)button_start);
 
 	gtk_widget_set_tooltip_text(button_start, _("Start search"));
-	image = gtk_image_new_from_stock(GTK_STOCK_FIND, GTK_ICON_SIZE_SMALL_TOOLBAR);
+	image = gtk_image_new_from_icon_name("system-search", GTK_ICON_SIZE_SMALL_TOOLBAR);
 	gtk_container_add(GTK_CONTAINER(button_start), image);
 
 
-	separator = gtk_vseparator_new();
+	separator = gtk_separator_new(GTK_ORIENTATION_VERTICAL);
 	gtk_box_pack_start(GTK_BOX(hbox), separator, FALSE, FALSE, 5);
 
 	// Search method
@@ -824,7 +824,7 @@ GtkWidget *create_dict_window()
 					  NULL);
 
 #if 0
-	separator = gtk_vseparator_new();
+	separator = gtk_separator_new(GTK_ORIENTATION_VERTICAL);
 	gtk_box_pack_start(GTK_BOX(hbox), separator, FALSE, FALSE, 5);
 
 
@@ -869,7 +869,7 @@ GtkWidget *create_dict_window()
 
 #endif
 
-	separator = gtk_vseparator_new();
+	separator = gtk_separator_new(GTK_ORIENTATION_VERTICAL);
 	gtk_box_pack_start(GTK_BOX(hbox), separator, FALSE, FALSE, 5);
 
 	button_up = gtk_button_new();
@@ -880,7 +880,7 @@ GtkWidget *create_dict_window()
 			 NULL);
 	gtk_widget_set_tooltip_text(button_up, _("Previous Item"));
 
-	image = gtk_image_new_from_stock(GTK_STOCK_GO_UP, GTK_ICON_SIZE_SMALL_TOOLBAR);
+	image = gtk_image_new_from_icon_name("go-up", GTK_ICON_SIZE_SMALL_TOOLBAR);
 	gtk_container_add(GTK_CONTAINER(button_up), image);
 
 
@@ -892,11 +892,11 @@ GtkWidget *create_dict_window()
 			 NULL);
 	gtk_widget_set_tooltip_text(button_down, _("Next Item"));
 
-	image = gtk_image_new_from_stock(GTK_STOCK_GO_DOWN, GTK_ICON_SIZE_SMALL_TOOLBAR);
+	image = gtk_image_new_from_icon_name("go-down", GTK_ICON_SIZE_SMALL_TOOLBAR);
 	gtk_container_add(GTK_CONTAINER(button_down), image);
 
 
-	separator = gtk_vseparator_new();
+	separator = gtk_separator_new(GTK_ORIENTATION_VERTICAL);
 	gtk_box_pack_start(GTK_BOX(hbox), separator, FALSE, FALSE, 5);
 
 	button_forward = gtk_button_new();
@@ -907,7 +907,7 @@ GtkWidget *create_dict_window()
 			 NULL);
 	gtk_widget_set_tooltip_text(button_forward, _("show next in history"));
 
-	image = gtk_image_new_from_stock(GTK_STOCK_GO_FORWARD, GTK_ICON_SIZE_SMALL_TOOLBAR);
+	image = gtk_image_new_from_icon_name("go-next", GTK_ICON_SIZE_SMALL_TOOLBAR);
 	gtk_container_add(GTK_CONTAINER(button_forward), image);
 
 	button_back = gtk_button_new();
@@ -917,10 +917,10 @@ GtkWidget *create_dict_window()
 			 G_CALLBACK(dict_history_back),
 			 NULL);
 	gtk_widget_set_tooltip_text(button_back, _("show previous in history"));
-	image = gtk_image_new_from_stock(GTK_STOCK_GO_BACK, GTK_ICON_SIZE_SMALL_TOOLBAR);
+	image = gtk_image_new_from_icon_name("go-previous", GTK_ICON_SIZE_SMALL_TOOLBAR);
 	gtk_container_add(GTK_CONTAINER(button_back), image);
 
-	separator = gtk_hseparator_new();
+	separator = gtk_separator_new(GTK_ORIENTATION_HORIZONTAL);
 	gtk_box_pack_start(GTK_BOX(vbox),separator, FALSE, FALSE, 0);
 
 	// Dictionary bar
@@ -937,9 +937,9 @@ GtkWidget *create_dict_window()
 
 
 	if(pane_direction == 0)
-		pane = gtk_hpaned_new();
+		pane = gtk_paned_new(GTK_ORIENTATION_HORIZONTAL);
 	else
-		pane = gtk_vpaned_new();
+		pane = gtk_paned_new(GTK_ORIENTATION_VERTICAL);
 	gtk_box_pack_start(GTK_BOX(vbox), pane, TRUE, TRUE, 0);
 
 
@@ -959,14 +959,14 @@ GtkWidget *create_dict_window()
 	// EBook page
 	widget = create_headword_tree();
 	//image = create_image(IMAGE_LIST);
-	image = gtk_image_new_from_stock(GTK_STOCK_FIND, GTK_ICON_SIZE_SMALL_TOOLBAR);
+	image = gtk_image_new_from_icon_name("system-search", GTK_ICON_SIZE_SMALL_TOOLBAR);
 	gtk_notebook_append_page(GTK_NOTEBOOK(note_tree), widget, image);
 
 
 	// Multi search tree
 	widget =  create_multi_tree();
 	//image = create_image(IMAGE_MULTI);
-	image = gtk_image_new_from_stock(GTK_STOCK_INDEX, GTK_ICON_SIZE_SMALL_TOOLBAR);
+	image = gtk_image_new_from_icon_name("index-card", GTK_ICON_SIZE_SMALL_TOOLBAR);
 	gtk_notebook_append_page(GTK_NOTEBOOK(note_tree), widget, image);
 
 
@@ -979,7 +979,7 @@ GtkWidget *create_dict_window()
 	// Directory tree page
 	widget = create_directory_tree();
 	//image = create_image(IMAGE_HTML);
-	image = gtk_image_new_from_stock(GTK_STOCK_OPEN, GTK_ICON_SIZE_SMALL_TOOLBAR);
+	image = gtk_image_new_from_icon_name("folder", GTK_ICON_SIZE_SMALL_TOOLBAR);
 	gtk_notebook_append_page(GTK_NOTEBOOK(note_tree), widget, image);
 
 
@@ -999,7 +999,7 @@ GtkWidget *create_dict_window()
 
 	// Candidate page
 
-	entry_box = gtk_vbox_new(FALSE, 0);
+	entry_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 	gtk_container_set_border_width(GTK_CONTAINER(entry_box), 5);
 
 	label = gtk_label_new(_("Candidate"));
