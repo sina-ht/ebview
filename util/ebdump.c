@@ -22,7 +22,7 @@
 #include <eb/error.h>
 #include <eb/text.h>
 
-inline gboolean isjis(gchar *buff){
+static inline gboolean isjis(gchar *buff){
 	g_assert(buff != NULL);
 	
 	if((buff[0] >= 0x21) && (buff[0] <= 0x74) && 
@@ -33,9 +33,7 @@ inline gboolean isjis(gchar *buff){
 
 
 int
-main(argc, argv)
-int argc;
-char *argv[];
+main(int argc, char *argv[])
 {
 	EB_Error_Code error_code;
 	EB_Book book;
@@ -44,15 +42,12 @@ char *argv[];
 	int subbook_index;
 	char text[EB_SIZE_PAGE];
 	ssize_t read_length;
-	int text_count;
 	int block_no;
 	
 	gchar *p_hex;
 	gchar *p_char;
 	gchar hex_buff[512];
 	gchar char_buff[512];
-	gchar buff[512];
-	char *result;
 	int i;
 	
 	/* コマンド行引数をチェック。*/
