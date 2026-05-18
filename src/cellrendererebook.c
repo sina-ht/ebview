@@ -49,8 +49,10 @@
 #include "render.h"
 
 
-static void gtk_cell_renderer_ebook_init       (GtkCellRendererEbook      *cellebook);
-static void gtk_cell_renderer_ebook_class_init (GtkCellRendererEbookClass *class);
+static void gtk_cell_renderer_ebook_init       (GTypeInstance             *instance,
+                                                gpointer                   g_class);
+static void gtk_cell_renderer_ebook_class_init (gpointer                   g_class,
+                                                gpointer                   class_data);
 static void gtk_cell_renderer_ebook_finalize   (GObject                  *object);
 
 static void gtk_cell_renderer_ebook_get_property  (GObject                  *object,
@@ -103,17 +105,14 @@ gtk_cell_renderer_ebook_get_type (void)
 
 	if (!cell_ebook_type)
 	{
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wcast-function-type"
 		static const GTypeInfo cell_ebook_info =
 		{
 			.class_size = sizeof (GtkCellRendererEbookClass),
-			.class_init = (GClassInitFunc) gtk_cell_renderer_ebook_class_init,
+			.	class_init = gtk_cell_renderer_ebook_class_init,
 			.instance_size = sizeof (GtkCellRendererEbook),
-			.instance_init = (GInstanceInitFunc) gtk_cell_renderer_ebook_init,
+			.instance_init = gtk_cell_renderer_ebook_init,
 			.value_table = NULL,
 		};
-#pragma GCC diagnostic pop
 
 		cell_ebook_type = g_type_register_static (GTK_TYPE_CELL_RENDERER, "GtkCellRendererEbook", &cell_ebook_info, 0);
 	}
@@ -123,8 +122,10 @@ gtk_cell_renderer_ebook_get_type (void)
 }
 
 static void
-gtk_cell_renderer_ebook_init (GtkCellRendererEbook *cellebook)
+gtk_cell_renderer_ebook_init (GTypeInstance *instance, gpointer g_class)
 {
+	GtkCellRendererEbook *cellebook = GTK_CELL_RENDERER_EBOOK(instance);
+	(void)g_class;
 //	LOG(LOG_DEBUG, "IN : gtk_cell_renderer_ebook_init()");
 
 	g_object_set(G_OBJECT(cellebook), "xalign", 0.0, "yalign", 0.5, "xpad", 2, "ypad", 2, NULL);
@@ -135,8 +136,10 @@ gtk_cell_renderer_ebook_init (GtkCellRendererEbook *cellebook)
 }
 
 static void
-gtk_cell_renderer_ebook_class_init (GtkCellRendererEbookClass *class)
+gtk_cell_renderer_ebook_class_init (gpointer g_class, gpointer class_data)
 {
+	GtkCellRendererEbookClass *class = (GtkCellRendererEbookClass *)g_class;
+	(void)class_data;
 	GObjectClass *object_class = G_OBJECT_CLASS (class);
 	GtkCellRendererClass *cell_class = GTK_CELL_RENDERER_CLASS (class);
 

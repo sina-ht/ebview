@@ -860,10 +860,7 @@ void draw_content(CANVAS *canvas, DRAW_TEXT *text, BOOK_INFO *binfo, TAG *tag, g
 				l_tag.page = l_page;
 				l_tag.offset = l_offset;
 				l_tag.size = l_size;
-				#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wformat-truncation"
 				snprintf(l_tag.filename, sizeof(l_tag.filename), "%s", attr);
-#pragma GCC diagnostic pop
 				
 				utf_str = _(" [Movie] ");
 				euc_str = iconv_convert("utf-8", "euc-jp", utf_str);

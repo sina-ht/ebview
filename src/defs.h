@@ -246,7 +246,7 @@ typedef struct {
 	gint page;
 	gint offset;
 	gint size;
-	gchar filename[256];
+	gchar filename[512];
 } TAG;
 
 typedef struct _result_eb {
