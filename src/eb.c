@@ -869,6 +869,7 @@ G_GNUC_UNUSED static gint ebook_full_search_old(BOOK_INFO *binfo, char *word, gi
 
 	int stop_code;
 	int page_count=0;
+	(void)page_count;
 
 	LOG(LOG_DEBUG, "IN : ebook_full_search(%s)", word);
 
@@ -1065,6 +1066,7 @@ static gint ebook_full_search(BOOK_INFO *binfo, char *word, gint method, gchar *
 
 	int stop_code;
 	int page_count=0;
+	(void)page_count;
 
 	BMH_TABLE *bmh;
 	gchar *start_p;
