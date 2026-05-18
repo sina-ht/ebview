@@ -423,10 +423,11 @@ static void cell_renderer_ebook_render_string(GtkCellRenderer *cell,
 	gchar *str;
 	gchar *tmp_str;
 	PangoRectangle rect;
-	PangoAttrList *attrs;
-	gchar *parsed_text;
-	GdkRGBA color;
+	PangoAttrList *attrs = NULL;
+	gchar *parsed_text = NULL;
+	GdkRGBA color = {0, 0, 0, 1.0};
 	GtkStyleContext *style;
+	gboolean parse_result;
 
 
 //	LOG(LOG_DEBUG, "IN : cell_renderer_ebook_render_string(text=%s,w=%d, h=%d)",text, *x, *y );
@@ -443,9 +444,9 @@ static void cell_renderer_ebook_render_string(GtkCellRenderer *cell,
 			      tmp_str);
 	g_free(tmp_str);
 
-	pango_parse_markup (str, -1, 0, &attrs, &parsed_text, NULL, NULL);
+	parse_result = pango_parse_markup (str, -1, 0, &attrs, &parsed_text, NULL, NULL);
 
-	if(parsed_text){
+	if (parse_result && parsed_text) {
 		layout = gtk_widget_create_pango_layout(widget, parsed_text);
 		pango_layout_set_attributes(layout, attrs);
 	} else {
