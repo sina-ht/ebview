@@ -58,7 +58,61 @@ ebview_SOURCES = \
 	thread_search.c \
 	websearch.c \
 	xml.c \
-	xmlinternal.c
+	xmlinternal.c \
+	bmh.h \
+	cellrenderercolor.h \
+	cellrendererebook.h \
+	defs.h \
+	dialog.h \
+	dictbar.h \
+	dirtree.h \
+	dump.h \
+	eb.h \
+	ebview.h \
+	external.h \
+	filter.h \
+	global.h \
+	grep.h \
+	headword.h \
+	history.h \
+	hook.h \
+	intl.h \
+	jcode.h \
+	link.h \
+	log.h \
+	mainmenu.h \
+	mainwindow.h \
+	menu.h \
+	misc.h \
+	multi.h \
+	pixmap.h \
+	popup.h \
+	pref_color.h \
+	pref_dictgroup.h \
+	pref_dirgroup.h \
+	pref_external.h \
+	pref_font.h \
+	pref_grep.h \
+	pref_gui.h \
+	pref_io.h \
+	pref_search.h \
+	pref_selection.h \
+	pref_shortcut.h \
+	pref_stemming.h \
+	pref_weblist.h \
+	preference.h \
+	reg.h \
+	render.h \
+	selection.h \
+	shortcut.h \
+	shortcutfunc.h \
+	splash.h \
+	statusbar.h \
+	textview.h \
+	thread_search.h \
+	websearch.h \
+	xml.h \
+	xmlinternal.h
 
 ebview.res:	ebview.rc
 	windres -i $< -O coff -o $@
