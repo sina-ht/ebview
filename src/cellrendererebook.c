@@ -277,7 +277,7 @@ gtk_cell_renderer_ebook_get_size (GtkCellRenderer *cell,
 	GtkCellRendererEbook *cellebook = (GtkCellRendererEbook *) cell;
 	(void)cell_area;
 
-//	LOG(LOG_DEBUG, "IN : gtk_cell_renderer_ebook_get_size()");
+//	LOG(LOG_DEBUG, "IN : gtk_cell_renderer_ebook_get_size(text=%s)", cellebook->text ? cellebook->text : "(null)");
 
 	if(width)
 		*width = 100;
@@ -326,20 +326,20 @@ static void cell_renderer_ebook_render_gaiji(GtkCellRenderer *cell,
 					     gboolean render)
 {
 	(void)state;
+	(void)widget;
 	GtkCellRendererEbook *cellebook = (GtkCellRendererEbook *) cell;
 	gchar *color_name;
 	gint width, height;
 	GdkPixbuf *pixbuf;
 	GdkRGBA color;
-	GtkStyleContext *style;
 	gint l_y;
-
 
 //	LOG(LOG_DEBUG, "IN : cell_renderer_ebook_render_gaiji(code=%s)", code);
 
-	style = gtk_widget_get_style_context(widget);
-	GtkStateFlags widget_state = gtk_style_context_get_state(style);
-	gtk_style_context_get(style, widget_state, "color", &color, NULL);
+	if(theme_color_cached)
+		color = theme_text_color;
+	else
+		gdk_rgba_parse(&color, "#000000");
 	color_name = g_strdup_printf("#%02X%02X%02X",
 	    (gint)(color.red * 255), (gint)(color.green * 255), (gint)(color.blue * 255));
 	pixbuf = load_xbm(binfo, code, &width, &height, color_name);
@@ -425,16 +425,20 @@ static void cell_renderer_ebook_render_string(GtkCellRenderer *cell,
 	PangoRectangle rect;
 	PangoAttrList *attrs = NULL;
 	gchar *parsed_text = NULL;
-	GdkRGBA color = {0, 0, 0, 1.0};
-	GtkStyleContext *style;
+	GdkRGBA color;
 	gboolean parse_result;
 
 
 //	LOG(LOG_DEBUG, "IN : cell_renderer_ebook_render_string(text=%s,w=%d, h=%d)",text, *x, *y );
 
-	style = gtk_widget_get_style_context(widget);
-	GtkStateFlags widget_state = gtk_style_context_get_state(style);
-	gtk_style_context_get(style, widget_state, "color", &color, NULL);
+	if(theme_color_cached)
+		color = theme_text_color;
+	else
+		gdk_rgba_parse(&color, "#000000");
+	LOG(LOG_DEBUG, "headword color: cached=%d, r=%f g=%f b=%f -> #%02X%02X%02X",
+	    theme_color_cached,
+	    color.red, color.green, color.blue,
+	    (gint)(color.red * 255), (gint)(color.green * 255), (gint)(color.blue * 255));
 	str = g_strndup(text, length);
 
 	tmp_str = str;
@@ -496,7 +500,7 @@ static void cell_renderer_ebook_render_ebook(GtkCellRenderer *cell,
 	gchar code[16];
 	gint x, y;
 
-//	LOG(LOG_DEBUG, "IN : cell_renderer_ebook_render_ebook()");
+//	LOG(LOG_DEBUG, "IN : cell_renderer_ebook_render_ebook(text=%s, render=%d)", text ? text : "(null)", render);
 
 	x = origin_x;
 	y = origin_y;
@@ -638,7 +642,7 @@ gtk_cell_renderer_ebook_render (GtkCellRenderer      *cell,
 	GtkStateFlags state;
 
 
-//	LOG(LOG_DEBUG, "IN : gtk_cell_renderer_ebook_render()");
+//	LOG(LOG_DEBUG, "IN : gtk_cell_renderer_ebook_render(text=%s)", cellebook->text ? cellebook->text : "(null)");
 
 	if ((flags & GTK_CELL_RENDERER_SELECTED) == GTK_CELL_RENDERER_SELECTED)
 	{

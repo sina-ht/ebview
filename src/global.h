@@ -115,6 +115,9 @@ global gchar *fontset_superscript;
 global gchar *color_str[NUM_COLORS];
 global GdkColor colors[NUM_COLORS];
 
+global GdkRGBA theme_text_color;
+global gint theme_color_cached;
+
 global GtkTreeStore *web_store;
 global GtkTreeStore *dict_store;
 global GtkListStore *stemming_en_store;

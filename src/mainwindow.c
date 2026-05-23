@@ -646,6 +646,15 @@ void create_main_window()
 #endif
 
 	gtk_widget_realize(main_window);
+	{
+		GtkWidget *tmp = gtk_tree_view_new();
+		gtk_container_add(GTK_CONTAINER(main_window), tmp);
+		gtk_widget_realize(tmp);
+		GtkStyleContext *style = gtk_widget_get_style_context(tmp);
+		gtk_style_context_get_color(style, GTK_STATE_FLAG_NORMAL, &theme_text_color);
+		gtk_widget_destroy(tmp);
+		theme_color_cached = 1;
+	}
 	pixbuf = create_pixbuf(IMAGE_EBVIEW);
 	gtk_window_set_icon (GTK_WINDOW(main_window), pixbuf);
 	destroy_pixbuf(pixbuf);
