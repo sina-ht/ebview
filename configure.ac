@@ -2,7 +2,7 @@ dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.63)
 
-AC_INIT([ebview],[0.3.6-gtk3-20260518],[http://ebview.sourceforge.net/])
+AC_INIT([ebview],[0.3.6-gtk3-20260523],[http://ebview.sourceforge.net/])
 AC_CONFIG_SRCDIR(src/ebview.c)
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 AC_CONFIG_HEADERS([config.h])
